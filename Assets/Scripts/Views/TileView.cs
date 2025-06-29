@@ -1,39 +1,34 @@
 using System;
 using UnityEngine;
 
-
 [RequireComponent(typeof(SpriteRenderer))]
 public class TileView : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BattlefieldConfig colorPalette;
-    public TileModel Model { get; private set; }
-    private Action<ETileHighlightType> HighlightKeyChangeHandler;
+    private SpriteRenderer spriteRenderer;
+    private TileController controller;
 
-    // El controller llama a esto justo después de instanciar la casilla
-    public void Init(TileModel model)
+    /* -------- Init llamado por TileController ---------- */
+    public void Init(TileController ctrl)
     {
-        Model = model;
-        SetHighlightColor(ETileHighlightType.None);          // color base
-        HighlightKeyChangeHandler = colorKey => SetHighlightColor(colorKey);
-        Model.OnHighlightChanged += HighlightKeyChangeHandler;
+        controller = ctrl;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Suscribimos el cambio de highlight
+        controller.OnHighlightCurrentChanged += SetColor;
+
+        // Color base
+        SetColor(ETileHighlightType.None);
     }
 
     private void OnDestroy()
     {
-        if (Model != null)
-        {
-            Model.OnHighlightChanged -= HighlightKeyChangeHandler;
-        }
+        if (controller != null)
+            controller.OnHighlightCurrentChanged -= SetColor;
     }
 
-    public void SetHighlightColor(ETileHighlightType colorKey)
+    public void SetColor(ETileHighlightType key)
     {
-        spriteRenderer.color = colorPalette.GetColor(colorKey);
+        spriteRenderer.color = colorPalette.GetColor(key);
     }
-
-    /* ---------- Input ---------- */
-    private void OnMouseDown() => BattlefieldController.Instance.OnTileClicked(Model.Coord);
-    private void OnMouseEnter() => BattlefieldController.Instance.OnTileHovered(Model.Coord);
-    private void OnMouseExit() => BattlefieldController.Instance.OnTileUnhovered(Model.Coord);
 }

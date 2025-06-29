@@ -1,11 +1,11 @@
 public class DeployPhaseController : IBattlePhase
 {
-    private readonly BattlefieldController bfController;
-    private readonly BattlefieldModel bfModel;
-    private readonly HexHighlightController highlightsController;
+    private BattlefieldController bfController;
+    private BattlefieldModel bfModel;
+    private HexHighlightController highlightsController;
     private PhaseManager phaseManager;
 
-    public DeployPhaseController(BattlefieldController newBfController, HexHighlightController newHhcontroller, BattlefieldModel newBfModel, PhaseManager newPhaseManager)
+    public void Init(BattlefieldController newBfController, HexHighlightController newHhcontroller, BattlefieldModel newBfModel, PhaseManager newPhaseManager)
     {
         bfController = newBfController;
         bfModel = newBfModel;
@@ -24,25 +24,6 @@ public class DeployPhaseController : IBattlePhase
     public void ExitPhase()
     {
         // TODO: limpiar tiles y UI
-    }
-
-    /* --------- Input --------- */
-    // public void OnTileClicked(CubeCoord coord)
-    // {
-    //     // Ejemplo mínimo: resaltar selección
-    //     highlightsController.ClearHighlightsByType(ETileHighlightType.Selected);
-    //     highlightsController.SetHighlight(coord, ETileHighlightType.Selected);
-
-    //     // Próximo paso: intentar colocar criatura en mano
-    // }
-
-    public void OnTileHovered(CubeCoord c)
-    {
-        highlightsController.SetHighlight(c, ETileHighlightType.Hover);
-    }
-    public void OnTileUnhovered(CubeCoord c)
-    {
-        highlightsController.SetHighlight(c, ETileHighlightType.None);
     }
 
     /* --------- Helpers --------- */

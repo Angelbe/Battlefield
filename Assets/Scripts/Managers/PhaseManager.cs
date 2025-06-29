@@ -8,7 +8,7 @@ public class PhaseManager
         bfModel = newBfModel;
     }
 
-    public void StartBattle(BattlefieldController newBfController, HexHighlightController newHhController, Army attacker, Army defender)
+    public void StartBattle(BattlefieldController newBfController, Army attacker, Army defender)
     {
         // current = new DeployPhaseController();
         // current.EnterPhase();

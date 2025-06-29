@@ -1,27 +1,21 @@
 public class TileModel
 {
-    public CubeCoord Coord { get; }
-    public ETileHighlightType Highlight { get; private set; }
-    public CreatureModel Occupant { get; private set; }
-    public bool IsOccupied => Occupant != null;
-    public event System.Action<ETileHighlightType> OnHighlightChanged;
+    public CubeCoord CubeCoord { get; }
+    public CreatureModel OccupantModel { get; private set; }
+    public bool IsOccupied => OccupantModel != null;
 
-
-    public TileModel(CubeCoord cube)
+    public TileModel(CubeCoord cubeCoord)
     {
-        Coord = cube;
-        Highlight = ETileHighlightType.None;
+        CubeCoord = cubeCoord;
     }
 
-    public void SetOccupant(CreatureModel unit)
+    public void SetOccupant(CreatureModel creature)
     {
-        Occupant = unit;
+        OccupantModel = creature;
     }
 
-    public void SetHighlight(ETileHighlightType value)
+    public void ClearOccupant()
     {
-        if (Highlight == value) return;      // evita fuego cruzado infinito
-        Highlight = value;
-        OnHighlightChanged?.Invoke(value);   // avisa a los listeners
+        OccupantModel = null;
     }
 }

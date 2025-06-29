@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 598080370473033057}
   - component: {fileID: 4915057451628526274}
   - component: {fileID: 8737732426561843228}
+  - component: {fileID: 8061109793421227552}
   m_Layer: 0
   m_Name: HexTile
   m_TagString: Untagged
@@ -156,3 +157,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 598080370473033057}
   colorPalette: {fileID: 11400000, guid: 3b27ce9f1989d40d8a456a23cc47c252, type: 2}
+--- !u!114 &8061109793421227552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3200075118856896099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20016ba6b882ca62a80b7749ae5845a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 0}
+  BaseKey: 0

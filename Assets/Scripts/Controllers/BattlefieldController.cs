@@ -7,9 +7,7 @@ public class BattlefieldController : MonoBehaviour
     private BattlefieldModel bfModel;
     public BattlefieldConfig bfConfig;
     private PhaseManager phaseManager;
-    public readonly Dictionary<CubeCoord, TileModel> TileModels = new();
-    private readonly Dictionary<CubeCoord, TileView> tileViews = new();
-    private HexHighlightController highlightController;
+    public readonly Dictionary<CubeCoord, TileController> TileCtrls = new();
     private Dictionary<CubeCoord, CreatureModel> unitModels = new();
     public Dictionary<CreatureModel, CreatureView> UnitViews = new();
     private List<CubeCoord> currentDeployableTiles;
@@ -20,33 +18,31 @@ public class BattlefieldController : MonoBehaviour
     {
         for (int row = 0; row < bfConfig.Rows; row++)
         {
-            int colsInRow = (row % 2 == 0) ? 19 : 18;
+            int colsInRow = (row & 1) == 0 ? 19 : 18;
 
             for (int col = 0; col < colsInRow; col++)
             {
                 CubeCoord cube = CubeCoord.FromOffset(col, row);
-                var tileModel = new TileModel(cube);
-                TileModels[cube] = tileModel;
+                var TileModel = new TileModel(cube);
 
                 Vector2 pos = HexUtils.OffsetToWorld(col, row, bfConfig.HexSize);
-                GameObject go = Instantiate(bfConfig.tilePrefab, pos, Quaternion.identity, transform);
+                var go = Instantiate(bfConfig.tilePrefab, pos, Quaternion.identity, transform);
 
-                TileView tileView = go.GetComponent<TileView>();
-                tileView.Init(tileModel);
-                tileViews[cube] = tileView;
+                var ctrl = go.GetComponent<TileController>();
+                ctrl.Init(TileModel);
+                TileCtrls[cube] = ctrl;
             }
         }
     }
+
 
     // ---------- ShowDeploymentZone ----------
     public void ShowDeploymentZone(bool isAttacker, EDeploymentLevel level)
     {
         currentDeployableTiles = DeploymentZone.GetZone(isAttacker, level);
-        foreach (var tile in currentDeployableTiles)
-        {
-            if (TileModels.ContainsKey(tile) && !TileModels[tile].IsOccupied)
-                TileModels[tile].SetHighlight(ETileHighlightType.DeployZone);  // color nuevo
-        }
+        foreach (var cube in currentDeployableTiles)
+            if (!TileCtrls[cube].Model.IsOccupied)
+                TileCtrls[cube].SetHighlight(ETileHighlightType.DeployZone, asBase: true);
     }
 
     // ---------- Army interactions ----------
@@ -65,7 +61,7 @@ public class BattlefieldController : MonoBehaviour
         // 2. Verificar si TODAS las casillas están libres
         foreach (var coord in occupiedCoords)
         {
-            if (!TileModels.ContainsKey(coord) || TileModels[coord].IsOccupied)
+            if (!TileCtrls.ContainsKey(coord) || TileCtrls[coord].Model.IsOccupied)
                 return; // Alguna casilla no existe o está ocupada → no se puede spawnear
         }
 
@@ -73,7 +69,7 @@ public class BattlefieldController : MonoBehaviour
         var unitModel = new CreatureModel(center, offsets);
         foreach (var coord in unitModel.OccupiedCoords)
         {
-            TileModels[coord].SetOccupant(unitModel);
+            TileCtrls[coord].Model.SetOccupant(unitModel);
         }
         unitModels[center] = unitModel;
 
@@ -86,28 +82,21 @@ public class BattlefieldController : MonoBehaviour
     }
 
 
-    /* ---------- Input público llamado desde TileView ---------- */
+    /* ---------- Click y Hover ---------- */
     public void OnTileClicked(CubeCoord cube)
     {
         if (selected.HasValue)
-            highlightController.SetHighlight(selected.Value, ETileHighlightType.None);
+            TileCtrls[selected.Value].ResetHighlight();
 
         selected = cube;
-        highlightController.SetHighlight(cube, ETileHighlightType.Selected);
+        TileCtrls[cube].SetHighlight(ETileHighlightType.Selected, asBase: true);
     }
-
-    public void OnTileHovered(CubeCoord cube) => TryHoverHighlight(cube, ETileHighlightType.Hover);
-    public void OnTileUnhovered(CubeCoord cube) => TryHoverHighlight(cube, ETileHighlightType.None);
-
+    public void OnTileHovered(CubeCoord c) => TileCtrls[c].SetHighlight(ETileHighlightType.Hover);
+    public void OnTileUnhovered(CubeCoord c) => TileCtrls[c].ResetHighlight();
     public Vector3 WorldPosOf(CubeCoord cube)
-    => HexUtils.CubeToWorld(cube, bfConfig.HexSize);
-
-    private void TryHoverHighlight(CubeCoord cube, ETileHighlightType target)
     {
-        if (selected.HasValue && selected.Value.Equals(cube)) return;
-        highlightController.SetHighlight(cube, target);
+        return HexUtils.CubeToWorld(cube, bfConfig.HexSize);
     }
-
 
     public void Init(BattlefieldModel m, PhaseManager pm, BattlefieldConfig cfg)
     {
@@ -121,9 +110,8 @@ public class BattlefieldController : MonoBehaviour
     private void Start()
     {
         GenerateHexGrid();
-        highlightController = new HexHighlightController(TileModels);
-        ShowDeploymentZone(true, EDeploymentLevel.Master);
-        SpawnUnit(new CubeCoord(0, 0, 0), null);
+        ShowDeploymentZone(isAttacker: true, EDeploymentLevel.Basic);
     }
+
 
 }

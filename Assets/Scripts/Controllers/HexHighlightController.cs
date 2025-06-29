@@ -3,38 +3,31 @@ using UnityEngine;
 
 public class HexHighlightController
 {
-    private readonly Dictionary<CubeCoord, TileModel> dicTileModels;
+    private readonly Dictionary<CubeCoord, TileController> tileControllers;
 
-    // Constructor: recibe la referencia al mapa generado
-    public HexHighlightController(Dictionary<CubeCoord, TileModel> tileModelsFromBattlefield)
+    public HexHighlightController(Dictionary<CubeCoord, TileController> tileModelsFromBattlefield)
     {
-        this.dicTileModels = tileModelsFromBattlefield;
-    }
-
-    public void SetHighlight(CubeCoord coord, ETileHighlightType type)
-    {
-        if (dicTileModels.ContainsKey(coord))
-            dicTileModels[coord].SetHighlight(type);
+        this.tileControllers = tileModelsFromBattlefield;
     }
 
     public void SetManyHighlights(IEnumerable<CubeCoord> coords, ETileHighlightType type)
     {
         foreach (var coord in coords)
-            SetHighlight(coord, type);
+            tileControllers[coord].SetHighlight(type);
     }
 
     public void ClearHighlightsByType(ETileHighlightType type)
     {
-        foreach (var tileModel in dicTileModels)
+        foreach (var tileModel in tileControllers)
         {
-            if (tileModel.Value.Highlight == type)
-                tileModel.Value.SetHighlight(ETileHighlightType.None);
+            if (tileModel.Value.BaseKey == type)
+                tileModel.Value.SetHighlight(ETileHighlightType.None, true);
         }
     }
 
     public void ClearAllHighlights()
     {
-        foreach (var tileModel in dicTileModels)
+        foreach (var tileModel in tileControllers)
             tileModel.Value.SetHighlight(ETileHighlightType.None);
     }
 }

@@ -15,10 +15,10 @@ public class BattlefieldGizmoDrawer : MonoBehaviour
         if (battlefield == null)
             battlefield = GetComponent<BattlefieldController>();
 
-        if (battlefield == null || battlefield.TileModels == null)
+        if (battlefield == null || battlefield.TileCtrls == null)
             return;
 
-        foreach (var pair in battlefield.TileModels)
+        foreach (var pair in battlefield.TileCtrls)
         {
             var coord = pair.Key;
             float size = battlefield.bfConfig.HexSize;
