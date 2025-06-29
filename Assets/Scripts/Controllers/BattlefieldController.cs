@@ -18,7 +18,7 @@ public class BattlefieldController : MonoBehaviour
     /* ---------- Generar grid ---------- */
     private void GenerateHexGrid()
     {
-        for (int row = 0; row < bfConfig.GridHeight; row++)
+        for (int row = 0; row < bfConfig.Rows; row++)
         {
             int colsInRow = (row % 2 == 0) ? 19 : 18;
 
@@ -122,7 +122,7 @@ public class BattlefieldController : MonoBehaviour
     {
         GenerateHexGrid();
         highlightController = new HexHighlightController(TileModels);
-        ShowDeploymentZone(true, EDeploymentLevel.Basic);
+        ShowDeploymentZone(true, EDeploymentLevel.Master);
         SpawnUnit(new CubeCoord(0, 0, 0), null);
     }
 
