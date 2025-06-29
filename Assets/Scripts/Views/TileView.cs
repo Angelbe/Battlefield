@@ -6,15 +6,15 @@ using UnityEngine;
 public class TileView : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private ColorPalette colorPalette;
+    [SerializeField] private BattlefieldConfig colorPalette;
     public TileModel Model { get; private set; }
-    private Action<TileHighlightType> HighlightKeyChangeHandler;
+    private Action<ETileHighlightType> HighlightKeyChangeHandler;
 
     // El controller llama a esto justo después de instanciar la casilla
     public void Init(TileModel model)
     {
         Model = model;
-        SetHighlightColor(TileHighlightType.None);          // color base
+        SetHighlightColor(ETileHighlightType.None);          // color base
         HighlightKeyChangeHandler = colorKey => SetHighlightColor(colorKey);
         Model.OnHighlightChanged += HighlightKeyChangeHandler;
     }
@@ -27,7 +27,7 @@ public class TileView : MonoBehaviour
         }
     }
 
-    public void SetHighlightColor(TileHighlightType colorKey)
+    public void SetHighlightColor(ETileHighlightType colorKey)
     {
         spriteRenderer.color = colorPalette.GetColor(colorKey);
     }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98cb647740b0ca1a989e08f9554cef44, type: 3}
-  m_Name: HexPalette
+  m_Name: BattlefieldConfig
   m_EditorClassIdentifier: 
   noneColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

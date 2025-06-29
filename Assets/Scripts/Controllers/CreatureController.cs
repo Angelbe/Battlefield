@@ -1,19 +1,19 @@
 using UnityEngine;
 
-/* UnitController.cs (MonoBehaviour) */
-public class UnitController : MonoBehaviour
+/* CreatureController.cs (MonoBehaviour) */
+public class CreatureController : MonoBehaviour
 {
-    public UnitModel UnitModel { get; private set; }
-    private UnitView unitView;
+    public CreatureModel UnitModel { get; private set; }
+    private CreatureView unitView;
 
     /* Init desde Battlefield */
-    public void Init(UnitModel initmodel, UnitView initView)
+    public void Init(CreatureModel initmodel, CreatureView initView)
     {
         UnitModel = initmodel;
         this.unitView = initView;
         UnitModel.OnPositionChanged += pos => this.unitView.UpdateWorldPos(pos);
     }
-    public void MoveUnit(UnitModel unit, CubeCoord newCenter, BattlefieldController board)
+    public void MoveUnit(CreatureModel unit, CubeCoord newCenter, BattlefieldController board)
     {
         // 1 Libera las antiguas
         foreach (var tile in unit.OccupiedCoords)

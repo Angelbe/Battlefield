@@ -1,0 +1,1 @@
+public enum EBattlePhase { Deployment, Combat, Results }

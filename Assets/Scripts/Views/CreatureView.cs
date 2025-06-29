@@ -1,16 +1,16 @@
-// UnitView.cs (simplísimo)
+// CreatureView.cs (simplísimo)
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class UnitView : MonoBehaviour
+public class CreatureView : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Color selectedTint = Color.cyan;
 
-    public UnitModel Model { get; private set; }
+    public CreatureModel Model { get; private set; }
     private Color original;
 
-    public void Init(UnitModel model)
+    public void Init(CreatureModel model)
     {
         Model = model;
         original = spriteRenderer.color;

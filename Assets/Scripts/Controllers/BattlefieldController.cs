@@ -4,55 +4,62 @@ using UnityEngine;
 public class BattlefieldController : MonoBehaviour
 {
     public static BattlefieldController Instance { get; private set; }
-
-    [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private int gridHeight = 11;
-    [SerializeField] private float hexSize = 1f;
-    [SerializeField] private GameObject unitPrefab;
+    private BattlefieldModel bfModel;
+    private BattlefieldConfig bfConfig;
+    private PhaseManager phaseManager;
     public readonly Dictionary<CubeCoord, TileModel> TileModels = new();
     private readonly Dictionary<CubeCoord, TileView> tileViews = new();
-    private Dictionary<CubeCoord, UnitModel> unitModels = new();
-    public Dictionary<UnitModel, UnitView> UnitViews = new();
-    private CubeCoord? selected;    // casilla actualmente seleccionada
-    private UnitModel selectedUnit;
-
-    /* ---------- Ciclo de vida ---------- */
-    private void Awake() => Instance = this;
-    private void Start()
-    {
-        GenerateHexGrid();
-        SpawnUnit(new CubeCoord(0, 0, 0), null);
-
-    }
+    private HexHighlightController highlightController;
+    private Dictionary<CubeCoord, CreatureModel> unitModels = new();
+    public Dictionary<CreatureModel, CreatureView> UnitViews = new();
+    private List<CubeCoord> currentDeployableTiles;
+    private CubeCoord? selected;
 
     /* ---------- Generar grid ---------- */
     private void GenerateHexGrid()
     {
-        for (int row = 0; row < gridHeight; row++)
+        for (int row = 0; row < bfConfig.GridHeight; row++)
         {
             int colsInRow = (row % 2 == 0) ? 19 : 18;
 
             for (int col = 0; col < colsInRow; col++)
             {
                 CubeCoord cube = CubeCoord.FromOffset(col, row);
-                var model = new TileModel(cube);
-                TileModels[cube] = model;
+                var tileModel = new TileModel(cube);
+                TileModels[cube] = tileModel;
 
-                Vector2 pos = HexUtils.OffsetToWorld(col, row, hexSize);
-                GameObject go = Instantiate(tilePrefab, pos, Quaternion.identity, transform);
+                Vector2 pos = HexUtils.OffsetToWorld(col, row, bfConfig.HexSize);
+                GameObject go = Instantiate(bfConfig.tilePrefab, pos, Quaternion.identity, transform);
 
-                TileView view = go.GetComponent<TileView>();
-                view.Init(model);
-                tileViews[cube] = view;
+                TileView tileView = go.GetComponent<TileView>();
+                tileView.Init(tileModel);
+                tileViews[cube] = tileView;
             }
         }
+    }
+
+    // ---------- ShowDeploymentZone ----------
+    public void ShowDeploymentZone(bool isAttacker, EDeploymentLevel level)
+    {
+        currentDeployableTiles = DeploymentZone.GetZone(isAttacker, level);
+        foreach (var tile in currentDeployableTiles)
+        {
+            if (TileModels.ContainsKey(tile) && !TileModels[tile].IsOccupied)
+                TileModels[tile].SetHighlight(ETileHighlightType.DeployZone);  // color nuevo
+        }
+    }
+
+    // ---------- Army interactions ----------
+    public void ChangeActiveArmy(Army newArmy)
+    {
+
     }
 
     // ---------- spawn ----------
     private void SpawnUnit(CubeCoord center, CubeCoord[] offsets)
     {
         // 1. Crear modelo temporal solo para calcular las coords
-        var tempModel = new UnitModel(center, offsets);
+        var tempModel = new CreatureModel(center, offsets);
         var occupiedCoords = tempModel.OccupiedCoords;
 
         // 2. Verificar si TODAS las casillas están libres
@@ -63,7 +70,7 @@ public class BattlefieldController : MonoBehaviour
         }
 
         // 3. Crear modelo definitivo y registrar
-        var unitModel = new UnitModel(center, offsets);
+        var unitModel = new CreatureModel(center, offsets);
         foreach (var coord in unitModel.OccupiedCoords)
         {
             TileModels[coord].SetOccupant(unitModel);
@@ -71,11 +78,11 @@ public class BattlefieldController : MonoBehaviour
         unitModels[center] = unitModel;
 
         // 4. Crear vista
-        Vector3 pos = WorldPosOf(center) + Vector3.up * 0.01f;
-        var go = Instantiate(unitPrefab, pos, Quaternion.identity, transform);
-        var unitView = go.GetComponent<UnitView>();
-        unitView.Init(unitModel);
-        UnitViews[unitModel] = unitView;
+        // Vector3 pos = WorldPosOf(center) + Vector3.up * 0.01f;
+        // var go = Instantiate(unitPrefab, pos, Quaternion.identity, transform);
+        // var unitView = go.GetComponent<CreatureView>();
+        // unitView.Init(unitModel);
+        // UnitViews[unitModel] = unitView;
     }
 
 
@@ -83,29 +90,40 @@ public class BattlefieldController : MonoBehaviour
     public void OnTileClicked(CubeCoord cube)
     {
         if (selected.HasValue)
-            SetHighlightKey(selected.Value, TileHighlightType.None);
+            highlightController.SetHighlight(selected.Value, ETileHighlightType.None);
 
         selected = cube;
-        SetHighlightKey(cube, TileHighlightType.Selected);
+        highlightController.SetHighlight(cube, ETileHighlightType.Selected);
     }
 
-    public void OnTileHovered(CubeCoord cube) => TryTempHighlight(cube, TileHighlightType.Hover);
-    public void OnTileUnhovered(CubeCoord cube) => TryTempHighlight(cube, TileHighlightType.None);
-
-    /* ---------- Helpers ---------- */
-    private void SetHighlightKey(CubeCoord cube, TileHighlightType colorKey)
-    {
-        var tileModel = TileModels[cube];
-        tileModel.SetHighlight(colorKey);
-    }
+    public void OnTileHovered(CubeCoord cube) => TryHoverHighlight(cube, ETileHighlightType.Hover);
+    public void OnTileUnhovered(CubeCoord cube) => TryHoverHighlight(cube, ETileHighlightType.None);
 
     public Vector3 WorldPosOf(CubeCoord cube)
-    => HexUtils.CubeToWorld(cube, hexSize);
+    => HexUtils.CubeToWorld(cube, bfConfig.HexSize);
 
-    private void TryTempHighlight(CubeCoord cube, TileHighlightType target)
+    private void TryHoverHighlight(CubeCoord cube, ETileHighlightType target)
     {
         if (selected.HasValue && selected.Value.Equals(cube)) return;
-        SetHighlightKey(cube, target);
+        highlightController.SetHighlight(cube, target);
+    }
+
+
+    public void Init(BattlefieldModel m, PhaseManager pm, BattlefieldConfig cfg)
+    {
+        bfModel = m;
+        phaseManager = pm;
+        bfConfig = cfg;
+    }
+
+    /* ---------- Ciclo de vida ---------- */
+    private void Awake() => Instance = this;
+    private void Start()
+    {
+        GenerateHexGrid();
+        highlightController = new HexHighlightController(TileModels);
+        ShowDeploymentZone(true, EDeploymentLevel.Basic);
+        SpawnUnit(new CubeCoord(0, 0, 0), null);
     }
 
 }
