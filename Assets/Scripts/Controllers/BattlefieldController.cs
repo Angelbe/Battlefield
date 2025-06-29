@@ -5,7 +5,7 @@ public class BattlefieldController : MonoBehaviour
 {
     public static BattlefieldController Instance { get; private set; }
     private BattlefieldModel bfModel;
-    private BattlefieldConfig bfConfig;
+    public BattlefieldConfig bfConfig;
     private PhaseManager phaseManager;
     public readonly Dictionary<CubeCoord, TileModel> TileModels = new();
     private readonly Dictionary<CubeCoord, TileView> tileViews = new();

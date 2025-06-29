@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1423609489167399829}
   - component: {fileID: 4959131122945412038}
+  - component: {fileID: -3423513589319641006}
   m_Layer: 0
   m_Name: Battlefield
   m_TagString: Untagged
@@ -44,7 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61efe9ffbaedf487f96c0df40453bd6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 3200075118856896099, guid: 0e0078ac78b4b2fb4ab4b50306994d2f, type: 3}
-  gridHeight: 11
-  hexSize: 0.55
-  unitPrefab: {fileID: 8727678427291825858, guid: 9a1a5a55799ef04b7a8ae1da8761020c, type: 3}
+  bfConfig: {fileID: 0}
+--- !u!114 &-3423513589319641006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7710286814033475010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23a37ba5a29a684889ce572595d8e0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

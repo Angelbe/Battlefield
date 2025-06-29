@@ -33,7 +33,7 @@ public class TileView : MonoBehaviour
     }
 
     /* ---------- Input ---------- */
-    private void OnMouseDown() => BattlefieldController.Instance.OnTileClicked(Model.Cube);
-    private void OnMouseEnter() => BattlefieldController.Instance.OnTileHovered(Model.Cube);
-    private void OnMouseExit() => BattlefieldController.Instance.OnTileUnhovered(Model.Cube);
+    private void OnMouseDown() => BattlefieldController.Instance.OnTileClicked(Model.Coord);
+    private void OnMouseEnter() => BattlefieldController.Instance.OnTileHovered(Model.Coord);
+    private void OnMouseExit() => BattlefieldController.Instance.OnTileUnhovered(Model.Coord);
 }

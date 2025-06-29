@@ -1,6 +1,6 @@
 public class TileModel
 {
-    public CubeCoord Cube { get; }
+    public CubeCoord Coord { get; }
     public ETileHighlightType Highlight { get; private set; }
     public CreatureModel Occupant { get; private set; }
     public bool IsOccupied => Occupant != null;
@@ -9,7 +9,7 @@ public class TileModel
 
     public TileModel(CubeCoord cube)
     {
-        Cube = cube;
+        Coord = cube;
         Highlight = ETileHighlightType.None;
     }
 
