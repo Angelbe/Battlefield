@@ -116,7 +116,4 @@ public static class DeploymentZone
             current = new CubeCoord(nextX, nextY, nextZ);
         }
     }
-
-    // Devuelve la coordenada “reflejada” respecto al origen (lado opuesto)
-    private static CubeCoord Mirror(CubeCoord c) => new(-c.X, -c.Y, -c.Z);
 }
