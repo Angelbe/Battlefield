@@ -9,12 +9,12 @@ public class BattleSetup : MonoBehaviour
     private void Awake()
     {
         /* 0 – Crear la cámara y la luz antes de hacer nada más */
-        CreateMainCamera();
-        CreateLight();
+        SetupHelpers.CreateMainCamera();
+        SetupHelpers.CreateGlobalLight2D();
 
         /* 1 – Ejércitos de prueba */
-        var attacker = BuildSampleArmy(isAttacker: true);
-        var defender = BuildSampleArmy(isAttacker: false);
+        var attacker = SetupHelpers.BuildSampleArmy(isAttacker: true, EDeploymentLevel.Basic);
+        var defender = SetupHelpers.BuildSampleArmy(isAttacker: false, EDeploymentLevel.Advanced);
 
         /* 2 – Modelo + gestor de fases */
         var bfModel = new BattlefieldModel(attacker, defender);
@@ -28,53 +28,4 @@ public class BattleSetup : MonoBehaviour
         battlefieldCtr.Init(bfModel, phaseManager, battlefieldConfig);
     }
 
-    private void CreateMainCamera()
-    {
-        var camGO = new GameObject("Main Camera") { tag = "MainCamera" };
-
-        /* 1️⃣  Camera + posición */
-        var cam = camGO.AddComponent<Camera>();
-        cam.orthographic = true;
-        cam.transform.position = new Vector3(8.5f, 4f, -10f);
-
-        /* 2️⃣  Audio listener (si usas audio 2D/3D) */
-        camGO.AddComponent<AudioListener>();
-
-        /* 3️⃣  Pixel-Perfect setup */
-        var pp = camGO.AddComponent<PixelPerfectCamera>();
-        pp.assetsPPU = 32;
-        pp.refResolutionX = 640;
-        pp.refResolutionY = 320;
-        pp.cropFrame = PixelPerfectCamera.CropFrame.None;
-        pp.gridSnapping = PixelPerfectCamera.GridSnapping.None;
-
-#if UNITY_URP
-        /* 4️⃣  URP extra data (para stacking, post-FX, etc.) */
-        camGO.AddComponent<UniversalAdditionalCameraData>();
-#endif
-    }
-
-    private void CreateLight()
-    {
-        GameObject lightGO = new GameObject("Global Light 2D");
-        var light2D = lightGO.AddComponent<Light2D>();
-        light2D.lightType = Light2D.LightType.Global;
-        light2D.intensity = 1f;
-        light2D.color = Color.white;
-    }
-
-    private Army BuildSampleArmy(bool isAttacker)
-    {
-        var army = new Army
-        {
-            Name = isAttacker ? "Attacker" : "Defender",
-            IsAttacker = isAttacker,
-            DeploymentLevel = EDeploymentLevel.Basic,
-        };
-
-        // Aquí meterías criaturas en Reserve (placeholder)
-        army.Reserve.Add(new CreatureModel(new CubeCoord(0, 0, 0)));
-
-        return army;
-    }
 }
