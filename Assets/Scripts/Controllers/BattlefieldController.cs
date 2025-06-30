@@ -89,7 +89,7 @@ public class BattlefieldController : MonoBehaviour
             TileCtrls[selected.Value].ResetHighlight();
 
         selected = cube;
-        TileCtrls[cube].SetHighlight(ETileHighlightType.Selected, asBase: true);
+        TileCtrls[cube].SetHighlight(ETileHighlightType.Selected);
     }
     public void OnTileHovered(CubeCoord c) => TileCtrls[c].SetHighlight(ETileHighlightType.Hover);
     public void OnTileUnhovered(CubeCoord c) => TileCtrls[c].ResetHighlight();
