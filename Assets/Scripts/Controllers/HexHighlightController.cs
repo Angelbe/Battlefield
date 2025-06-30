@@ -5,9 +5,9 @@ public class HexHighlightController
 {
     private readonly Dictionary<CubeCoord, TileController> tileControllers;
 
-    public HexHighlightController(Dictionary<CubeCoord, TileController> tileModelsFromBattlefield)
+    public HexHighlightController(Dictionary<CubeCoord, TileController> tileControllersFromBattlefield)
     {
-        this.tileControllers = tileModelsFromBattlefield;
+        this.tileControllers = tileControllersFromBattlefield;
     }
 
     public void SetManyHighlights(IEnumerable<CubeCoord> coords, ETileHighlightType type)

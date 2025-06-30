@@ -6,26 +6,35 @@ public class BattleSetup : MonoBehaviour
     [SerializeField] private BattlefieldConfig battlefieldConfig;
 
     // Prototipo de datos: luego vendrán de menú, savegame, etc.
-    private void Awake()
+    void Awake()
     {
-        /* 0 – Crear la cámara y la luz antes de hacer nada más */
-        SetupHelpers.CreateMainCamera();
+        SetupHelpers.CreateMainCamera(new Vector3(8.5f, 4, -10));
         SetupHelpers.CreateGlobalLight2D();
 
-        /* 1 – Ejércitos de prueba */
-        var attacker = SetupHelpers.BuildSampleArmy(isAttacker: true, EDeploymentLevel.Basic);
-        var defender = SetupHelpers.BuildSampleArmy(isAttacker: false, EDeploymentLevel.Advanced);
+        var attacker = SetupHelpers.BuildSampleArmy(true, EDeploymentLevel.Basic);
+        var defender = SetupHelpers.BuildSampleArmy(false, EDeploymentLevel.Advanced);
 
-        /* 2 – Modelo + gestor de fases */
         var bfModel = new BattlefieldModel(attacker, defender);
-        var phaseManager = new PhaseManager(bfModel);
 
-        /* 3 – Instanciar el controlador de campo de batalla */
-        var battlefieldGO = Instantiate(battlefieldConfig.battlefieldPrefab);
-        var battlefieldCtr = battlefieldGO.GetComponent<BattlefieldController>();
+        /* Instancia el prefab del campo de batalla */
+        var bfGO = Instantiate(battlefieldConfig.battlefieldPrefab);
+        var bfCtrl = bfGO.GetComponent<BattlefieldController>();
+        bfCtrl.Init(bfModel, battlefieldConfig);
 
-        /* 4 – Inyección de dependencias antes de Start() */
-        battlefieldCtr.Init(bfModel, phaseManager, battlefieldConfig);
+
+        /* Necesitas el highlightCtrl después de que el grid se genere */
+        bfCtrl.GenerateHexGrid();                                  // o en Start
+        var highlightCtrl = new HexHighlightController(bfCtrl.TileCtrls);
+
+
+        /* PhaseManager con todas las dependencias */
+        var phaseMgr = new PhaseManager(bfModel, bfCtrl, highlightCtrl);
+
+        /* Inyección final */
+        bfCtrl.setPhaseManager(phaseMgr);
+
+        /* Arranque de la fase inicial */
+        phaseMgr.StartBattle();
     }
 
 }

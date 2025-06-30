@@ -10,11 +10,10 @@ public class BattlefieldController : MonoBehaviour
     public readonly Dictionary<CubeCoord, TileController> TileCtrls = new();
     private Dictionary<CubeCoord, CreatureModel> unitModels = new();
     public Dictionary<CreatureModel, CreatureView> UnitViews = new();
-    private List<CubeCoord> currentDeployableTiles;
     private CubeCoord? selected;
 
     /* ---------- Generar grid ---------- */
-    private void GenerateHexGrid()
+    public void GenerateHexGrid()
     {
         for (int row = 0; row < bfConfig.Rows; row++)
         {
@@ -33,22 +32,6 @@ public class BattlefieldController : MonoBehaviour
                 TileCtrls[cube] = ctrl;
             }
         }
-    }
-
-
-    // ---------- ShowDeploymentZone ----------
-    public void ShowDeploymentZone(bool isAttacker, EDeploymentLevel level)
-    {
-        currentDeployableTiles = DeploymentZone.GetZone(isAttacker, level);
-        foreach (var cube in currentDeployableTiles)
-            if (!TileCtrls[cube].Model.IsOccupied)
-                TileCtrls[cube].SetHighlight(ETileHighlightType.DeployZone, asBase: true);
-    }
-
-    // ---------- Army interactions ----------
-    public void ChangeActiveArmy(Army newArmy)
-    {
-
     }
 
     // ---------- spawn ----------
@@ -98,19 +81,22 @@ public class BattlefieldController : MonoBehaviour
         return HexUtils.CubeToWorld(cube, bfConfig.HexSize);
     }
 
-    public void Init(BattlefieldModel m, PhaseManager pm, BattlefieldConfig cfg)
+    public void Init(BattlefieldModel m, BattlefieldConfig cfg)
     {
         bfModel = m;
-        phaseManager = pm;
         bfConfig = cfg;
+    }
+
+    public void setPhaseManager(PhaseManager pm)
+    {
+        phaseManager = pm;
     }
 
     /* ---------- Ciclo de vida ---------- */
     private void Awake() => Instance = this;
     private void Start()
     {
-        GenerateHexGrid();
-        ShowDeploymentZone(isAttacker: true, EDeploymentLevel.Basic);
+
     }
 
 

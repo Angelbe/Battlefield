@@ -73,21 +73,11 @@ public static class DeploymentZone
         return coords;
     }
 
-    /* *********************************************************************/
-    /* Helpers                                                              */
-    /* *********************************************************************/
-
-    // Genera un “rectángulo” triangular (inclusive) entre zStart y zEnd
-    private static IEnumerable<CubeCoord> CalcRect(int xStart, int zStart, int zEnd)
+    public static void PaintZone(List<CubeCoord> coordList, BattlefieldController bfController)
     {
-        int dz = (zEnd >= zStart) ? 1 : -1;
-        for (int z = zStart; z != zEnd + dz; z += dz)
+        foreach (var coord in coordList)
         {
-            for (int x = xStart; x <= 0; x++)
-            {
-                int y = -x - z;
-                yield return new CubeCoord(x, y, z);
-            }
+            bfController.TileCtrls[coord].SetHighlight(ETileHighlightType.DeployZone, true);
         }
     }
 

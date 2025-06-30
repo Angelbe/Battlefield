@@ -1,29 +1,45 @@
 public class PhaseManager
 {
-    private IBattlePhase current;
-    private BattlefieldModel bfModel;
+    private IBattlePhase currentPhase;
+    private readonly BattlefieldModel bfModel;
 
-    public PhaseManager(BattlefieldModel newBfModel)
+    // Guardamos referencias si las necesitas más adelante
+    private readonly BattlefieldController bfCtrl;
+    private readonly HexHighlightController highlightCtrl;
+
+    public PhaseManager(BattlefieldModel model,
+                        BattlefieldController controller,
+                        HexHighlightController highlightCtrl)
     {
-        bfModel = newBfModel;
+        this.bfModel = model;
+        this.bfCtrl = controller;
+        this.highlightCtrl = highlightCtrl;
     }
 
-    public void StartBattle(BattlefieldController newBfController, Army attacker, Army defender)
+    /* ───────────────────────────  arranque ─────────────────────────── */
+    public void StartBattle()
     {
-        // current = new DeployPhaseController();
-        // current.EnterPhase();
+        currentPhase = new DeploymentPhaseController(
+                           bfCtrl,
+                           highlightCtrl,
+                           bfModel,
+                           this);
+        currentPhase.EnterPhase();
     }
 
-    public void ChangePhase(EBattlePhase nextPhase)
+    /* ───────────────────────────  transición ───────────────────────── */
+    public void ChangePhase(EBattlePhase next)
     {
-        current.ExitPhase();
+        currentPhase.ExitPhase();
 
-        current = nextPhase switch
+        currentPhase = next switch
         {
-            // EBattlePhase.Combat => new CombatPhaseController(bf, hh, attacker, defender),
-            // EBattlePhase.Results => new ResultsPhaseController(bf, hh, attacker, defender),
-            _ => current // no debería ocurrir
+            EBattlePhase.Deployment => new DeploymentPhaseController(bfCtrl, highlightCtrl, bfModel, this),
+            // EBattlePhase.Combat => new CombatPhaseController(bfCtrl, highlightCtrl, model, this),
+            // EBattlePhase.Results => new ResultsPhaseController(bfCtrl, highlightCtrl, model, this),
+            _ => currentPhase               // por seguridad
         };
-        current.EnterPhase();
+
+        currentPhase.EnterPhase();
     }
 }
