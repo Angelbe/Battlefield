@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 public class TileController : MonoBehaviour
-{ 
+{
     public TileView View { get; private set; }
     public TileModel Model { get; private set; }
     public ETileHighlightType BaseKey = ETileHighlightType.None;
@@ -13,10 +13,7 @@ public class TileController : MonoBehaviour
     public void Init(TileModel model)
     {
         Model = model;
-
-        if (View == null)
-            View = GetComponent<TileView>();
-
+        View = GetComponent<TileView>();
         View.Init(this); // Iniciamos también la vista
         ApplyHighlight(BaseKey); // Aplicamos el estado visual base
     }

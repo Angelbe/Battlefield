@@ -69,7 +69,7 @@ public static class SetupHelpers
             DeploymentLevel = deploymentLevel,
         };
 
-        army.Reserve.Add(new CreatureModel(new CubeCoord(0, 0, 0)));
+        // army.Reserve.Add(new CreatureModel(new CubeCoord(0, 0, 0)));
         return army;
     }
 }

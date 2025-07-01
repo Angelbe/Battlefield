@@ -1,32 +1,37 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-/* CreatureController.cs (MonoBehaviour) */
 public class CreatureController : MonoBehaviour
 {
-    public CreatureModel UnitModel { get; private set; }
-    private CreatureView unitView;
 
-    /* Init desde Battlefield */
-    public void Init(CreatureModel initmodel, CreatureView initView)
+    public CreatureView View { get; private set; }
+    public CreatureModel Model { get; private set; }
+    private readonly List<CubeCoord> positions = new();
+
+    public void Init(CreatureModel model, CubeCoord anchor)
     {
-        UnitModel = initmodel;
-        this.unitView = initView;
-        UnitModel.OnPositionChanged += pos => this.unitView.UpdateWorldPos(pos);
-    }
-    public void MoveUnit(CreatureModel unit, CubeCoord newCenter, BattlefieldController bfCtrl)
-    {
-        // 1 Libera las antiguas
-        foreach (var tile in unit.OccupiedCoords)
-            bfCtrl.TileCtrls[tile].Model.SetOccupant(null);
-
-        // 2 Marca las nuevas
-        unit.SetCenter(newCenter);
-        foreach (var tile in unit.OccupiedCoords)
-            bfCtrl.TileCtrls[tile].Model.SetOccupant(unit);
-
-        // 3 Mueve la vista (solo al centro; las highlights salen del modelo)
-        var uView = bfCtrl.UnitViews[unit];
-        uView.transform.position = bfCtrl.WorldPosOf(newCenter) + Vector3.up * 0.01f;
+        Model = model;
+        View.GetComponent<CreatureView>();
+        View.Init(Model);
+        RebuildPositions(anchor);
+        UpdateWorldPosition();
     }
 
+    public void MoveTo(CubeCoord newAnchor)
+    {
+        RebuildPositions(newAnchor);
+        UpdateWorldPosition();
+    }
+
+    private void RebuildPositions(CubeCoord anchor)
+    {
+        positions.Clear();
+        positions.AddRange(Model.Shape.Select(rel => anchor + rel));
+    }
+
+    private void UpdateWorldPosition()
+    {
+        transform.position = BattlefieldController.Instance.WorldPosOf(positions[0]) + Vector3.up * 0.01f;
+    }
 }

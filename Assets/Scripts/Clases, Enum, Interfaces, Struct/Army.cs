@@ -14,4 +14,9 @@ public class Army
     // Helper para devolver la zona que puede usar este ejército
     public IEnumerable<CubeCoord> GetDeploymentZone()
         => DeploymentZone.GetZone(IsAttacker, DeploymentLevel);
+
+    public void addCreatureToArmy(CreatureModel newCreatureToAdd)
+    {
+        Reserve.Add(newCreatureToAdd);
+    }
 }

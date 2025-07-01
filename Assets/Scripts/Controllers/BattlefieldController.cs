@@ -34,37 +34,6 @@ public class BattlefieldController : MonoBehaviour
         }
     }
 
-    // ---------- spawn ----------
-    private void SpawnUnit(CubeCoord center, CubeCoord[] offsets)
-    {
-        // 1. Crear modelo temporal solo para calcular las coords
-        var tempModel = new CreatureModel(center, offsets);
-        var occupiedCoords = tempModel.OccupiedCoords;
-
-        // 2. Verificar si TODAS las casillas están libres
-        foreach (var coord in occupiedCoords)
-        {
-            if (!TileCtrls.ContainsKey(coord) || TileCtrls[coord].Model.IsOccupied)
-                return; // Alguna casilla no existe o está ocupada → no se puede spawnear
-        }
-
-        // 3. Crear modelo definitivo y registrar
-        var unitModel = new CreatureModel(center, offsets);
-        foreach (var coord in unitModel.OccupiedCoords)
-        {
-            TileCtrls[coord].Model.SetOccupant(unitModel);
-        }
-        unitModels[center] = unitModel;
-
-        // 4. Crear vista
-        // Vector3 pos = WorldPosOf(center) + Vector3.up * 0.01f;
-        // var go = Instantiate(unitPrefab, pos, Quaternion.identity, transform);
-        // var unitView = go.GetComponent<CreatureView>();
-        // unitView.Init(unitModel);
-        // UnitViews[unitModel] = unitView;
-    }
-
-
     /* ---------- Click y Hover ---------- */
     public void OnTileClicked(CubeCoord cube)
     {

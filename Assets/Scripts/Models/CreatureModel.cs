@@ -2,28 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class CreatureModel
 {
-    public CubeCoord Center { get; private set; }
-    public CubeCoord[] Offsets { get; }
-    public IEnumerable<CubeCoord> OccupiedCoords =>
-        Offsets.Select(o => Center + o);
-    public event Action<CubeCoord> OnPositionChanged;    // ← aquí
+    public string Name { get; }
+    public IReadOnlyList<CubeCoord> Shape { get; }
+    public Sprite Sprite { get; }
 
-    public CreatureModel(CubeCoord center, CubeCoord[] offsets = null)
+    public CreatureModel(string newName, Sprite newSpriteModel, IEnumerable<CubeCoord> shape = null)
     {
-        Center = center;
-        Offsets = (offsets == null || offsets.Length == 0)
-            ? new CubeCoord[] { new CubeCoord(0, 0, 0) }   // ← ocupa solo el centro
-            : offsets;
-    }
+        Name = newName;
+        Sprite = newSpriteModel;
+        var defaultShape = new[] { new CubeCoord(0, 0, 0) };
+        Shape = (shape == null ? defaultShape : shape.ToArray()).ToList().AsReadOnly();
 
-
-    public void SetCenter(CubeCoord newCenter)
-    {
-        if (Center == newCenter) return;
-        Center = newCenter;
-        OnPositionChanged?.Invoke(newCenter);            // ← dispara evento
+        if (!Shape.Contains(new CubeCoord(0, 0, 0)))
+            throw new ArgumentException("Shape must include the origin (0,0,0)");
     }
 }

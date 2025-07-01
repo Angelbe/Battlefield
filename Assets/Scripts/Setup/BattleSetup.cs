@@ -21,11 +21,9 @@ public class BattleSetup : MonoBehaviour
         var bfCtrl = bfGO.GetComponent<BattlefieldController>();
         bfCtrl.Init(bfModel, battlefieldConfig);
 
-
         /* Necesitas el highlightCtrl después de que el grid se genere */
         bfCtrl.GenerateHexGrid();                                  // o en Start
         var highlightCtrl = new HexHighlightController(bfCtrl.TileCtrls);
-
 
         /* PhaseManager con todas las dependencias */
         var phaseMgr = new PhaseManager(bfModel, bfCtrl, highlightCtrl);
