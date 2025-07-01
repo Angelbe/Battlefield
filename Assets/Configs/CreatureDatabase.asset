@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84fe3bbe00c9d47fa9d03636df2f9f6c, type: 3}
   m_Name: CreatureDatabase
   m_EditorClassIdentifier: 
-  entries: []
+  entries:
+  - id: Llum
+    prefab: {fileID: 8538908298707484784, guid: 5dd931c47db073abdb8e8e25037b59fe, type: 3}

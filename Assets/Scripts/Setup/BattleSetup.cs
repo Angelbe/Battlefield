@@ -11,10 +11,10 @@ public class BattleSetup : MonoBehaviour
         SetupHelpers.CreateMainCamera(new Vector3(8.5f, 4, -10));
         SetupHelpers.CreateGlobalLight2D();
 
-        var attacker = SetupHelpers.BuildSampleArmy(true, EDeploymentLevel.Basic);
-        var defender = SetupHelpers.BuildSampleArmy(false, EDeploymentLevel.Advanced);
+        Army attacker = SampleArmy.ArmyOne;
+        Army defender = SampleArmy.ArmyTwo;
 
-        var bfModel = new BattlefieldModel(attacker, defender);
+        BattlefieldModel bfModel = new BattlefieldModel(attacker, defender);
 
         /* Instancia el prefab del campo de batalla */
         var bfGO = Instantiate(battlefieldConfig.battlefieldPrefab);

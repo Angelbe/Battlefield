@@ -1,0 +1,1 @@
+public enum EAttackType{melee, shoot}

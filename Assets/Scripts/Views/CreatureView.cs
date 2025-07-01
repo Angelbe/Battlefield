@@ -10,7 +10,6 @@ public class CreatureView : MonoBehaviour
     public void Init(CreatureModel model)
     {
         Model = model;
-        spriteRenderer.sprite = model.Sprite;
     }
 
     public void UpdateWorldPos(CubeCoord cube)

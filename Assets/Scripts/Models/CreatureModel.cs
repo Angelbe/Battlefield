@@ -1,23 +1,53 @@
-// CreatureModel.cs
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 public class CreatureModel
 {
     public string Name { get; }
-    public IReadOnlyList<CubeCoord> Shape { get; }
-    public Sprite Sprite { get; }
+    public CubeCoord[] Shape { get; }
 
-    public CreatureModel(string newName, Sprite newSpriteModel, IEnumerable<CubeCoord> shape = null)
+    public int HealthPoint;
+    public int Attack;
+    public int Defense;
+    public EAttackType AttackType;
+    public int MinDamage;
+    public int MaxDamage;
+    public int OptimalRange;
+    public int Ammunition;
+    public int Initiative;
+    public int Speed;
+    public EMovementType MovementType;
+    public int Retaliations;
+
+    public CreatureModel(
+        string name,
+        CubeCoord[] shape,
+        int healthPoint,
+        int attack,
+        int defense,
+        EAttackType attackType,
+        int minDamage,
+        int maxDamage,
+        int optimalRange,
+        int ammunition,
+        int initiative,
+        int speed,
+        EMovementType movementType,
+        int retaliations
+    )
     {
-        Name = newName;
-        Sprite = newSpriteModel;
-        var defaultShape = new[] { new CubeCoord(0, 0, 0) };
-        Shape = (shape == null ? defaultShape : shape.ToArray()).ToList().AsReadOnly();
-
-        if (!Shape.Contains(new CubeCoord(0, 0, 0)))
-            throw new ArgumentException("Shape must include the origin (0,0,0)");
+        Name = name;
+        Shape = shape;
+        HealthPoint = healthPoint;
+        Attack = attack;
+        Defense = defense;
+        AttackType = attackType;
+        MinDamage = minDamage;
+        MaxDamage = maxDamage;
+        OptimalRange = optimalRange;
+        Ammunition = ammunition;
+        Initiative = initiative;
+        Speed = speed;
+        MovementType = movementType;
+        Retaliations = retaliations;
     }
 }

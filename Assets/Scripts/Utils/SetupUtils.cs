@@ -59,17 +59,4 @@ public static class SetupHelpers
         light2D.intensity = 1f;
         light2D.color = Color.white;
     }
-
-    public static Army BuildSampleArmy(bool isAttacker, EDeploymentLevel deploymentLevel)
-    {
-        var army = new Army
-        {
-            Name = isAttacker ? "Attacker" : "Defender",
-            IsAttacker = isAttacker,
-            DeploymentLevel = deploymentLevel,
-        };
-
-        // army.Reserve.Add(new CreatureModel(new CubeCoord(0, 0, 0)));
-        return army;
-    }
 }

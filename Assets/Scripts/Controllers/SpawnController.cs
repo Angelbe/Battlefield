@@ -31,7 +31,7 @@ public class SpawnController
 
         // 3) inicializar componentes
         var creatureCtrl = go.GetComponent<CreatureController>();
-        creatureCtrl.Init(creatureModel, anchor);
+        creatureCtrl.Init(creatureModel, anchor, 5);
 
         // 4) registrar en tablero
         // foreach (var c in ctrl.CreaturePositions)
