@@ -15,3 +15,13 @@ MonoBehaviour:
   entries:
   - Name: Llum
     Prefab: {fileID: 8538908298707484784, guid: 5dd931c47db073abdb8e8e25037b59fe, type: 3}
+  - Name: Fighter
+    Prefab: {fileID: 5807057137412330576, guid: a42cd431e5406907baa4821fa3432b3d, type: 3}
+  - Name: Archer
+    Prefab: {fileID: 5807057137412330576, guid: 9969b66057bef8c5dbefd5f6f894289f, type: 3}
+  - Name: Bandit
+    Prefab: {fileID: 5807057137412330576, guid: 0a49de7f414fcefa1a7449d6b3f54044, type: 3}
+  - Name: Knight
+    Prefab: {fileID: 5807057137412330576, guid: dc6630584509bb3598640a3df50026e7, type: 3}
+  - Name: Mage
+    Prefab: {fileID: 5807057137412330576, guid: baedc79ac42a3116abb62e9ed81e427d, type: 3}

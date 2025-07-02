@@ -12,8 +12,9 @@ public class BattleSetup : MonoBehaviour
         SetupHelpers.CreateMainCamera(new Vector3(8.5f, 4, -10));
         SetupHelpers.CreateGlobalLight2D();
 
-        Army attacker = SampleArmy.ArmyOne;
-        Army defender = SampleArmy.ArmyTwo;
+        Army attacker = new("Attacker", Color.red);
+        attacker.SetIsAttacker(true);
+        Army defender = new("Defender", Color.blue);
 
         BattlefieldModel bfModel = new BattlefieldModel(attacker, defender);
 
