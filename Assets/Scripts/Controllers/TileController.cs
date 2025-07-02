@@ -40,7 +40,7 @@ public class TileController : MonoBehaviour
     }
 
     /* ---------- Input ---------- */
-    private void OnMouseEnter() => BattlefieldController.Instance.OnTileHovered(Model.CubeCoord);
-    private void OnMouseExit() => BattlefieldController.Instance.OnTileUnhovered(Model.CubeCoord);
-    private void OnMouseDown() => BattlefieldController.Instance.OnTileClicked(Model.CubeCoord);
+    private void OnMouseEnter() => SetHighlight(ETileHighlightType.Hover);
+    private void OnMouseExit() => ResetHighlight();
+    private void OnMouseDown() => ApplyHighlight(ETileHighlightType.Selected);
 }

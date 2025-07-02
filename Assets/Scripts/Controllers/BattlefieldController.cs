@@ -5,11 +5,10 @@ public class BattlefieldController : MonoBehaviour
 {
     public static BattlefieldController Instance { get; private set; }
     private BattlefieldModel bfModel;
-    public BattlefieldConfig bfConfig;
-    private PhaseManager phaseManager;
+    public BattlefieldConfig bfConfig { get; private set; }
     public readonly Dictionary<CubeCoord, TileController> TileCtrls = new();
-    private Dictionary<CubeCoord, CreatureModel> unitModels = new();
-    public Dictionary<CreatureModel, CreatureView> UnitViews = new();
+    public Army ActiveArmy;
+    private readonly Dictionary<CubeCoord, CreatureModel> deployed = new();
     private CubeCoord? selected;
 
     /* ---------- Generar grid ---------- */
@@ -34,39 +33,24 @@ public class BattlefieldController : MonoBehaviour
         }
     }
 
-    /* ---------- Click y Hover ---------- */
-    public void OnTileClicked(CubeCoord cube)
-    {
-        if (selected.HasValue)
-            TileCtrls[selected.Value].ResetHighlight();
-
-        selected = cube;
-        TileCtrls[cube].SetHighlight(ETileHighlightType.Selected);
-    }
-    public void OnTileHovered(CubeCoord c) => TileCtrls[c].SetHighlight(ETileHighlightType.Hover);
-    public void OnTileUnhovered(CubeCoord c) => TileCtrls[c].ResetHighlight();
     public Vector3 WorldPosOf(CubeCoord cube)
     {
         return HexUtils.CubeToWorld(cube, bfConfig.HexSize);
     }
 
+    public void SetActiveArmy(Army newActiveArmy)
+    {
+        ActiveArmy = newActiveArmy;
+    }
+
+    public CreatureModel GetCreatureAt(CubeCoord coord)
+        => deployed.TryGetValue(coord, out var c) ? c : null;
+
     public void Init(BattlefieldModel m, BattlefieldConfig cfg)
     {
         bfModel = m;
         bfConfig = cfg;
+        SetActiveArmy(bfModel.Attacker);
     }
-
-    public void setPhaseManager(PhaseManager pm)
-    {
-        phaseManager = pm;
-    }
-
-    /* ---------- Ciclo de vida ---------- */
-    private void Awake() => Instance = this;
-    private void Start()
-    {
-
-    }
-
 
 }

@@ -20,7 +20,7 @@ public class DeploymentPhaseController : IBattlePhase
     /* --------- Entrar / Salir --------- */
     public void EnterPhase()
     {
-        ShowDeploymentZoneFromArmy(bfModel.ActiveArmy, true);
+        ShowDeploymentZoneFromArmy(bfController.ActiveArmy, true);
     }
 
     public void ExitPhase()
@@ -34,10 +34,10 @@ public class DeploymentPhaseController : IBattlePhase
     {
         highlights.ClearHighlightsByType(ETileHighlightType.DeployZone);
 
-        if (bfModel.ActiveArmy == bfModel.Attacker)
+        if (bfController.ActiveArmy == bfModel.Attacker)
         {
-            bfModel.SetActiveArmy(bfModel.Defender);
-            ShowDeploymentZoneFromArmy(bfModel.ActiveArmy, false);
+            bfController.SetActiveArmy(bfModel.Defender);
+            ShowDeploymentZoneFromArmy(bfController.ActiveArmy, false);
         }
         else
         {

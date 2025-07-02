@@ -3,6 +3,7 @@ using UnityEngine.Rendering.Universal;
 
 public class BattleSetup : MonoBehaviour
 {
+    [SerializeField] private GameObject Cursor;
     [SerializeField] private BattlefieldConfig battlefieldConfig;
 
     // Prototipo de datos: luego vendrán de menú, savegame, etc.
@@ -17,6 +18,7 @@ public class BattleSetup : MonoBehaviour
         BattlefieldModel bfModel = new BattlefieldModel(attacker, defender);
 
         /* Instancia el prefab del campo de batalla */
+        var cursor = Instantiate(Cursor);
         var bfGO = Instantiate(battlefieldConfig.battlefieldPrefab);
         var bfCtrl = bfGO.GetComponent<BattlefieldController>();
         bfCtrl.Init(bfModel, battlefieldConfig);
@@ -27,9 +29,6 @@ public class BattleSetup : MonoBehaviour
 
         /* PhaseManager con todas las dependencias */
         var phaseMgr = new PhaseManager(bfModel, bfCtrl, highlightCtrl);
-
-        /* Inyección final */
-        bfCtrl.setPhaseManager(phaseMgr);
 
         /* Arranque de la fase inicial */
         phaseMgr.StartBattle();
