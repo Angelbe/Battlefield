@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public static class SetupHelpers
+public class SetupHelpers
 {
-    public static void CreateMainCamera(Vector3 position, int ppu = 32, int refX = 640, int refY = 320)
+    public void CreateMainCamera(Vector3 position, int ppu = 32, int refX = 640, int refY = 320)
     {
         var camGO = new GameObject("Main Camera") { tag = "MainCamera" };
 
@@ -25,7 +25,7 @@ public static class SetupHelpers
 #endif
     }
 
-    public static void CreateMainCamera()
+    public void CreateMainCamera()
     {
         var camGO = new GameObject("Main Camera") { tag = "MainCamera" };
 
@@ -48,7 +48,7 @@ public static class SetupHelpers
 #endif
     }
 
-    public static void CreateGlobalLight2D()
+    public void CreateGlobalLight2D()
     {
         GameObject lightGO = new GameObject("Global Light 2D");
         var light2D = lightGO.AddComponent<Light2D>();

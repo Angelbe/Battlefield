@@ -1,8 +1,9 @@
 // CubeCoord.cs
 using System;
+using UnityEngine;
 
 [Serializable]               // útil si algún día lo serializas
-public class CubeCoord : IEquatable<CubeCoord>
+public struct CubeCoord : IEquatable<CubeCoord>
 {
     public int X { get; }
     public int Y { get; }
@@ -35,9 +36,8 @@ public class CubeCoord : IEquatable<CubeCoord>
     /* ---------- Conversión a string (debug) ---------- */
     public override string ToString() => $"({X}, {Y}, {Z})";
 
-    public static CubeCoord FromOffset(int col, int row)
+    public static CubeCoord FromColRow(int col, int row)
     {
-        // Odd-r offset (filas impares desplazadas a la derecha)
         int x = col - (row - (row & 1)) / 2;
         int z = row;
         int y = -x - z;

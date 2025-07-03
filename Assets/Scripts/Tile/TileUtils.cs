@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -31,13 +32,13 @@ public static class TileUtils
         return dx + dy + dz == 2;   // distancia cúbica 1
     }
 
-    public static readonly CubeCoord[] CubeDirections =
-    {
-        new CubeCoord(1, -1, 0),
-        new CubeCoord(1, 0, -1),
-        new CubeCoord(0, 1, -1),
-        new CubeCoord(-1, 1, 0),
-        new CubeCoord(-1, 0, 1),
-        new CubeCoord(0, -1, 1),
-    };
+    public static readonly Dictionary<string, CubeCoord> CubeDirections = new()
+{
+    { "E",  new CubeCoord(1, -1, 0) },
+    { "SE", new CubeCoord(1, 0, -1) },
+    { "SW", new CubeCoord(0, 1, -1) },
+    { "W",  new CubeCoord(-1, 1, 0) },
+    { "NW", new CubeCoord(-1, 0, 1) },
+    { "NE", new CubeCoord(0, -1, 1) },
+};
 }
