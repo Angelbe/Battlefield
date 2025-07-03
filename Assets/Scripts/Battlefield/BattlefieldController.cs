@@ -1,20 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattlefieldController : MonoBehaviour
+public interface IBattlefieldController
 {
-    public static BattlefieldController Instance { get; private set; }
-    private BattlefieldModel bfModel;
-    public BattlefieldConfig bfConfig { get; private set; }
-    public readonly Dictionary<CubeCoord, TileController> TileCtrls = new();
-    public Army ActiveArmy;
-    private readonly Dictionary<CubeCoord, CreatureModel> deployed = new();
-    private CubeCoord? selected;
+    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel);
+    public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType);
+}
 
-    /* ---------- Generar grid ---------- */
+public class BattlefieldController : MonoBehaviour, IBattlefieldController
+{
+    private BattlefieldModel bfModel;
+    public BattlefieldConfig BfConfig { get; private set; }
+    public BattlefieldHighlightHandler BfHighlight { get; private set; }
+    public BattlefieldMouseHandler BfMouse { get; private set; }
+    public Dictionary<CubeCoord, TileController> TileControllers;
+    public Army ActiveArmy;
+
     public void GenerateHexGrid()
     {
-        for (int row = 0; row < bfConfig.Rows; row++)
+        for (int row = 0; row < BfConfig.Rows; row++)
         {
             int colsInRow = (row & 1) == 0 ? 19 : 18;
 
@@ -23,19 +27,19 @@ public class BattlefieldController : MonoBehaviour
                 CubeCoord cube = CubeCoord.FromOffset(col, row);
                 var TileModel = new TileModel(cube);
 
-                Vector2 pos = TileUtils.OffsetToWorld(col, row, bfConfig.HexSize);
-                var go = Instantiate(bfConfig.tilePrefab, pos, Quaternion.identity, transform);
+                Vector2 pos = TileUtils.OffsetToWorld(col, row, BfConfig.HexSize);
+                var go = Instantiate(BfConfig.tilePrefab, pos, Quaternion.identity, transform);
 
-                var ctrl = go.GetComponent<TileController>();
-                ctrl.Init(TileModel);
-                TileCtrls[cube] = ctrl;
+                var TileController = go.GetComponent<TileController>();
+                TileController.Init(TileModel, this);
+                TileControllers[cube] = TileController;
             }
         }
     }
 
     public Vector3 WorldPosOf(CubeCoord cube)
     {
-        return TileUtils.CubeToWorld(cube, bfConfig.HexSize);
+        return TileUtils.CubeToWorld(cube, BfConfig.HexSize);
     }
 
     public void SetActiveArmy(Army newActiveArmy)
@@ -43,14 +47,36 @@ public class BattlefieldController : MonoBehaviour
         ActiveArmy = newActiveArmy;
     }
 
-    public CreatureModel GetCreatureAt(CubeCoord coord)
-        => deployed.TryGetValue(coord, out var c) ? c : null;
-
-    public void Init(BattlefieldModel m, BattlefieldConfig cfg)
+    public void HandleHoverTile(CubeCoord newTileCoordHovered)
     {
-        bfModel = m;
-        bfConfig = cfg;
+        BfMouse.HandleHoverTile(newTileCoordHovered);
+    }
+
+    public void HandleUnhoverTile()
+    {
+        BfMouse.HandleUnhoverTile();
+    }
+    public void HandleclickTile(CubeCoord TileClickedCoord)
+    {
+        BfMouse.HandleclickTile(TileClickedCoord);
+    }
+    public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType)
+    {
+        BfHighlight.SetManyHighlights(coord, newHighlightType);
+    }
+    public void ResetManyTilesWithType(ETileHighlightType newHighlightType)
+    {
+        BfHighlight.SetManyToBase(newHighlightType);
+    }
+
+    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig)
+    {
+        bfModel = newBfConfig;
+        BfConfig = newBfModel;
         SetActiveArmy(bfModel.Attacker);
+        GenerateHexGrid();
+        BfHighlight = new(TileControllers);
+        BfMouse = new(TileControllers);
     }
 
 }

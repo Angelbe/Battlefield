@@ -77,7 +77,7 @@ public static class DeploymentZone
     {
         foreach (var coord in coordList)
         {
-            bfController.TileCtrls[coord].SetHighlight(ETileHighlightType.DeployZone, true);
+            // bfController.TileCtrls[coord].SetHighlight(ETileHighlightType.DeployZone, true);
         }
     }
 

@@ -4,8 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BattlefieldConfig", menuName = "Uroboros/BattlefieldConfig")]
 public class BattlefieldConfig : ScriptableObject
 {
-    /* -- Visual / prefabs -- */
-    public Color noneColor = Color.gray;
+    public Color noneColor = new (0f, 0f, 0f, 0.5f);
     public Color hoverColor = Color.cyan;
     public Color selectedColor = Color.yellow;
     public Color deployZoneColor = Color.green;

@@ -2,33 +2,19 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class TileView : MonoBehaviour
+public class TileView : MonoBehaviour, ITileView
 {
     [SerializeField] private BattlefieldConfig colorPalette;
     private SpriteRenderer spriteRenderer;
-    private TileController controller;
 
-    /* -------- Init llamado por TileController ---------- */
-    public void Init(TileController ctrl)
+    public void Init()
     {
-        controller = ctrl;
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        // Suscribimos el cambio de highlight
-        controller.OnHighlightCurrentChanged += SetColor;
-
-        // Color base
-        SetColor(ETileHighlightType.None);
+        SetColor(ETileHighlightType.Transparent);
     }
 
-    private void OnDestroy()
+    public void SetColor(ETileHighlightType newColor)
     {
-        if (controller != null)
-            controller.OnHighlightCurrentChanged -= SetColor;
-    }
-
-    public void SetColor(ETileHighlightType key)
-    {
-        spriteRenderer.color = colorPalette.GetColor(key);
+        spriteRenderer.color = colorPalette.GetColor(newColor);
     }
 }

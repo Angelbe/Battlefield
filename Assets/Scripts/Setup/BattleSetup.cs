@@ -3,7 +3,6 @@ using UnityEngine.Rendering.Universal;
 
 public class BattleSetup : MonoBehaviour
 {
-    [SerializeField] private GameObject Cursor;
     [SerializeField] private BattlefieldConfig battlefieldConfig;
 
     // Prototipo de datos: luego vendrán de menú, savegame, etc.
@@ -19,17 +18,15 @@ public class BattleSetup : MonoBehaviour
         BattlefieldModel bfModel = new BattlefieldModel(attacker, defender);
 
         /* Instancia el prefab del campo de batalla */
-        var cursor = Instantiate(Cursor);
-        var bfGO = Instantiate(battlefieldConfig.battlefieldPrefab);
-        var bfCtrl = bfGO.GetComponent<BattlefieldController>();
-        bfCtrl.Init(bfModel, battlefieldConfig);
+        var bfGameObject = Instantiate(battlefieldConfig.battlefieldPrefab);
+        var bfController = bfGameObject.GetComponent<BattlefieldController>();
+        bfController.Init(battlefieldConfig, bfModel);
 
         /* Necesitas el highlightCtrl después de que el grid se genere */
-        bfCtrl.GenerateHexGrid();                                  // o en Start
-        var highlightCtrl = new HexHighlightController(bfCtrl.TileCtrls);
+        bfController.GenerateHexGrid();                                  // o en Start
 
         /* PhaseManager con todas las dependencias */
-        var phaseMgr = new PhaseManager(bfModel, bfCtrl, highlightCtrl);
+        var phaseMgr = new PhaseManager(bfModel, bfController);
 
         /* Arranque de la fase inicial */
         phaseMgr.StartBattle();

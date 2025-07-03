@@ -2,17 +2,15 @@ public class DeploymentPhaseController : IBattlePhase
 {
     private readonly BattlefieldController bfController;
     private readonly BattlefieldModel bfModel;
-    private readonly HexHighlightController highlights;
+    private readonly TileController highlights;
     private readonly PhaseManager phaseManager;
 
     public DeploymentPhaseController(
         BattlefieldController bfCtrl,
-        HexHighlightController hhCtrl,
         BattlefieldModel model,
         PhaseManager pm)
     {
         bfController = bfCtrl;
-        highlights = hhCtrl;
         bfModel = model;
         phaseManager = pm;
     }
@@ -25,14 +23,14 @@ public class DeploymentPhaseController : IBattlePhase
 
     public void ExitPhase()
     {
-        highlights.ClearHighlightsByType(ETileHighlightType.DeployZone);
+        // highlights.ClearHighlightsByType(ETileHighlightType.DeployZone);
         // limpiar UI, etc.
     }
 
     /* --------- Interacciones --------- */
     private void FinishCurrentArmy()
     {
-        highlights.ClearHighlightsByType(ETileHighlightType.DeployZone);
+        // highlights.ClearHighlightsByType(ETileHighlightType.DeployZone);
 
         if (bfController.ActiveArmy == bfModel.Attacker)
         {
@@ -48,6 +46,6 @@ public class DeploymentPhaseController : IBattlePhase
     private void ShowDeploymentZoneFromArmy(Army army, bool isAttacker)
     {
         var coords = DeploymentZone.GetZone(isAttacker, army.ChampionModel.DeploymentLevel);
-        DeploymentZone.PaintZone(coords, bfController);
+        bfController.PaintManyTiles(coords, ETileHighlightType.DeployZone);
     }
 }

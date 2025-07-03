@@ -5,15 +5,12 @@ public class PhaseManager
 
     // Guardamos referencias si las necesitas más adelante
     private readonly BattlefieldController bfCtrl;
-    private readonly HexHighlightController highlightCtrl;
 
     public PhaseManager(BattlefieldModel model,
-                        BattlefieldController controller,
-                        HexHighlightController highlightCtrl)
+                        BattlefieldController controller)
     {
         this.bfModel = model;
         this.bfCtrl = controller;
-        this.highlightCtrl = highlightCtrl;
     }
 
     /* ───────────────────────────  arranque ─────────────────────────── */
@@ -21,7 +18,6 @@ public class PhaseManager
     {
         currentPhase = new DeploymentPhaseController(
                            bfCtrl,
-                           highlightCtrl,
                            bfModel,
                            this);
         currentPhase.EnterPhase();
@@ -34,7 +30,7 @@ public class PhaseManager
 
         currentPhase = next switch
         {
-            EBattlePhase.Deployment => new DeploymentPhaseController(bfCtrl, highlightCtrl, bfModel, this),
+            EBattlePhase.Deployment => new DeploymentPhaseController(bfCtrl, bfModel, this),
             // EBattlePhase.Combat => new CombatPhaseController(bfCtrl, highlightCtrl, model, this),
             // EBattlePhase.Results => new ResultsPhaseController(bfCtrl, highlightCtrl, model, this),
             _ => currentPhase               // por seguridad

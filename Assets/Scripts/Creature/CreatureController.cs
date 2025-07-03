@@ -4,12 +4,20 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+public interface ICreatureController
+{
+    public CreatureView View { get; }
+    public CreatureModel Model { get; }
+    public void addQuantity(int newCreaturesToAdd);
+    public void removeQuantity(int newCreaturesToAdd);
+}
+
 public class CreatureController : MonoBehaviour
 {
     public Guid InstanceId { get; private set; } = Guid.NewGuid();
     public CreatureView View { get; private set; }
     public CreatureModel Model { get; private set; }
-    private readonly List<CubeCoord> positions = new();
+    private CubeCoord[] positions;
     public int Quantity;
 
 
@@ -19,12 +27,6 @@ public class CreatureController : MonoBehaviour
         Quantity = newQuantity;
         View.GetComponent<CreatureView>();
         View.Init(Model);
-        UpdateWorldPosition();
-    }
-
-    private void UpdateWorldPosition()
-    {
-        transform.position = BattlefieldController.Instance.WorldPosOf(positions[0]) + Vector3.up * 0.01f;
     }
 
     public void addQuantity(int newCreaturesToAdd)

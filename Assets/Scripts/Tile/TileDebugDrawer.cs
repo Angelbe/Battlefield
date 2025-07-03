@@ -15,13 +15,13 @@ public class BattlefieldGizmoDrawer : MonoBehaviour
         if (battlefield == null)
             battlefield = GetComponent<BattlefieldController>();
 
-        if (battlefield == null || battlefield.TileCtrls == null)
+        if (battlefield == null || battlefield.TileControllers == null)
             return;
 
-        foreach (var pair in battlefield.TileCtrls)
+        foreach (var pair in battlefield.TileControllers)
         {
             var coord = pair.Key;
-            float size = battlefield.bfConfig.HexSize;
+            float size = battlefield.BfConfig.HexSize;
             Vector3 pos = TileUtils.CubeToWorld(coord, size);
 
             string label = $"{coord.X},{coord.Y},{coord.Z}";

@@ -1,8 +1,13 @@
 // CreatureView.cs
 using UnityEngine;
 
+public interface ICreatureView
+{
+    public void Init(CreatureModel model);
+}
+
 [RequireComponent(typeof(SpriteRenderer))]
-public class CreatureView : MonoBehaviour
+public class CreatureView : MonoBehaviour, ICreatureView
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     public CreatureModel Model { get; private set; }
@@ -10,10 +15,5 @@ public class CreatureView : MonoBehaviour
     public void Init(CreatureModel model)
     {
         Model = model;
-    }
-
-    public void UpdateWorldPos(CubeCoord cube)
-    {
-        transform.position = BattlefieldController.Instance.WorldPosOf(cube) + Vector3.up * 0.01f;
     }
 }

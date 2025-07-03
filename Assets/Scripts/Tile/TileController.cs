@@ -1,46 +1,43 @@
 using System;
 using UnityEngine;
 
-public class TileController : MonoBehaviour
+public interface ITileController
+{
+    BattlefieldController BfController { get; }
+    TileView View { get; }
+    TileModel Model { get; }
+    TileHighlightController Highlight { get; }
+    public void PaintTile(ETileHighlightType newHighLightType);
+}
+
+public class TileController : MonoBehaviour, ITileController
 {
     public TileView View { get; private set; }
     public TileModel Model { get; private set; }
-    public ETileHighlightType BaseKey = ETileHighlightType.None;
-    private ETileHighlightType current = ETileHighlightType.None;
-    public event Action<ETileHighlightType> OnHighlightCurrentChanged;
-    public event Action<ETileHighlightType> OnHighlightBaseChanged;
+    public BattlefieldController BfController { get; private set; }
+    public TileHighlightController Highlight { get; private set; }
+    public CreatureModel OccupantModel { get; private set; }
 
-    public void Init(TileModel model)
+    public void Init(TileModel model, BattlefieldController newBfController)
     {
         Model = model;
         View = GetComponent<TileView>();
-        View.Init(this); // Iniciamos también la vista
-        ApplyHighlight(BaseKey); // Aplicamos el estado visual base
+        View.Init(); // Iniciamos también la vista
+        Highlight = new(View);
+        BfController = newBfController;
     }
 
-    public void SetHighlight(ETileHighlightType key, bool asBase = false)
+    public void PaintTile(ETileHighlightType newHighlight)
     {
-        if (asBase)
-        {
-            BaseKey = key;
-            OnHighlightBaseChanged?.Invoke(key);
-        }
-        if (current == key) return;
-
-        current = key;
-        OnHighlightCurrentChanged?.Invoke(key);
-        ApplyHighlight(key);
+        Highlight.SetHighlight(newHighlight);
     }
 
-    public void ResetHighlight() => SetHighlight(BaseKey);
-
-    private void ApplyHighlight(ETileHighlightType key)
+    public void ResetPaint()
     {
-        View.SetColor(key);          // delega en la vista la paleta real
+        Highlight.ResetHighlight();
     }
 
-    /* ---------- Input ---------- */
-    private void OnMouseEnter() => SetHighlight(ETileHighlightType.Hover);
-    private void OnMouseExit() => ResetHighlight();
-    private void OnMouseDown() => ApplyHighlight(ETileHighlightType.Selected);
+    private void OnMouseEnter() => BfController.HandleHoverTile(Model.Coord);
+    private void OnMouseExit() => BfController.HandleUnhoverTile();
+    private void OnMouseDown() => BfController.HandleclickTile(Model.Coord);
 }
