@@ -89,6 +89,21 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfHighlight.SetManyToBase(newHighlightType);
     }
 
+    public void PaintAttackerDeploymentZone()
+    {
+        PaintManyTiles(BfDeploymentZones.AttackerZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
+    }
+
+    public void PaintDefenderDeploymentZone()
+    {
+        PaintManyTiles(BfDeploymentZones.DefenderZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
+    }
+
+    public void ClearDeploymentZones()
+    {
+        ResetManyTilesWithType(ETileHighlightType.DeployZone);
+    }
+
     public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, SetupHelpers newSetuphelpers)
     {
         setupHelpers = newSetuphelpers;
@@ -101,7 +116,6 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         GenerateGrid();
         GenerateCamera();
         BfDeploymentZones = new(this, BfConfig);
-        BfDeploymentZones.LoadDeploymentZones();
     }
 
 }

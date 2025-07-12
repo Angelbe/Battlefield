@@ -12,35 +12,23 @@ public class BattlefieldDeploymentHandler
     private Dictionary<EDeploymentLevel, List<CubeCoord>> _deploymentDict;
     public IReadOnlyDictionary<EDeploymentLevel, List<CubeCoord>> DeploymentDict => _deploymentDict;
 
-    private Dictionary<EDeploymentLevel, List<CubeCoord>> _attackerZones = new();
-    private Dictionary<EDeploymentLevel, List<CubeCoord>> _defenderZones = new();
+    private Dictionary<EDeploymentLevel, List<CubeCoord>> attackerZones = new();
+    private Dictionary<EDeploymentLevel, List<CubeCoord>> defenderZones = new();
 
-    public IReadOnlyDictionary<EDeploymentLevel, List<CubeCoord>> AttackerZones => _attackerZones;
-    public IReadOnlyDictionary<EDeploymentLevel, List<CubeCoord>> DefenderZones => _defenderZones;
+    public IReadOnlyDictionary<EDeploymentLevel, List<CubeCoord>> AttackerZones => attackerZones;
+    public IReadOnlyDictionary<EDeploymentLevel, List<CubeCoord>> DefenderZones => defenderZones;
 
     public BattlefieldDeploymentHandler(BattlefieldController newBfController, BattlefieldConfig newBfConfig)
     {
         bfController = newBfController;
         bfConfig = newBfConfig;
+        LoadDeploymentZones();
     }
-
-    private void DebugPrintZones(string label, Dictionary<EDeploymentLevel, List<CubeCoord>> zones)
-    {
-        Debug.Log($"── {label} ──");
-
-        foreach (var pair in zones)
-        {
-            string level = pair.Key.ToString();
-            string coords = string.Join(", ", pair.Value.Select(c => c.ToString()));
-            Debug.Log($"Level: {level} → [{coords}]");
-        }
-    }
-
 
     public void LoadDeploymentZones()
     {
-        _attackerZones = new();
-        _defenderZones = new();
+        attackerZones = new();
+        defenderZones = new();
 
         TextAsset bfDeploymentZibesJson = bfConfig.deploymentZonesJson;
         if (bfDeploymentZibesJson == null || string.IsNullOrWhiteSpace(bfDeploymentZibesJson.text)) return;
@@ -50,23 +38,23 @@ public class BattlefieldDeploymentHandler
 
         foreach (var zone in wrapper.deploymentZones)
         {
-            // Elegir diccionario según sea atacante o defensor
-            var dict = zone.attacker ? _attackerZones : _defenderZones;
-
-            if (!dict.TryGetValue(zone.level, out var list))
+            if (!Enum.TryParse<EDeploymentLevel>(zone.level, out var parsedLevel))
             {
-                list = new List<CubeCoord>();
-                dict[zone.level] = list;
+                Debug.LogWarning($"[DeployZone] Nivel desconocido: {zone.level}");
+                continue;
             }
 
-            // Aquí ocurre la conversión DTO → modelo de dominio
+            var dict = zone.attacker ? attackerZones : defenderZones;
+
+            if (!dict.TryGetValue(parsedLevel, out var list))
+            {
+                list = new List<CubeCoord>();
+                dict[parsedLevel] = list;
+            }
+
             foreach (var dto in zone.tiles)
                 list.Add(dto.ToModel());
         }
-
-        // Opcional: imprime para verificar
-        DebugPrintZones("Attacker Zones", _attackerZones);
-        DebugPrintZones("Defender Zones", _defenderZones);
     }
 
     public void PaintDeploymentZone(List<CubeCoord> deploymentCoords, Color ArmyColor)

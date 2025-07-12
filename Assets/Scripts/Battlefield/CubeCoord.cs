@@ -43,19 +43,12 @@ public struct CubeCoord : IEquatable<CubeCoord>
     }
 }
 
-
-public interface ICubeCoordDTO
-{
-    int X { get; set; }
-    int Y { get; set; }
-    int Z { get; set; }
-    CubeCoord ToModel() => new CubeCoord(X, Y, Z);
-}
+//Al utilizar JSON.Utility las variables a leer no pueden tener un { get; set;} porque impiden la lectura ni usar interfaces
 [Serializable]
-public struct CubeCoordDTO : ICubeCoordDTO
+public struct CubeCoordDTO
 {
-    public int X { get; set; }
-    public int Y { get; set; }
-    public int Z { get; set; }
-    public CubeCoord ToModel() => new CubeCoord(X, Y, Z);
+    public int X;
+    public int Y;
+    public int Z;
+    public CubeCoord ToModel() => new(X, Y, Z);
 }

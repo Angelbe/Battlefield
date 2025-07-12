@@ -16,37 +16,23 @@ public class DeploymentPhaseController : IBattlePhase
         phaseManager = pm;
     }
 
-    /* --------- Entrar / Salir --------- */
     public void EnterPhase()
     {
-        ShowDeploymentZoneFromArmy(bfController.ActiveArmy, false);
+        bfController.PaintAttackerDeploymentZone();
     }
 
     public void ExitPhase()
     {
-        // highlights.ClearHighlightsByType(ETileHighlightType.DeployZone);
-        // limpiar UI, etc.
+        bfController.ClearDeploymentZones();
+        phaseManager.ChangePhase(EBattlePhase.Combat);
+
     }
 
-    /* --------- Interacciones --------- */
-    private void FinishCurrentArmy()
+    public void StartDefenderDeployment()
     {
-        // highlights.ClearHighlightsByType(ETileHighlightType.DeployZone);
-
-        if (bfController.ActiveArmy == bfModel.Attacker)
-        {
-            bfController.SetActiveArmy(bfModel.Defender);
-            ShowDeploymentZoneFromArmy(bfController.ActiveArmy, false);
-        }
-        else
-        {
-            phaseManager.ChangePhase(EBattlePhase.Combat);
-        }
+        bfController.ClearDeploymentZones();
+        bfController.SetActiveArmy(bfModel.Defender);
+        bfController.PaintDefenderDeploymentZone();
     }
 
-    private void ShowDeploymentZoneFromArmy(Army army, bool isAttacker)
-    {
-        var coords = deploymentZone.GetZone(isAttacker, army.Champion.DeploymentLevel);
-        bfController.PaintManyTiles(coords, ETileHighlightType.DeployZone);
-    }
 }

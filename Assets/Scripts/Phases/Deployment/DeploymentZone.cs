@@ -8,7 +8,7 @@ using System;
 [Serializable]
 public class DeploymentZone
 {
-    public EDeploymentLevel level;
+    public string level;
     public bool attacker;
     public CubeCoordDTO[] tiles;
 }
