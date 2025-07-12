@@ -10,7 +10,13 @@ public class BattlefieldHighlightHandler
         tileControllers = tileControllersFromBattlefield;
     }
 
-    public void SetManyHighlights(IEnumerable<CubeCoord> coords, ETileHighlightType type)
+    public void SetManyOriginalHl(IEnumerable<CubeCoord> coords, ETileHighlightType type)
+    {
+        foreach (var coord in coords)
+            tileControllers[coord].PaintOriginalHlTile(type);
+    }
+
+    public void SetManyHl(IEnumerable<CubeCoord> coords, ETileHighlightType type)
     {
         foreach (var coord in coords)
             tileControllers[coord].PaintTile(type);

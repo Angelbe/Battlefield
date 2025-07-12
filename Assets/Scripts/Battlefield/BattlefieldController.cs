@@ -82,7 +82,12 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
     }
     public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType)
     {
-        BfHighlight.SetManyHighlights(coord, newHighlightType);
+        BfHighlight.SetManyHl(coord, newHighlightType);
+    }
+
+    public void PaintManyOriginalTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType)
+    {
+        BfHighlight.SetManyOriginalHl(coord, newHighlightType);
     }
     public void ResetManyTilesWithType(ETileHighlightType newHighlightType)
     {
@@ -91,12 +96,12 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 
     public void PaintAttackerDeploymentZone()
     {
-        PaintManyTiles(BfDeploymentZones.AttackerZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
+        PaintManyOriginalTiles(BfDeploymentZones.AttackerZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
     }
 
     public void PaintDefenderDeploymentZone()
     {
-        PaintManyTiles(BfDeploymentZones.DefenderZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
+        PaintManyOriginalTiles(BfDeploymentZones.DefenderZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
     }
 
     public void ClearDeploymentZones()

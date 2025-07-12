@@ -2,7 +2,7 @@ using System;
 
 public class TileHighlightController
 {
-    public ETileHighlightType originalHl { get; private set; } = ETileHighlightType.Transparent;
+    public ETileHighlightType originalHl { get; private set; } = ETileHighlightType.Transparent; // Cambiar esto a un  sistema de niveles (nivel 1 transparente nivel 2 deployment, nivel 3 selected etc)
     public ETileHighlightType currentHl { get; private set; } = ETileHighlightType.Transparent;
     public event Action<ETileHighlightType> OnHighlightCurrentChanged;
     public event Action<ETileHighlightType> OnHighlightBaseChanged;

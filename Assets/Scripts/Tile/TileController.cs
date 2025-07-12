@@ -32,6 +32,11 @@ public class TileController : MonoBehaviour, ITileController
         Highlight.SetHighlight(newHighlight);
     }
 
+    public void PaintOriginalHlTile(ETileHighlightType newHighlight)
+    {
+        Highlight.SetOriginalHighLight(newHighlight);
+    }
+
     public void ResetPaint()
     {
         Highlight.ResetHighlight();
