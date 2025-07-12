@@ -16,6 +16,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
     public BattlefieldHighlightHandler BfHighlight { get; private set; }
     public BattlefieldMouseHandler BfMouse { get; private set; }
     public BattlefieldGridHandler BfGrid { get; private set; }
+    public BattlefieldDeploymentHandler BfDeploymentZones { get; private set; }
     public Dictionary<CubeCoord, TileController> TileControllers = new();
     public Army ActiveArmy;
 
@@ -99,6 +100,8 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfGrid = new(BfConfig);
         GenerateGrid();
         GenerateCamera();
+        BfDeploymentZones = new(this, BfConfig);
+        BfDeploymentZones.LoadDeploymentZones();
     }
 
 }

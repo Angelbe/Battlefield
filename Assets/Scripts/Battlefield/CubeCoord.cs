@@ -1,8 +1,7 @@
 // CubeCoord.cs
 using System;
-using UnityEngine;
 
-[Serializable]               // útil si algún día lo serializas
+[Serializable]
 public struct CubeCoord : IEquatable<CubeCoord>
 {
     public int X { get; }
@@ -11,7 +10,6 @@ public struct CubeCoord : IEquatable<CubeCoord>
 
     public CubeCoord(int x, int y, int z)
     {
-        // OPCIONAL : validador (x + y + z debe ser 0)
         if (x + y + z != 0) throw new ArgumentException("Cube coordinate must satisfy x + y + z == 0");
         X = x; Y = y; Z = z;
     }
@@ -43,4 +41,21 @@ public struct CubeCoord : IEquatable<CubeCoord>
         int y = -x - z;
         return new CubeCoord(x, y, z);
     }
+}
+
+
+public interface ICubeCoordDTO
+{
+    int X { get; set; }
+    int Y { get; set; }
+    int Z { get; set; }
+    CubeCoord ToModel() => new CubeCoord(X, Y, Z);
+}
+[Serializable]
+public struct CubeCoordDTO : ICubeCoordDTO
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Z { get; set; }
+    public CubeCoord ToModel() => new CubeCoord(X, Y, Z);
 }

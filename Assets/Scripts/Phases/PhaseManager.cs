@@ -3,17 +3,14 @@ public class PhaseManager
     private IBattlePhase currentPhase;
     private readonly BattlefieldModel bfModel;
 
-    // Guardamos referencias si las necesitas más adelante
     private readonly BattlefieldController bfCtrl;
 
     public PhaseManager(BattlefieldModel model,
                         BattlefieldController controller)
     {
-        this.bfModel = model;
-        this.bfCtrl = controller;
+        bfModel = model;
+        bfCtrl = controller;
     }
-
-    /* ───────────────────────────  arranque ─────────────────────────── */
     public void StartBattle()
     {
         currentPhase = new DeploymentPhaseController(
@@ -22,8 +19,6 @@ public class PhaseManager
                            this);
         currentPhase.EnterPhase();
     }
-
-    /* ───────────────────────────  transición ───────────────────────── */
     public void ChangePhase(EBattlePhase next)
     {
         currentPhase.ExitPhase();

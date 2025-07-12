@@ -163,7 +163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df81a130f261a73dd8ce32301bdcc0d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cursor: {fileID: 413688632637228071, guid: e6792f2b6b84b1efdae2c01f7b5f7b92, type: 3}
   battlefieldConfig: {fileID: 11400000, guid: 3b27ce9f1989d40d8a456a23cc47c252, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

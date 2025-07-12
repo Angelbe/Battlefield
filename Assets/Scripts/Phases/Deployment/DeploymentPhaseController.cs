@@ -1,5 +1,6 @@
 public class DeploymentPhaseController : IBattlePhase
 {
+    private readonly DeploymentZone deploymentZone;
     private readonly BattlefieldController bfController;
     private readonly BattlefieldModel bfModel;
     private readonly TileController highlights;
@@ -18,7 +19,7 @@ public class DeploymentPhaseController : IBattlePhase
     /* --------- Entrar / Salir --------- */
     public void EnterPhase()
     {
-        ShowDeploymentZoneFromArmy(bfController.ActiveArmy, true);
+        ShowDeploymentZoneFromArmy(bfController.ActiveArmy, false);
     }
 
     public void ExitPhase()
@@ -45,7 +46,7 @@ public class DeploymentPhaseController : IBattlePhase
 
     private void ShowDeploymentZoneFromArmy(Army army, bool isAttacker)
     {
-        var coords = DeploymentZone.GetZone(isAttacker, army.ChampionModel.DeploymentLevel);
+        var coords = deploymentZone.GetZone(isAttacker, army.Champion.DeploymentLevel);
         bfController.PaintManyTiles(coords, ETileHighlightType.DeployZone);
     }
 }

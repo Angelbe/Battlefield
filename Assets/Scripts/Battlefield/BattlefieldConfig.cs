@@ -1,28 +1,38 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+public interface IBattlefieldConfig
+{
+    int Rows { get; set; }
+    int Cols { get; set; }
+    float HexSize { get; set; }
+    GameObject tilePrefab { get; set; }
+    GameObject battlefieldPrefab { get; set; }
+    TextAsset deploymentZonesJson { get; set; }
+}
+
 
 [CreateAssetMenu(fileName = "BattlefieldConfig", menuName = "Uroboros/BattlefieldConfig")]
 public class BattlefieldConfig : ScriptableObject
 {
-    public Color noneColor = new (0f, 0f, 0f, 0.5f);
+    [Header("Battlefield Colors")]
+    public Color noneColor = new(0f, 0f, 0f, 0.5f);
     public Color hoverColor = Color.cyan;
     public Color selectedColor = Color.yellow;
     public Color deployZoneColor = Color.green;
+    [Header("Battlefield and tiles prefabs")]
     public GameObject tilePrefab;
     public GameObject battlefieldPrefab;
-    public float HexSize = 0.55f;
 
-    /* -- Datos de tablero -- */
+    [Header("Battlefield Size")]
     public int Rows = 11;        // filas reales
     public int Cols = 19;        // columnas en filas pares
+    public float HexSize = 0.55f;
 
-    /* -- RANGOS de despliegue -- */
-    [Header("Deployment zones (cube coords)")]
-    public List<CubeCoord> attackerBasic = new();
-    public List<CubeCoord> defenderBasic = new();
+    [Header("Deployment zones")]
+    public TextAsset deploymentZonesJson;
 
-    // Opcional: advanced/expert/master
-    // public List<CubeCoord> attackerAdvanced = new();
     public Color GetColor(ETileHighlightType highlight)
     {
         return highlight switch

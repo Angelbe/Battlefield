@@ -37,37 +37,37 @@ public class BattlefieldDeploymentHandler
     }
 
 
-    // public void LoadDeploymentZones()
-    // {
-    //     _attackerZones = new();
-    //     _defenderZones = new();
+    public void LoadDeploymentZones()
+    {
+        _attackerZones = new();
+        _defenderZones = new();
 
-    //     TextAsset bfDeploymentZibesJson = bfConfig.deploymentZonesJson;
-    //     if (bfDeploymentZibesJson == null || string.IsNullOrWhiteSpace(bfDeploymentZibesJson.text)) return;
+        TextAsset bfDeploymentZibesJson = bfConfig.deploymentZonesJson;
+        if (bfDeploymentZibesJson == null || string.IsNullOrWhiteSpace(bfDeploymentZibesJson.text)) return;
 
-    //     var wrapper = JsonUtility.FromJson<DeploymentZonesWrapper>(bfDeploymentZibesJson.text);
-    //     if (wrapper == null || wrapper.deploymentZones == null) return;
+        var wrapper = JsonUtility.FromJson<DeploymentZonesWrapper>(bfDeploymentZibesJson.text);
+        if (wrapper == null || wrapper.deploymentZones == null) return;
 
-    //     foreach (var zone in wrapper.deploymentZones)
-    //     {
-    //         // Elegir diccionario según sea atacante o defensor
-    //         var dict = zone.attacker ? _attackerZones : _defenderZones;
+        foreach (var zone in wrapper.deploymentZones)
+        {
+            // Elegir diccionario según sea atacante o defensor
+            var dict = zone.attacker ? _attackerZones : _defenderZones;
 
-    //         if (!dict.TryGetValue(zone.level, out var list))
-    //         {
-    //             list = new List<CubeCoord>();
-    //             dict[zone.level] = list;
-    //         }
+            if (!dict.TryGetValue(zone.level, out var list))
+            {
+                list = new List<CubeCoord>();
+                dict[zone.level] = list;
+            }
 
-    //         // Aquí ocurre la conversión DTO → modelo de dominio
-    //         foreach (var dto in zone.tiles)
-    //             list.Add(dto.ToModel());
-    //     }
+            // Aquí ocurre la conversión DTO → modelo de dominio
+            foreach (var dto in zone.tiles)
+                list.Add(dto.ToModel());
+        }
 
-    //     // Opcional: imprime para verificar
-    //     DebugPrintZones("Attacker Zones", _attackerZones);
-    //     DebugPrintZones("Defender Zones", _defenderZones);
-    // }
+        // Opcional: imprime para verificar
+        DebugPrintZones("Attacker Zones", _attackerZones);
+        DebugPrintZones("Defender Zones", _defenderZones);
+    }
 
     public void PaintDeploymentZone(List<CubeCoord> deploymentCoords, Color ArmyColor)
     {

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class BattleSetup : MonoBehaviour
 {
@@ -13,8 +12,7 @@ public class BattleSetup : MonoBehaviour
         // setupUtils.CreateMainCamera(new Vector3(8.5f, 4, -10));
         setupUtils.CreateGlobalLight2D();
 
-        Army attacker = new("Attacker", Color.red);
-        attacker.SetIsAttacker(true);
+        Army attacker = new("Attacker", Color.red, new(), new("Goku"));
         Army defender = new("Defender", Color.blue);
 
         BattlefieldModel bfModel = new BattlefieldModel(attacker, defender);
