@@ -22,7 +22,7 @@ public class TileController : MonoBehaviour, ITileController
     {
         Model = model;
         View = GetComponent<TileView>();
-        View.Init(); // Iniciamos también la vista
+        View.Init();
         Highlight = new(View);
         BfController = newBfController;
     }

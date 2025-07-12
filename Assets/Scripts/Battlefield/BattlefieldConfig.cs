@@ -17,7 +17,7 @@ public interface IBattlefieldConfig
 public class BattlefieldConfig : ScriptableObject
 {
     [Header("Battlefield Colors")]
-    public Color noneColor = new(0f, 0f, 0f, 0.5f);
+    public Color noneColor = new(0f, 0f, 0f, 0.33f);
     public Color hoverColor = Color.cyan;
     public Color selectedColor = Color.yellow;
     public Color deployZoneColor = Color.green;
@@ -40,6 +40,7 @@ public class BattlefieldConfig : ScriptableObject
             ETileHighlightType.Hover => hoverColor,
             ETileHighlightType.Selected => selectedColor,
             ETileHighlightType.DeployZone => deployZoneColor,
+            ETileHighlightType.Transparent => noneColor,
             _ => noneColor,
         };
     }
