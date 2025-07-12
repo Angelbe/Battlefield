@@ -1,9 +1,7 @@
 public class DeploymentPhaseController : IBattlePhase
 {
-    private readonly DeploymentZone deploymentZone;
     private readonly BattlefieldController bfController;
     private readonly BattlefieldModel bfModel;
-    private readonly TileController highlights;
     private readonly PhaseManager phaseManager;
 
     public DeploymentPhaseController(
@@ -24,8 +22,7 @@ public class DeploymentPhaseController : IBattlePhase
     public void ExitPhase()
     {
         bfController.ClearDeploymentZones();
-        phaseManager.ChangePhase(EBattlePhase.Combat);
-
+        phaseManager.StartCombat();
     }
 
     public void StartDefenderDeployment()

@@ -1,36 +1,26 @@
+using System.Diagnostics;
+
 public class PhaseManager
 {
     private IBattlePhase currentPhase;
+    private readonly DeploymentPhaseController deploymentPhaseController;
     private readonly BattlefieldModel bfModel;
-
     private readonly BattlefieldController bfCtrl;
 
-    public PhaseManager(BattlefieldModel model,
-                        BattlefieldController controller)
+    public PhaseManager(BattlefieldModel model, BattlefieldController controller)
     {
         bfModel = model;
         bfCtrl = controller;
+        deploymentPhaseController = new DeploymentPhaseController(bfCtrl, bfModel, this);
     }
     public void StartBattle()
     {
-        currentPhase = new DeploymentPhaseController(
-                           bfCtrl,
-                           bfModel,
-                           this);
+        currentPhase = deploymentPhaseController;
         currentPhase.EnterPhase();
     }
-    public void ChangePhase(EBattlePhase next)
+
+    public void StartCombat()
     {
-        currentPhase.ExitPhase();
-
-        currentPhase = next switch
-        {
-            EBattlePhase.Deployment => new DeploymentPhaseController(bfCtrl, bfModel, this),
-            // EBattlePhase.Combat => new CombatPhaseController(bfCtrl, highlightCtrl, model, this),
-            // EBattlePhase.Results => new ResultsPhaseController(bfCtrl, highlightCtrl, model, this),
-            _ => currentPhase               // por seguridad
-        };
-
-        currentPhase.EnterPhase();
+        Debug.Print("Start combat");
     }
 }

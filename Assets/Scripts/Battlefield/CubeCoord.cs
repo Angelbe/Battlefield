@@ -31,7 +31,6 @@ public struct CubeCoord : IEquatable<CubeCoord>
     public static bool operator ==(CubeCoord left, CubeCoord right) => left.Equals(right);
     public static bool operator !=(CubeCoord left, CubeCoord right) => !left.Equals(right);
 
-    /* ---------- Conversión a string (debug) ---------- */
     public override string ToString() => $"({X}, {Y}, {Z})";
 
     public static CubeCoord FromColRow(int col, int row)
