@@ -10,7 +10,7 @@ public class BattleSetup : MonoBehaviour
     void Awake()
     {
         setupUtils = new();
-        setupUtils.CreateMainCamera(new Vector3(8.5f, 4, -10));
+        // setupUtils.CreateMainCamera(new Vector3(8.5f, 4, -10));
         setupUtils.CreateGlobalLight2D();
 
         Army attacker = new("Attacker", Color.red);
@@ -22,7 +22,7 @@ public class BattleSetup : MonoBehaviour
         /* Instancia el prefab del campo de batalla */
         var bfGameObject = Instantiate(battlefieldConfig.battlefieldPrefab);
         var bfController = bfGameObject.GetComponent<BattlefieldController>();
-        bfController.Init(battlefieldConfig, bfModel);
+        bfController.Init(battlefieldConfig, bfModel, setupUtils);
 
         /* PhaseManager con todas las dependencias */
         var phaseMgr = new PhaseManager(bfModel, bfController);

@@ -18,5 +18,8 @@ MonoBehaviour:
   deployZoneColor: {r: 0, g: 1, b: 0, a: 1}
   tilePrefab: {fileID: 3200075118856896099, guid: 0e0078ac78b4b2fb4ab4b50306994d2f, type: 3}
   battlefieldPrefab: {fileID: 7710286814033475010, guid: 0338ee16dcbbd30b8a3cb0c19644569c, type: 3}
-  GridHeight: 11
-  HexSize: 0.55
+  HexSize: 0.48
+  Rows: 11
+  Cols: 19
+  attackerBasic: []
+  defenderBasic: []

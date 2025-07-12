@@ -3,13 +3,14 @@ using UnityEngine;
 
 public interface IBattlefieldController
 {
-    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel);
+    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel, SetupHelpers newsetupHelper);
     public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType);
     public void GenerateGrid();
 }
 
 public class BattlefieldController : MonoBehaviour, IBattlefieldController
 {
+    private SetupHelpers setupHelpers;
     private BattlefieldModel bfModel;
     public BattlefieldConfig BfConfig { get; private set; }
     public BattlefieldHighlightHandler BfHighlight { get; private set; }
@@ -20,33 +21,40 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 
     public void GenerateGrid()
     {
+        Transform gridContainer = transform.Find("GridContainer");
         Dictionary<CubeCoord, TileModel> tileModels = BfGrid.GenerateGridModel();
         foreach (TileModel tileModel in tileModels.Values)
         {
-            var go = Instantiate(BfConfig.tilePrefab, tileModel.WorldPosition, Quaternion.identity, transform);
-            var TileController = go.GetComponent<TileController>();
-            TileController.Init(tileModel, this);
-            TileControllers[tileModel.Coord] = TileController;
+            var go = Instantiate(BfConfig.tilePrefab, tileModel.WorldPosition, Quaternion.identity, gridContainer);
+            go.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+            var tileController = go.GetComponent<TileController>();
+            tileController.Init(tileModel, this);
+            TileControllers[tileModel.Coord] = tileController;
+        }
+    }
+
+    public void GenerateCamera()
+    {
+        Vector2 center = GetGridWorldCenter();
+        GameObject camGO = setupHelpers.CreateMainCamera(new Vector3(center.x, center.y, -10));
+        camGO.transform.SetParent(transform);
+    }
+
+    public Vector2 GetGridWorldCenter()
+    {
+        Vector2 min = Vector2.positiveInfinity;
+        Vector2 max = Vector2.negativeInfinity;
+
+        foreach (var tileController in TileControllers.Values)
+        {
+            Vector2 pos = tileController.transform.position;
+            min = Vector2.Min(min, pos);
+            max = Vector2.Max(max, pos);
         }
 
-        // for (int row = 0; row < BfConfig.Rows; row++)
-        // {
-        //     int colsInRow = (row & 1) == 0 ? 19 : 18;
-
-        //     for (int col = 0; col < colsInRow; col++)
-        //     {
-        //         CubeCoord cube = CubeCoord.FromColRow(col, row);
-
-        //         Vector2 pos = TileUtils.OffsetToWorld(col, row, BfConfig.HexSize);
-        //         var go = Instantiate(BfConfig.tilePrefab, pos, Quaternion.identity, transform);
-        //         var TileModel = new TileModel(cube, pos, new ColRow (row, col), BfConfig.HexSize);
-
-        //         var TileController = go.GetComponent<TileController>();
-        //         TileController.Init(TileModel, this);
-        //         TileControllers[cube] = TileController;
-        //     }
-        // }
+        return (min + max) / 2f;
     }
+
 
     public Vector3 WorldPosOf(CubeCoord cube)
     {
@@ -80,8 +88,9 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfHighlight.SetManyToBase(newHighlightType);
     }
 
-    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig)
+    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, SetupHelpers newSetuphelpers)
     {
+        setupHelpers = newSetuphelpers;
         bfModel = newBfConfig;
         BfConfig = newBfModel;
         SetActiveArmy(bfModel.Attacker);
@@ -89,6 +98,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfMouse = new(TileControllers);
         BfGrid = new(BfConfig);
         GenerateGrid();
+        GenerateCamera();
     }
 
 }

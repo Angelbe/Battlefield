@@ -3,7 +3,7 @@ using UnityEngine.Rendering.Universal;
 
 public class SetupHelpers
 {
-    public void CreateMainCamera(Vector3 position, int ppu = 32, int refX = 640, int refY = 320)
+    public GameObject CreateMainCamera(Vector3 position, float PosX = 0, float PosY = 0, int ppu = 32, int refX = 640, int refY = 360)
     {
         var camGO = new GameObject("Main Camera") { tag = "MainCamera" };
 
@@ -23,29 +23,7 @@ public class SetupHelpers
 #if UNITY_URP
         camGO.AddComponent<UniversalAdditionalCameraData>();
 #endif
-    }
-
-    public void CreateMainCamera()
-    {
-        var camGO = new GameObject("Main Camera") { tag = "MainCamera" };
-
-        var cam = camGO.AddComponent<Camera>();
-        cam.orthographic = true;
-        cam.transform.position = new Vector3(8.5f, 4f, -10f);
-
-
-        camGO.AddComponent<AudioListener>();
-
-        var pp = camGO.AddComponent<PixelPerfectCamera>();
-        pp.assetsPPU = 32;
-        pp.refResolutionX = 640;
-        pp.refResolutionY = 320;
-        pp.cropFrame = PixelPerfectCamera.CropFrame.None;
-        pp.gridSnapping = PixelPerfectCamera.GridSnapping.None;
-
-#if UNITY_URP
-        camGO.AddComponent<UniversalAdditionalCameraData>();
-#endif
+        return camGO;
     }
 
     public void CreateGlobalLight2D()
