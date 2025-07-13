@@ -3,20 +3,24 @@ public class DeploymentPhaseController : IBattlePhase
     private readonly BattlefieldController bfController;
     private readonly BattlefieldModel bfModel;
     private readonly PhaseManager phaseManager;
+    private readonly UIController uIController;
 
     public DeploymentPhaseController(
-        BattlefieldController bfCtrl,
-        BattlefieldModel model,
-        PhaseManager pm)
+        BattlefieldController bfController,
+        BattlefieldModel bfModel,
+        UIController newUIController,
+        PhaseManager newPhaseManager)
     {
-        bfController = bfCtrl;
-        bfModel = model;
-        phaseManager = pm;
+        this.bfController = bfController;
+        this.bfModel = bfModel;
+        uIController = newUIController;
+        phaseManager = newPhaseManager;
     }
 
-    public void EnterPhase()
+    public void StartPhase()
     {
         bfController.PaintAttackerDeploymentZone();
+        uIController.StartUIDeploy();
     }
 
     public void ExitPhase()

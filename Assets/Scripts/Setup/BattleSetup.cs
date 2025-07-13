@@ -42,7 +42,7 @@ public class BattleSetup : MonoBehaviour
         UIController.AssignCamera(camGO.GetComponent<Camera>());
 
         /* PhaseManager con todas las dependencias */
-        var phaseMgr = new PhaseManager(bfModel, bfController);
+        var phaseMgr = new PhaseManager(bfModel, bfController, UIController);
         foreach (Creature creature in creatureCatalog.CreaturesByName.Values)
         {
             attacker.AddNewCreatureToTheArmy(creature, 5);

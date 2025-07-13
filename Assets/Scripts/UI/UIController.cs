@@ -17,8 +17,9 @@ public class UIController : MonoBehaviour
 
     public void StartUIDeploy()
     {
-        GameObject UIDeployGO = Instantiate(UIDeployPrefab);
-        UIDeploy = UIDeployGO.GetComponent<UIDeployController>();
+        // GameObject UIDeployGO = Instantiate(UIDeployPrefab);
+        // UIDeployGO.transform.SetParent(transform);
+        // UIDeploy = UIDeployGO.GetComponent<UIDeployController>();
     }
 
     public void Init()
