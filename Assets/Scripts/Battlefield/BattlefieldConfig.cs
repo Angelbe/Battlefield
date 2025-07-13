@@ -21,9 +21,12 @@ public class BattlefieldConfig : ScriptableObject
     public Color hoverColor = Color.cyan;
     public Color selectedColor = Color.yellow;
     public Color deployZoneColor = Color.green;
-    [Header("Battlefield and tiles prefabs")]
+    [Header("Prefabs")]
     public GameObject tilePrefab;
     public GameObject battlefieldPrefab;
+    [Header("Background")]
+    public Sprite battlefieldBackgroundSprite;
+
 
     [Header("Battlefield Size")]
     public int Rows = 11;        // filas reales

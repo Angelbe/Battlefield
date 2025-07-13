@@ -3,6 +3,14 @@ using UnityEngine;
 
 public interface IBattlefieldController
 {
+    public Vector2 Center { get; }
+    public BattlefieldConfig BfConfig { get; }
+    public BattlefieldHighlightHandler BfHighlight { get; }
+    public BattlefieldMouseHandler BfMouse { get; }
+    public BattlefieldGridHandler BfGrid { get; }
+    public BattlefieldDeploymentHandler BfDeploymentZones { get; }
+    public Dictionary<CubeCoord, TileController> TileControllers { get; }
+    public Army ActiveArmy { get; }
     public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel, SetupHelpers newsetupHelper);
     public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType);
     public void GenerateGrid();
@@ -12,13 +20,14 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 {
     private SetupHelpers setupHelpers;
     private BattlefieldModel bfModel;
+    public Vector2 Center { get; private set; }
     public BattlefieldConfig BfConfig { get; private set; }
     public BattlefieldHighlightHandler BfHighlight { get; private set; }
     public BattlefieldMouseHandler BfMouse { get; private set; }
     public BattlefieldGridHandler BfGrid { get; private set; }
     public BattlefieldDeploymentHandler BfDeploymentZones { get; private set; }
-    public Dictionary<CubeCoord, TileController> TileControllers = new();
-    public Army ActiveArmy;
+    public Dictionary<CubeCoord, TileController> TileControllers { get; private set; } = new();
+    public Army ActiveArmy { get; private set; }
 
     public void GenerateGrid()
     {
@@ -36,10 +45,32 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 
     public void GenerateCamera()
     {
-        Vector2 center = GetGridWorldCenter();
-        GameObject camGO = setupHelpers.CreateMainCamera(new Vector3(center.x, center.y, -10));
+        GameObject camGO = setupHelpers.CreateMainCamera(new Vector3(Center.x, Center.y, -10));
         camGO.transform.SetParent(transform);
     }
+
+    public void GenerateBattlefieldBackground()
+    {
+        if (BfConfig.battlefieldBackgroundSprite == null)
+        {
+            Debug.LogWarning("No se ha asignado un sprite de fondo en BattlefieldConfig.");
+            return;
+        }
+
+        GameObject bg = new GameObject("BattlefieldBackground");
+        bg.transform.SetParent(transform); // lo agrupa en la jerarquía del battlefield
+        bg.transform.position = Center; // o ajusta según la escala del mapa
+        bg.transform.position = Center; // o ajusta según la escala del mapa
+        float scaleX = 1.05f;
+        float scaleY = 1.05f;
+
+        bg.transform.localScale = new Vector3(scaleX, scaleY, 1f);
+
+        var sr = bg.AddComponent<SpriteRenderer>();
+        sr.sprite = BfConfig.battlefieldBackgroundSprite;
+        sr.sortingOrder = -10; // para que quede por debajo de las tiles
+    }
+
 
     public Vector2 GetGridWorldCenter()
     {
@@ -113,6 +144,8 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfMouse = new(TileControllers);
         BfGrid = new(BfConfig);
         GenerateGrid();
+        Center = GetGridWorldCenter();
+        GenerateBattlefieldBackground();
         GenerateCamera();
         BfDeploymentZones = new(this, BfConfig);
     }

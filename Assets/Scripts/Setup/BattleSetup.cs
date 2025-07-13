@@ -4,6 +4,7 @@ using UnityEngine;
 public class BattleSetup : MonoBehaviour
 {
     [SerializeField] private BattlefieldConfig battlefieldConfig;
+    [SerializeField] private BattlefieldConfig UIPrefab;
     [SerializeField] private CreatureCatalog creatureCatalog;
     private SetupHelpers setupUtils;
 
