@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battlefieldConfig: {fileID: 11400000, guid: 3b27ce9f1989d40d8a456a23cc47c252, type: 2}
+  creatureCatalog: {fileID: 11400000, guid: 2e836d9ea0278934bb89e1cc965425ea, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

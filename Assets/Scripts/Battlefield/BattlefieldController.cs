@@ -56,12 +56,6 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         return (min + max) / 2f;
     }
 
-
-    public Vector3 WorldPosOf(CubeCoord cube)
-    {
-        return TileUtils.CubeToWorld(cube, BfConfig.HexSize);
-    }
-
     public void SetActiveArmy(Army newActiveArmy)
     {
         ActiveArmy = newActiveArmy;

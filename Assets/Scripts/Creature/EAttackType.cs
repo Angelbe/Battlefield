@@ -1,1 +1,1 @@
-public enum EAttackType{melee, shoot}
+public enum EAttackType{Melee, Range}

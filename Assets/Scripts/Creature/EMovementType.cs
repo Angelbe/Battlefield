@@ -1,4 +1,4 @@
 public enum EMovementType
 {
-    Walk, Fly, Teleport
+    Fly, Walk, Teleport
 }

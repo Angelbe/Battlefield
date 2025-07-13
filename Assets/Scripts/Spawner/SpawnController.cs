@@ -5,7 +5,7 @@ public class SpawnController
 {
     private readonly BattlefieldController bfCtrl;
     private readonly CreatureCatalog creatureCatalog;
-    public readonly Dictionary<CreatureModel, CreatureView> CreatureViews = new();
+    public readonly Dictionary<CreatureController, CreatureView> CreatureViews = new();
 
     public SpawnController(BattlefieldController bfController, CreatureCatalog creatureCatalog)
     {

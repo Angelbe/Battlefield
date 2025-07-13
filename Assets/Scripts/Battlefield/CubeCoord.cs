@@ -1,5 +1,7 @@
 // CubeCoord.cs
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public struct CubeCoord : IEquatable<CubeCoord>
@@ -39,6 +41,24 @@ public struct CubeCoord : IEquatable<CubeCoord>
         int z = row;
         int y = -x - z;
         return new CubeCoord(x, y, z);
+    }
+
+    public static readonly Dictionary<string, CubeCoord> CubeDirections = new()
+    {
+        { "E",  new CubeCoord(1, -1, 0) },
+        { "SE", new CubeCoord(1, 0, -1) },
+        { "SW", new CubeCoord(0, 1, -1) },
+        { "W",  new CubeCoord(-1, 1, 0) },
+        { "NW", new CubeCoord(-1, 0, 1) },
+        { "NE", new CubeCoord(0, -1, 1) },
+    };
+
+    public readonly bool IsNeighborFromThisCube(CubeCoord b)
+    {
+        int dx = Mathf.Abs(X - b.X);
+        int dy = Mathf.Abs(Y - b.Y);
+        int dz = Mathf.Abs(Z - b.Z);
+        return dx + dy + dz == 2;   // distancia cúbica 1
     }
 }
 

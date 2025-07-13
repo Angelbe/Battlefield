@@ -16,7 +16,7 @@ public class TileController : MonoBehaviour, ITileController
     public TileModel Model { get; private set; }
     public BattlefieldController BfController { get; private set; }
     public TileHighlightController Highlight { get; private set; }
-    public CreatureModel OccupantModel { get; private set; }
+    public CreatureController OccupantModel { get; private set; }
 
     public void Init(TileModel model, BattlefieldController newBfController)
     {

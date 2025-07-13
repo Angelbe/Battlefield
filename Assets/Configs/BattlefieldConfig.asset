@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98cb647740b0ca1a989e08f9554cef44, type: 3}
   m_Name: BattlefieldConfig
   m_EditorClassIdentifier: 
-  noneColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  noneColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3137255}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   selectedColor: {r: 0.30968508, g: 0.6887079, b: 0.7203761, a: 1}
   deployZoneColor: {r: 0, g: 1, b: 0, a: 1}
   tilePrefab: {fileID: 3200075118856896099, guid: 0e0078ac78b4b2fb4ab4b50306994d2f, type: 3}
   battlefieldPrefab: {fileID: 7710286814033475010, guid: 0338ee16dcbbd30b8a3cb0c19644569c, type: 3}
-  HexSize: 0.48
   Rows: 11
   Cols: 19
-  attackerBasic: []
-  defenderBasic: []
+  HexSize: 0.48
+  deploymentZonesJson: {fileID: 4900000, guid: 0b45319c9b04f51088f75788ad65f727, type: 3}
