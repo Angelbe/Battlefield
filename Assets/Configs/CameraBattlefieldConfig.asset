@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dad9cca1677ba7079e96015e15f664c, type: 3}
+  m_Name: CameraBattlefieldConfig
+  m_EditorClassIdentifier: 
+  initialPosition: {x: 0, y: 0, z: -10}
+  assetsPPU: 32
+  refResolutionX: 640
+  refResolutionY: 360
+  CameraPrefab: {fileID: 831221581767379155, guid: 0fa0b22185553cc9aa8c73b20e8b596f, type: 3}

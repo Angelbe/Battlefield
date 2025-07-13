@@ -41,12 +41,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
             tileController.Init(tileModel, this);
             TileControllers[tileModel.Coord] = tileController;
         }
-    }
-
-    public void GenerateCamera()
-    {
-        GameObject camGO = setupHelpers.CreateMainCamera(new Vector3(Center.x, Center.y, -10));
-        camGO.transform.SetParent(transform);
+        Center = GetGridWorldCenter();
     }
 
     public void GenerateBattlefieldBackground()
@@ -144,9 +139,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfMouse = new(TileControllers);
         BfGrid = new(BfConfig);
         GenerateGrid();
-        Center = GetGridWorldCenter();
         GenerateBattlefieldBackground();
-        GenerateCamera();
         BfDeploymentZones = new(this, BfConfig);
     }
 

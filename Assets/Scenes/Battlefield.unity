@@ -164,6 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battlefieldConfig: {fileID: 11400000, guid: 3b27ce9f1989d40d8a456a23cc47c252, type: 2}
+  cameraBattlefieldConfig: {fileID: 11400000, guid: c02165b23aaf76a6c875db9886b700b5, type: 2}
+  UIPrefab: {fileID: 1872113804447560879, guid: 91ceac1f6bca7050facd71009462361a, type: 3}
   creatureCatalog: {fileID: 11400000, guid: 2e836d9ea0278934bb89e1cc965425ea, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -18,6 +18,7 @@ MonoBehaviour:
   deployZoneColor: {r: 0, g: 1, b: 0, a: 1}
   tilePrefab: {fileID: 3200075118856896099, guid: 0e0078ac78b4b2fb4ab4b50306994d2f, type: 3}
   battlefieldPrefab: {fileID: 7710286814033475010, guid: 0338ee16dcbbd30b8a3cb0c19644569c, type: 3}
+  battlefieldBackgroundSprite: {fileID: 9119414098855660196, guid: 11106b9ab9e1411df995f070333e4d1b, type: 3}
   Rows: 11
   Cols: 19
   HexSize: 0.48

@@ -1,10 +1,12 @@
 using System;
+using System.Numerics;
 using UnityEngine;
 
 public class BattleSetup : MonoBehaviour
 {
     [SerializeField] private BattlefieldConfig battlefieldConfig;
-    [SerializeField] private BattlefieldConfig UIPrefab;
+    [SerializeField] private CameraBattlefieldConfig cameraBattlefieldConfig;
+    [SerializeField] private GameObject UIPrefab;
     [SerializeField] private CreatureCatalog creatureCatalog;
     private SetupHelpers setupUtils;
 
@@ -20,10 +22,24 @@ public class BattleSetup : MonoBehaviour
 
         BattlefieldModel bfModel = new BattlefieldModel(attacker, defender);
 
-        /* Instancia el prefab del campo de batalla */
-        var bfGameObject = Instantiate(battlefieldConfig.battlefieldPrefab);
-        var bfController = bfGameObject.GetComponent<BattlefieldController>();
+        /* Instancia los prefabs del campo de batalla */
+        GameObject bfGO = Instantiate(battlefieldConfig.battlefieldPrefab);
+        bfGO.name = "Battlefield";
+        GameObject camGO = Instantiate(cameraBattlefieldConfig.CameraPrefab);
+        camGO.name = "CameraBattlefield";
+        GameObject UIGO = Instantiate(UIPrefab);
+        UIGO.name = "UI";
+
+
+        /* Inicializa los controllers*/
+        BattlefieldController bfController = bfGO.GetComponent<BattlefieldController>();
+        CameraBattlefieldController cameraController = camGO.GetComponent<CameraBattlefieldController>();
+        UIController UIController = UIGO.GetComponent<UIController>();
         bfController.Init(battlefieldConfig, bfModel, setupUtils);
+        cameraController.Init(cameraBattlefieldConfig);
+        cameraController.ChangeCameraPosition(bfController.Center);
+        UIController.Init();
+        UIController.AssignCamera(camGO.GetComponent<Camera>());
 
         /* PhaseManager con todas las dependencias */
         var phaseMgr = new PhaseManager(bfModel, bfController);
