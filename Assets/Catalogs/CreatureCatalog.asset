@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab8930cb02752862868ffbdf5ae4202, type: 3}
+  m_Name: CreatureCatalog
+  m_EditorClassIdentifier: 
+  creatureJson: {fileID: 4900000, guid: c100f698d269d08fa82a473912d802f7, type: 3}
+  entries:
+  - CreatureId: 0
+    CombatPrefab: {fileID: 5807057137412330576, guid: 0a49de7f414fcefa1a7449d6b3f54044, type: 3}
+    UIPrefab: {fileID: 3200924903512559727, guid: 5df8af4f45289e5fcbfb61b5e2e62bbb, type: 3}
+  - CreatureId: 1
+    CombatPrefab: {fileID: 5807057137412330576, guid: dc6630584509bb3598640a3df50026e7, type: 3}
+    UIPrefab: {fileID: 3200924903512559727, guid: 1ec469dde0c857bf7907c23229c1acb2, type: 3}
+  - CreatureId: 2
+    CombatPrefab: {fileID: 5807057137412330576, guid: baedc79ac42a3116abb62e9ed81e427d, type: 3}
+    UIPrefab: {fileID: 3200924903512559727, guid: d14ecd5432108f87e9625e7a21923b80, type: 3}
+  - CreatureId: 3
+    CombatPrefab: {fileID: 5807057137412330576, guid: 9969b66057bef8c5dbefd5f6f894289f, type: 3}
+    UIPrefab: {fileID: 3200924903512559727, guid: 155c3de21b667346ca0e640b97dcc0ab, type: 3}
+  - CreatureId: 4
+    CombatPrefab: {fileID: 5807057137412330576, guid: a42cd431e5406907baa4821fa3432b3d, type: 3}
+    UIPrefab: {fileID: 3200924903512559727, guid: 2ac46845b886afac4933a5777ac1af36, type: 3}

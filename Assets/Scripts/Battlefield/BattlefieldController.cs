@@ -56,8 +56,8 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         bg.transform.SetParent(transform); // lo agrupa en la jerarquía del battlefield
         bg.transform.position = Center; // o ajusta según la escala del mapa
         bg.transform.position = Center; // o ajusta según la escala del mapa
-        float scaleX = 1.05f;
-        float scaleY = 1.05f;
+        float scaleX = 1.04f;
+        float scaleY = 1.04f;
 
         bg.transform.localScale = new Vector3(scaleX, scaleY, 1f);
 

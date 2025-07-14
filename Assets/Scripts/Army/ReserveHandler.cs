@@ -16,6 +16,7 @@ public class ReserveHandler : IReserveHandler
 
     public bool TryAddToReserve(Creature creature, int quantity)
     {
+        if (creature == null) return false;
         // ¿Ya existe una pila con esta criatura?
         foreach (var kvp in CreaturesInReserve)
         {

@@ -33,7 +33,6 @@ public class ReservePanelController : MonoBehaviour
             DeploySlotModel DeploySlotModel = new DeploySlotModel(creatureStack);
             GameObject slotGO = Instantiate(DeploySlotPrefab, transform);
             DeploySlotController DeploySlotController = slotGO.GetComponent<DeploySlotController>();
-            DeploySlotController.CreatureStackModel = DeploySlotModel;
             DeploySlotController.Init(DeploySlotModel);
         }
     }

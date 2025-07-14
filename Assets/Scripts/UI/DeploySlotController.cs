@@ -1,13 +1,39 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Image))]
 public class DeploySlotController : MonoBehaviour
 {
-    public DeploySlotModel CreatureStackModel { get; set; }
+    public DeploySlotView View;
+    public DeploySlotModel Model { get; private set; }
+    public TextMeshProUGUI QuantityText;
+    // public CreatureController CreatureController { get; private set; }
+    [SerializeField] private CreatureCatalog CreatureCatalog;
+
+    public void InstantiateNewCreature(ECreaturesNames creatureName)
+    {
+        GameObject CreaturePrefabGO = CreatureCatalog.GetUIPrefab(creatureName);
+        if (CreaturePrefabGO == null)
+        {
+            Debug.LogWarning($"[DeploySlotController] ⚠ No se Pudo instanciar el deploy slot de '{creatureName}'");
+            return;
+        }
+        GameObject CreaturePrefabUI = Instantiate(CreaturePrefabGO, transform);
+    }
+
+    private void OnMouseDown()
+    {
+        View.SelectSlot();
+    }
+
 
     public void Init(DeploySlotModel ModelToShow)
     {
-        CreatureStackModel = ModelToShow;
+        Model = ModelToShow;
+        QuantityText.text = ModelToShow.StackInTheSlot.Quantity.ToString();
+        InstantiateNewCreature(Model.StackInTheSlot.Creature.Name);
+        View.UnselectSlot();
     }
+
+
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ICreature
 {
-    public string Name { get; }
+    public ECreaturesNames Name { get; }
     public ECreatureShape Shape { get; }
     public int HealthPoint { get; }
     public int Attack { get; }
@@ -19,7 +19,7 @@ public interface ICreature
 
 public class Creature : ICreature
 {
-    public string Name { get; protected set; }
+    public ECreaturesNames Name { get; protected set; }
     public ECreatureShape Shape { get; protected set; }
     public int HealthPoint { get; protected set; }
     public int Attack { get; protected set; }
@@ -32,7 +32,7 @@ public class Creature : ICreature
     public int Retaliations { get; protected set; }
     public virtual EAttackType AttackType => EAttackType.Melee;
 
-    public Creature(string name, ECreatureShape shape, int healthPoint, int attack, int defense, int minDamage, int maxDamage, int initiative, int speed, EMovementType movementType, int retaliations)
+    public Creature(ECreaturesNames name, ECreatureShape shape, int healthPoint, int attack, int defense, int minDamage, int maxDamage, int initiative, int speed, EMovementType movementType, int retaliations)
     {
         Name = name;
         Shape = shape;
@@ -62,7 +62,7 @@ public class RangedCreature : Creature, ICreatureRange
     public int Ammunition { get; private set; }
 
     public RangedCreature(
-        string name,
+        ECreaturesNames name,
         ECreatureShape shape,
         int healthPoint,
         int attack,
@@ -90,7 +90,6 @@ public class CreatureDTO
 {
     public string name;
     public string type;
-
     public string shape;
     public int healthPoint;
     public int attack;
@@ -106,32 +105,41 @@ public class CreatureDTO
     public int optimalRange;
     public int ammunition;
 
-    public Creature ToModel()
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+    public Creature? ToModel()
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
     {
+        if (!Enum.TryParse<ECreaturesNames>(name, true, out var parsedName))
+        {
+            Debug.LogWarning($"❌ Nombre inválido en JSON: '{name}' (no coincide con enum)");
+            return null;
+        }
+
         if (!Enum.TryParse<ECreatureShape>(shape, true, out var parsedShape))
         {
-            Debug.LogWarning($"❌ Shape no válido: '{shape}'");
-            parsedShape = ECreatureShape.Single;
+            Debug.LogWarning($"❌ Shape inválido: '{shape}' de la criatura {name}'");
+            return null;
         }
 
         if (!Enum.TryParse<EMovementType>(movementType, true, out var parsedMovement))
         {
-            Debug.LogWarning($"❌ MovementType no válido: '{movementType}'");
-            parsedMovement = EMovementType.Walk;
+            Debug.LogWarning($"❌ MovementType inválido: '{movementType}' de la criatura {name}'");
+            return null;
         }
 
         return type == "Ranged"
             ? new RangedCreature(
-                name, parsedShape, healthPoint, attack, defense,
+                parsedName, parsedShape, healthPoint, attack, defense,
                 minDamage, maxDamage, initiative, speed,
                 parsedMovement, retaliations, optimalRange, ammunition
             )
             : new Creature(
-                name, parsedShape, healthPoint, attack, defense,
+                parsedName, parsedShape, healthPoint, attack, defense,
                 minDamage, maxDamage, initiative, speed,
                 parsedMovement, retaliations
             );
     }
+
 }
 
 

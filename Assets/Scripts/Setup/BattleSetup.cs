@@ -42,12 +42,23 @@ public class BattleSetup : MonoBehaviour
         UIController.AssignCamera(camGO.GetComponent<Camera>());
 
         /* PhaseManager con todas las dependencias */
-        var phaseMgr = new PhaseManager(bfModel, bfController, UIController);
-        foreach (Creature creature in creatureCatalog.CreaturesByName.Values)
-        {
-            attacker.AddNewCreatureToTheArmy(creature, 5);
-            defender.AddNewCreatureToTheArmy(creature, 5);
-        }
+        PhaseManager phaseMgr = new PhaseManager(bfModel, bfController, UIController);
+        Creature Bandit = creatureCatalog.GetCreatureData(ECreaturesNames.Bandit);
+        Creature Knight = creatureCatalog.GetCreatureData(ECreaturesNames.Knight);
+        Creature Mage = creatureCatalog.GetCreatureData(ECreaturesNames.Mage);
+        Creature Fighter = creatureCatalog.GetCreatureData(ECreaturesNames.Fighter);
+        Creature Archer = creatureCatalog.GetCreatureData(ECreaturesNames.Archer);
+        attacker.AddNewCreatureToTheArmy(Bandit, 10);
+        defender.AddNewCreatureToTheArmy(Bandit, 10);
+        attacker.AddNewCreatureToTheArmy(Knight, 3);
+        defender.AddNewCreatureToTheArmy(Knight, 3);
+        attacker.AddNewCreatureToTheArmy(Mage, 4);
+        defender.AddNewCreatureToTheArmy(Mage, 4);
+        attacker.AddNewCreatureToTheArmy(Fighter, 8);
+        defender.AddNewCreatureToTheArmy(Fighter, 8);
+        attacker.AddNewCreatureToTheArmy(Archer, 6);
+        defender.AddNewCreatureToTheArmy(Archer, 6);
+
 
         /* Arranque de la fase inicial */
         phaseMgr.StartBattle();
