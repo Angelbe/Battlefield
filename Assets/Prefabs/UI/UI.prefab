@@ -250,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f88d89d6031d6a4aadfe6b0155a7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UIDeployController: {fileID: 80909618365619982}
   DeploySlotPrefab: {fileID: 3243577578681017046, guid: da69e52c7df9241c6847396837568240, type: 3}
 --- !u!1 &7557592624194242269
 GameObject:
@@ -301,3 +302,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ReservePanelController: {fileID: 4289253796508384069}
+  SlotSelected: {fileID: 0}

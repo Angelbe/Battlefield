@@ -35,7 +35,7 @@ public class BattleSetup : MonoBehaviour
         BattlefieldController bfController = bfGO.GetComponent<BattlefieldController>();
         CameraBattlefieldController cameraController = camGO.GetComponent<CameraBattlefieldController>();
         UIController UIController = UIGO.GetComponent<UIController>();
-        bfController.Init(battlefieldConfig, bfModel, setupUtils);
+        bfController.Init(battlefieldConfig, bfModel, setupUtils, creatureCatalog, UIController);
         cameraController.Init(cameraBattlefieldConfig);
         cameraController.ChangeCameraPosition(bfController.Center);
         UIController.Init(bfController);

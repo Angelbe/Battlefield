@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IBattlefieldController
@@ -11,31 +12,33 @@ public interface IBattlefieldController
     public BattlefieldDeploymentHandler BfDeploymentZones { get; }
     public Dictionary<CubeCoord, TileController> TileControllers { get; }
     public Army ActiveArmy { get; }
-    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel, SetupHelpers newsetupHelper);
+    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel, SetupHelpers newsetupHelper, CreatureCatalog creatureCatalog, UIController newIUController);
     public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType);
     public void GenerateGrid();
 }
 
 public class BattlefieldController : MonoBehaviour, IBattlefieldController
 {
+    public Transform ghostParentTransform;
     private SetupHelpers setupHelpers;
     public BattlefieldModel bfModel { get; private set; }
     public Vector2 Center { get; private set; }
     public BattlefieldConfig BfConfig { get; private set; }
+    public BattlefieldSpawnController BfSpawn { get; private set; }
     public BattlefieldHighlightHandler BfHighlight { get; private set; }
     public BattlefieldMouseHandler BfMouse { get; private set; }
     public BattlefieldGridHandler BfGrid { get; private set; }
     public BattlefieldDeploymentHandler BfDeploymentZones { get; private set; }
     public Dictionary<CubeCoord, TileController> TileControllers { get; private set; } = new();
     public Army ActiveArmy { get; private set; }
+    public Transform GridContainer;
 
     public void GenerateGrid()
     {
-        Transform gridContainer = transform.Find("GridContainer");
         Dictionary<CubeCoord, TileModel> tileModels = BfGrid.GenerateGridModel();
         foreach (TileModel tileModel in tileModels.Values)
         {
-            var go = Instantiate(BfConfig.tilePrefab, tileModel.WorldPosition, Quaternion.identity, gridContainer);
+            var go = Instantiate(BfConfig.tilePrefab, tileModel.WorldPosition, Quaternion.identity, GridContainer);
             go.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
             var tileController = go.GetComponent<TileController>();
             tileController.Init(tileModel, this);
@@ -129,7 +132,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         ResetManyTilesWithType(ETileHighlightType.DeployZone);
     }
 
-    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, SetupHelpers newSetuphelpers)
+    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, SetupHelpers newSetuphelpers, CreatureCatalog creatureCatalog, UIController newUiDeployController)
     {
         setupHelpers = newSetuphelpers;
         bfModel = newBfConfig;
@@ -138,6 +141,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfHighlight = new(TileControllers);
         BfMouse = new(TileControllers);
         BfGrid = new(BfConfig);
+        BfSpawn = new(creatureCatalog, ghostParentTransform, newUiDeployController.UIDeployController);
         GenerateGrid();
         GenerateBattlefieldBackground();
         BfDeploymentZones = new(this, BfConfig);
