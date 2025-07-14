@@ -19,7 +19,7 @@ public interface IBattlefieldController
 public class BattlefieldController : MonoBehaviour, IBattlefieldController
 {
     private SetupHelpers setupHelpers;
-    private BattlefieldModel bfModel;
+    public BattlefieldModel bfModel { get; private set; }
     public Vector2 Center { get; private set; }
     public BattlefieldConfig BfConfig { get; private set; }
     public BattlefieldHighlightHandler BfHighlight { get; private set; }

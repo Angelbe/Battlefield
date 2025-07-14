@@ -5,8 +5,8 @@ using UnityEngine;
 public class BattlefieldModel
 {
     public int GridHeight = 11;
-    public Army Attacker { get; }
-    public Army Defender { get; }
+    public Army Attacker { get; private set; }
+    public Army Defender { get; private set; }
 
     public BattlefieldModel(Army attacker, Army defender)
     {

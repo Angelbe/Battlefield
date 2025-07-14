@@ -26,6 +26,7 @@ public class DeploymentPhaseController : IBattlePhase
     public void ExitPhase()
     {
         bfController.ClearDeploymentZones();
+        uIController.StopUIDeploy();
         phaseManager.StartCombat();
     }
 

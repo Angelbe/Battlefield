@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -5,9 +6,9 @@ using UnityEngine;
 public class UIController : MonoBehaviour
 {
     [Serialize]
-    public GameObject UIDeployPrefab;
-    public UIDeployController UIDeploy { get; private set; }
-    public Canvas Canvas { get; private set; }
+    public BattlefieldController BattlefieldController { get; private set; }
+    public UIDeployController UIDeployController;
+    public Canvas Canvas;
 
     public void AssignCamera(Camera camera)
     {
@@ -17,14 +18,18 @@ public class UIController : MonoBehaviour
 
     public void StartUIDeploy()
     {
-        // GameObject UIDeployGO = Instantiate(UIDeployPrefab);
-        // UIDeployGO.transform.SetParent(transform);
-        // UIDeploy = UIDeployGO.GetComponent<UIDeployController>();
+        UIDeployController.EnableUI();
+        UIDeployController.Init(BattlefieldController);
     }
 
-    public void Init()
+    public void StopUIDeploy()
     {
-        Canvas = GetComponent<Canvas>();
+        UIDeployController.DisableUI();
+    }
+
+    public void Init(BattlefieldController battlefieldController)
+    {
+        BattlefieldController = battlefieldController;
     }
 
 }

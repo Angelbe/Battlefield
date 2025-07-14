@@ -50,7 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dcc50a6fef6cc5b2b15f64838d79d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIDeployPrefab: {fileID: 4816534493380055793, guid: 355149ed465528452a271722197b4d58, type: 3}
+  UIDeployController: {fileID: 80909618365619982}
+  Canvas: {fileID: 6570356922974615975}
 --- !u!223 &6570356922974615975
 Canvas:
   m_ObjectHideFlags: 0
@@ -86,6 +87,7 @@ GameObject:
   - component: {fileID: 764602106785556566}
   - component: {fileID: 7531636310033595428}
   - component: {fileID: 4415040299410531684}
+  - component: {fileID: 4289253796508384069}
   m_Layer: 0
   m_Name: ReservePanel
   m_TagString: Untagged
@@ -104,8 +106,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5682077623317797572}
+  m_Children: []
   m_Father: {fileID: 593737156886413830}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -161,6 +162,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &4289253796508384069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7368017020439113933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91f88d89d6031d6a4aadfe6b0155a7c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeploySlotPrefab: {fileID: 3243577578681017046, guid: da69e52c7df9241c6847396837568240, type: 3}
 --- !u!1 &7557592624194242269
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,78 +224,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0277efc674edb9ab7a8e5844150b357a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &7988392254399460557
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5682077623317797572}
-  - component: {fileID: 6458028975890862209}
-  - component: {fileID: 3007890942005692585}
-  m_Layer: 0
-  m_Name: DeploySlot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &5682077623317797572
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7988392254399460557}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2899528542890650622}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &6458028975890862209
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7988392254399460557}
-  m_CullTransparentMesh: 1
---- !u!114 &3007890942005692585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7988392254399460557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 61d4e68cbd5b277c9a72347246a9b3c9, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  ReservePanelController: {fileID: 4289253796508384069}

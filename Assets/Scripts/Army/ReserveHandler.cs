@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public interface IReserveHandler
 {
-    public Dictionary<int, CreatureStack> Reserve { get; }     // slot index → criatura
+    public Dictionary<int, CreatureStack> CreaturesInReserve { get; }     // slot index → criatura
     public bool TryAddToReserve(Creature creature, int quantity);
     public bool RemoveFromReserve(int slotIndex, int quantity);
     public bool RemoveAllFromSlot(int slotIndex);
@@ -12,12 +12,12 @@ public interface IReserveHandler
 
 public class ReserveHandler : IReserveHandler
 {
-    public Dictionary<int, CreatureStack> Reserve { get; private set; } = new();     // slot index → criatura
+    public Dictionary<int, CreatureStack> CreaturesInReserve { get; private set; } = new();     // slot index → criatura
 
     public bool TryAddToReserve(Creature creature, int quantity)
     {
         // ¿Ya existe una pila con esta criatura?
-        foreach (var kvp in Reserve)
+        foreach (var kvp in CreaturesInReserve)
         {
             if (kvp.Value.Creature.Name == creature.Name)
             {
@@ -29,9 +29,9 @@ public class ReserveHandler : IReserveHandler
         // Si hay espacio, agrega en slot nuevo
         for (int slot = 1; slot <= 10; slot++)
         {
-            if (!Reserve.ContainsKey(slot))
+            if (!CreaturesInReserve.ContainsKey(slot))
             {
-                Reserve[slot] = new CreatureStack(creature, quantity);
+                CreaturesInReserve[slot] = new CreatureStack(creature, quantity);
                 return true;
             }
         }
@@ -41,13 +41,13 @@ public class ReserveHandler : IReserveHandler
 
     public bool RemoveFromReserve(int slotIndex, int quantity)
     {
-        if (!Reserve.TryGetValue(slotIndex, out var stack)) return false;
+        if (!CreaturesInReserve.TryGetValue(slotIndex, out var stack)) return false;
 
         stack.Remove(quantity);
 
         if (stack.Quantity <= 0)
         {
-            Reserve.Remove(slotIndex);
+            CreaturesInReserve.Remove(slotIndex);
         }
 
         return true;
@@ -60,7 +60,7 @@ public class ReserveHandler : IReserveHandler
 
     public bool AddToStack(int slotIndex, int quantity)
     {
-        if (!Reserve.TryGetValue(slotIndex, out CreatureStack stack)) return false;
+        if (!CreaturesInReserve.TryGetValue(slotIndex, out CreatureStack stack)) return false;
 
         stack.Add(quantity);
         return true;
@@ -68,13 +68,13 @@ public class ReserveHandler : IReserveHandler
 
     public bool RemoveFromStack(int slotIndex, int quantity)
     {
-        if (!Reserve.TryGetValue(slotIndex, out CreatureStack stack)) return false;
+        if (!CreaturesInReserve.TryGetValue(slotIndex, out CreatureStack stack)) return false;
 
         stack.Remove(quantity);
 
         if (stack.Quantity <= 0)
         {
-            Reserve.Remove(slotIndex);
+            CreaturesInReserve.Remove(slotIndex);
         }
 
         return true;

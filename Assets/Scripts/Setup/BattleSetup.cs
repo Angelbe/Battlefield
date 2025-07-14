@@ -38,7 +38,7 @@ public class BattleSetup : MonoBehaviour
         bfController.Init(battlefieldConfig, bfModel, setupUtils);
         cameraController.Init(cameraBattlefieldConfig);
         cameraController.ChangeCameraPosition(bfController.Center);
-        UIController.Init();
+        UIController.Init(bfController);
         UIController.AssignCamera(camGO.GetComponent<Camera>());
 
         /* PhaseManager con todas las dependencias */
