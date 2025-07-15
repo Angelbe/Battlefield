@@ -302,4 +302,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ReservePanelController: {fileID: 4289253796508384069}
-  SlotSelected: {fileID: 0}

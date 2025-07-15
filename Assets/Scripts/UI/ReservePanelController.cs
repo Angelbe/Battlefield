@@ -1,11 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReservePanelController : MonoBehaviour
+public interface IReservePanelController
+{
+    public ReserveHandler ReserveToShow { get; set; }
+    public void ShowNewReserve(ReserveHandler newReserve);
+    public void ClearReserve();
+}
+
+public class ReservePanelController : MonoBehaviour, IReservePanelController
 {
     public UIDeployController UIDeployController;
     public GameObject DeploySlotPrefab;
-    public ReserveHandler ReserveToShow;
+    public ReserveHandler ReserveToShow { get; set; }
 
     public void ShowNewReserve(ReserveHandler newReserve)
     {
@@ -20,7 +27,7 @@ public class ReservePanelController : MonoBehaviour
 
     private void HandleReserveChanged()
     {
-        // Eliminar hijos previos
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -36,6 +43,5 @@ public class ReservePanelController : MonoBehaviour
             DeploySlotController.Init(DeploySlotModel, UIDeployController);
         }
     }
-
 
 }

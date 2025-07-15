@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 477792337292593522}
+  - component: {fileID: 4478909204627807613}
+  - component: {fileID: 827989120733740770}
   m_Layer: 0
   m_Name: CreatureBase
   m_TagString: Untagged
@@ -32,6 +34,32 @@ Transform:
   - {fileID: 2677390733658105418}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4478909204627807613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46234017728680510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5d13eacbf43201c498c626dbe03ff39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Quantity: 0
+--- !u!114 &827989120733740770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46234017728680510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bafa5b4056e524e0e98518b7e7c466fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 3313153612564541337}
 --- !u!1 &6266175577392943049
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,8 +70,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2677390733658105418}
   - component: {fileID: 3313153612564541337}
-  - component: {fileID: 5079636142063398875}
-  - component: {fileID: 257770472673605101}
   - component: {fileID: 4248335327859750566}
   m_Layer: 0
   m_Name: Creature
@@ -122,32 +148,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5079636142063398875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6266175577392943049}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bafa5b4056e524e0e98518b7e7c466fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 3313153612564541337}
---- !u!114 &257770472673605101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6266175577392943049}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5d13eacbf43201c498c626dbe03ff39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Quantity: 0
 --- !u!61 &4248335327859750566
 BoxCollider2D:
   m_ObjectHideFlags: 0

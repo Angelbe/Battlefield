@@ -2,10 +2,18 @@ using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(Canvas))]
-public class UIController : MonoBehaviour
+public interface IUIController
 {
-    [Serialize]
+    public BattlefieldController BattlefieldController { get; }
+    public void AssignCamera(Camera camera);
+    public void StartUIDeploy();
+    public void StopUIDeploy();
+    public void Init(BattlefieldController newBattlefieldController);
+}
+
+[RequireComponent(typeof(Canvas))]
+public class UIController : MonoBehaviour, IUIController
+{
     public BattlefieldController BattlefieldController { get; private set; }
     public UIDeployController UIDeployController;
     public Canvas Canvas;
@@ -18,18 +26,18 @@ public class UIController : MonoBehaviour
 
     public void StartUIDeploy()
     {
-        UIDeployController.EnableUI();
         UIDeployController.Init(BattlefieldController);
     }
 
     public void StopUIDeploy()
     {
-        UIDeployController.DisableUI();
+        UIDeployController.Shutdown();
     }
 
-    public void Init(BattlefieldController battlefieldController)
+    public void Init(BattlefieldController newBattlefieldController)
     {
-        BattlefieldController = battlefieldController;
+        BattlefieldController = newBattlefieldController;
+
     }
 
 }

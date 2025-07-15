@@ -2,29 +2,50 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DeploySlotController : MonoBehaviour
+public interface IDeploySlotController
+{
+    public DeploySlotModel Model { get; }
+
+    public UIDeployController UIDeployController { get; }
+}
+
+public class DeploySlotController : MonoBehaviour, IDeploySlotController
 {
     public DeploySlotView View;
-    public DeploySlotModel Model { get; private set; }
     public TextMeshProUGUI QuantityText;
-    public UIDeployController UIDeployController;
+    public DeploySlotModel Model { get; private set; }
+    public UIDeployController UIDeployController { get; private set; }
+    public GameObject CreatureUIGO { get; set; }
     [SerializeField] private CreatureCatalog CreatureCatalog;
 
-    public void InstantiateNewCreature(ECreaturesNames creatureName)
+    public void UpdateModelInTheSlot(DeploySlotModel newDeployModel)
     {
-        GameObject CreaturePrefabGO = CreatureCatalog.GetUIPrefab(creatureName);
-        if (CreaturePrefabGO == null)
+        Model = newDeployModel;
+        SetNewCreatureUI();
+        UpdateQuantityText(Model.StackInTheSlot.Quantity);
+    }
+
+    public void SetNewCreatureUI()
+    {
+        GameObject CreatureUIPrefab = CreatureCatalog.GetUIPrefab(Model.StackInTheSlot.Creature.Name);
+        if (CreatureUIPrefab == null)
         {
             // Debug.LogWarning($"[DeploySlotController] ⚠ No se Pudo instanciar el deploy slot de '{creatureName}'");
             return;
         }
-        GameObject CreaturePrefabUI = Instantiate(CreaturePrefabGO, transform);
+        Destroy(CreatureUIGO);
+        GameObject newGO = Instantiate(CreatureUIPrefab, transform);
+        CreatureUIGO = newGO;
+        Image ImageFromCreatureUI = newGO.GetComponent<Image>();
+        View.SetNewCreatureImage(ImageFromCreatureUI);
     }
 
-    private void OnMouseDown()
+    public void UpdateQuantityText(int newQuantity)
     {
-        UIDeployController.HandleSlotClicked(this);
+        QuantityText.text = newQuantity.ToString();
     }
+
+
 
     public void SlotSelected()
     {
@@ -35,14 +56,16 @@ public class DeploySlotController : MonoBehaviour
     {
         View.UnselectSlot();
     }
-
+    private void OnMouseDown()
+    {
+        UIDeployController.HandleSlotClicked(this);
+    }
 
     public void Init(DeploySlotModel ModelToShow, UIDeployController uIDeployController)
     {
         UIDeployController = uIDeployController;
         Model = ModelToShow;
-        QuantityText.text = ModelToShow.StackInTheSlot.Quantity.ToString();
-        InstantiateNewCreature(Model.StackInTheSlot.Creature.Name);
+        UpdateModelInTheSlot(Model);
         View.UnselectSlot();
     }
 
