@@ -16,7 +16,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     private CreatureShapeCatalog shapeCatalog;
     public bool isShowingGhosts { get; set; } = false;
     private CreatureStack selectedStack;
-    private DeploySlotController selectedSlot;
+    private DeploySlotController slotSelected;
     private TileController tileHovered;
 
     private bool IsCreatureShapeCorrect(Creature creatureToCheck, TileController tileAnchor)
@@ -58,12 +58,12 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
 
     public void HandleSlotClicked(DeploySlotController slotClicked)
     {
-        if (selectedSlot == null)
+        if (slotSelected == null)
         {
             StackSelectedToDeploy(slotClicked);
             return;
         }
-        if (selectedSlot.Model.CreatureStack.ID == slotClicked.Model.CreatureStack.ID)
+        if (slotSelected.Model.CreatureStack.ID == slotClicked.Model.CreatureStack.ID)
         {
             ClearStackSelectedToDeploy();
             return;
@@ -74,16 +74,15 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
 
     private void StackSelectedToDeploy(DeploySlotController newDeploySlotSelected)
     {
-        selectedSlot = newDeploySlotSelected;
-        selectedSlot.SlotSelected();
-        selectedStack = selectedSlot.Model.CreatureStack;
+        slotSelected = newDeploySlotSelected;
+        slotSelected.SlotSelected();
+        selectedStack = slotSelected.Model.CreatureStack;
         ShowGhosts();
     }
 
     private void ClearStackSelectedToDeploy()
     {
-        selectedSlot.UnselectSlot();
-        selectedSlot = null;
+        slotSelected = null;
         selectedStack = null;
         StopShowingGhosts();
     }
@@ -137,6 +136,8 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         GameObject CreatureGO = Instantiate(CreaturePrefab, ArmyTransform);
         CreatureController creaturecontroller = CreatureGO.GetComponent<CreatureController>();
         CreatureGO.transform.position = tileClicked.Model.WorldPosition;
+        slotSelected.UnselectSlot();
+        slotSelected.SlotDeployed();
         ClearStackSelectedToDeploy();
         tileClicked.SetOcupantCreature(creaturecontroller);
     }

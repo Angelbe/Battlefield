@@ -25,4 +25,14 @@ public class DeploySlotView : MonoBehaviour
         CreatureImage = newCreatureImage;
         SelectionFrame.SetActive(false);
     }
+
+    public void SetImageColor(Color newColor)
+    {
+        CreatureImage.color = newColor;
+    }
+
+    public void ResetColor()
+    {
+        CreatureImage.color = Color.white;
+    }
 }

@@ -12,6 +12,7 @@ public interface IDeploySlotController
 public class DeploySlotController : MonoBehaviour, IDeploySlotController
 {
     public DeploySlotView View;
+    public bool isDeployed;
     public TextMeshProUGUI QuantityText;
     public DeploySlotModel Model { get; private set; }
     public UIDeployController UIDeployController { get; private set; }
@@ -48,15 +49,33 @@ public class DeploySlotController : MonoBehaviour, IDeploySlotController
     public void SlotSelected()
     {
         View.SelectSlot();
+        View.SetImageColor(UroborosColors.HighlightedColor);
     }
 
     public void UnselectSlot()
     {
         View.UnselectSlot();
+        View.ResetColor();
     }
     private void OnMouseDown()
     {
+        if (isDeployed)
+        {
+            return;
+        }
         UIDeployController.HandleDeployslotSelected(this);
+    }
+
+    public void SlotDeployed()
+    {
+        isDeployed = true;
+        View.SetImageColor(UroborosColors.DimmedColor);
+    }
+
+    public void SlotUndeployed()
+    {
+        isDeployed = false;
+        View.ResetColor();
     }
 
     public void Init(DeploySlotModel ModelToShow, UIDeployController uIDeployController)
