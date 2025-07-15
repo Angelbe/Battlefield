@@ -19,7 +19,8 @@ public interface IBattlefieldController
 
 public class BattlefieldController : MonoBehaviour, IBattlefieldController
 {
-    public Transform ghostParentTransform;
+    [SerializeField]
+    private GameObject BattlefieldSpawnPrefab;
     private SetupHelpers setupHelpers;
     public BattlefieldModel bfModel { get; private set; }
     public Vector2 Center { get; private set; }
@@ -101,7 +102,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
     }
     public void HandleclickTile(CubeCoord TileClickedCoord)
     {
-        BfMouse.HandleclickTile(TileClickedCoord);
+        BfMouse.HandleClickTile(TileClickedCoord);
     }
     public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType)
     {
@@ -141,7 +142,9 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfHighlight = new(TileControllers);
         BfMouse = new(TileControllers);
         BfGrid = new(BfConfig);
-        BfSpawn = new(creatureCatalog, ghostParentTransform, newUiDeployController.UIDeployController);
+        GameObject BfSpawnGO = Instantiate(BattlefieldSpawnPrefab, transform);
+        BfSpawn = BfSpawnGO.GetComponent<BattlefieldSpawnController>();
+        BfSpawn.Init(creatureCatalog, newUiDeployController.UIDeployController, BfMouse);
         GenerateGrid();
         GenerateBattlefieldBackground();
         BfDeploymentZones = new(this, BfConfig);

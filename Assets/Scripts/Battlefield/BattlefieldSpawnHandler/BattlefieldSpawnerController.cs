@@ -2,25 +2,21 @@ using UnityEngine;
 
 public class BattlefieldSpawnController : MonoBehaviour
 {
-    private UIDeployController uIDeployController;
+    [SerializeField]
     private Transform ghostParent;
+    private BattlefieldMouseHandler bfMouseHandler;
+    private UIDeployController uIDeployController;
     private CreatureCatalog creatureCatalog;
     private GhostCreatureHandler ghostHandler;
     private CreatureStack selectedStack;
 
-    public BattlefieldSpawnController(CreatureCatalog catalog, Transform ghostParentTransform, UIDeployController newUIDeployController)
-    {
-        creatureCatalog = catalog;
-        ghostParent = ghostParentTransform;
-        ghostHandler = new GhostCreatureHandler(ghostParent, catalog);
-        uIDeployController = newUIDeployController;
-        uIDeployController.OnSlotSelected += SetSelectedCreature;
-    }
+
 
     private void OnDestroy()
     {
         uIDeployController.OnSlotSelected -= SetSelectedCreature;
-
+        bfMouseHandler.OnTileHovered -= UpdateHoverTile;
+        bfMouseHandler.OnTileUnhovered += ClearGhost;
     }
 
     public void SetSelectedCreature(CreatureStack creature)
@@ -44,5 +40,16 @@ public class BattlefieldSpawnController : MonoBehaviour
     {
         // Aquí más adelante iría la lógica real de deploy
         Debug.Log($"[BattlefieldSpawnHandler] Intentando desplegar {selectedStack.Creature.Name} en {coord}");
+    }
+
+    public void Init(CreatureCatalog newCreatureCatalog, UIDeployController newUIDeployController, BattlefieldMouseHandler newBFMouseHandler)
+    {
+        creatureCatalog = newCreatureCatalog;
+        ghostHandler = new GhostCreatureHandler(ghostParent, creatureCatalog);
+        uIDeployController = newUIDeployController;
+        bfMouseHandler = newBFMouseHandler;
+        uIDeployController.OnSlotSelected += SetSelectedCreature;
+        bfMouseHandler.OnTileHovered += UpdateHoverTile;
+        bfMouseHandler.OnTileUnhovered += ClearGhost;
     }
 }
