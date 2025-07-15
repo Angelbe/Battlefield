@@ -23,7 +23,7 @@ public class CreatureShapeCatalog : ICreatureShapeCatalog
         [ECreatureShape.Line] = new[]
         {
             new CubeCoord(0, 0, 0),
-            new CubeCoord(0, 1, -1)
+            CubeCoord.CubeDirections["W"]
         }
     };
 

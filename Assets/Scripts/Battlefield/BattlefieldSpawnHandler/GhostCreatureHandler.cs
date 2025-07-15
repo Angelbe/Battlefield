@@ -14,8 +14,6 @@ public class GhostCreatureHandler
 
     public void ShowGhost(CreatureStack creatureStack, TileController tileController)
     {
-        HideGhost();
-
         var prefab = creatureCatalog.GetCombatPrefab(creatureStack.Creature.Name);
         if (prefab == null) return;
 

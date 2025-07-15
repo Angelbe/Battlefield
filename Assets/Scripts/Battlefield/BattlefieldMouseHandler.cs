@@ -10,7 +10,7 @@ public interface IBattlefieldMouseHandler
 
 public class BattlefieldMouseHandler : IBattlefieldMouseHandler
 {
-    private Dictionary<CubeCoord, TileController> tileControllers;
+    public Dictionary<CubeCoord, TileController> TileControllers;
     private TileController currentTileHovered;
     private TileController currentTileClicked;
     public event Action<TileController> OnTileHovered;
@@ -20,17 +20,17 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
 
     public BattlefieldMouseHandler(Dictionary<CubeCoord, TileController> newTileControllers)
     {
-        tileControllers = newTileControllers;
+        TileControllers = newTileControllers;
     }
 
     public void HandleHoverTile(CubeCoord newTileCoordHovered)
     {
-        ETileHighlightType TileHoveredType = tileControllers[newTileCoordHovered].Highlight.currentHl;
+        ETileHighlightType TileHoveredType = TileControllers[newTileCoordHovered].Highlight.currentHl;
         if (TileHoveredType == ETileHighlightType.Selected || TileHoveredType == ETileHighlightType.Hover)
         {
             return;
         }
-        currentTileHovered = tileControllers[newTileCoordHovered];
+        currentTileHovered = TileControllers[newTileCoordHovered];
         currentTileHovered.PaintTile(ETileHighlightType.Hover);
         OnTileHovered?.Invoke(currentTileHovered);
     }
@@ -51,7 +51,7 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
         {
             currentTileClicked.ResetPaint();
         }
-        currentTileClicked = tileControllers[TileClickedCoord];
+        currentTileClicked = TileControllers[TileClickedCoord];
         currentTileClicked.PaintTile(ETileHighlightType.Selected);
         OnTileClicked?.Invoke(currentTileClicked);
     }

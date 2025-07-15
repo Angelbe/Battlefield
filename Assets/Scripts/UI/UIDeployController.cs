@@ -8,6 +8,7 @@ public class UIDeployController : MonoBehaviour
     public Army Attacker { get; private set; }
     public Army Defender { get; private set; }
     public event Action<CreatureStack> OnSlotSelected;
+    public event Action OnSlotUnselected;
 
 
     public void EnableUI()
@@ -29,19 +30,36 @@ public class UIDeployController : MonoBehaviour
         ReservePanelController.ShowNewReserve(Defender.Reserve);
     }
 
+    public void HandleSlotClicked(DeploySlotController slotClicked)
+    {
+        if (SlotSelected == null)
+        {
+            SetSlotSelected(slotClicked);
+        }
+        if (SlotSelected.Model.StackInTheSlot.ID == slotClicked.Model.StackInTheSlot.ID)
+        {
+            ClearSlotSelected();
+        }
+        SetSlotSelected(slotClicked);
+
+    }
+
     public void SetSlotSelected(DeploySlotController newSlotSelected)
     {
         if (SlotSelected != null)
         {
             ClearSlotSelected();
         }
+
         SlotSelected = newSlotSelected;
+        SlotSelected.SlotSelected();
         OnSlotSelected?.Invoke(newSlotSelected.Model.StackInTheSlot);
     }
 
     public void ClearSlotSelected()
     {
         SlotSelected.UnselectSlot();
+        OnSlotUnselected?.Invoke();
     }
 
     public void Init(BattlefieldController bfController)

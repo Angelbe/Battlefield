@@ -8,7 +8,6 @@ public class DeploySlotController : MonoBehaviour
     public DeploySlotModel Model { get; private set; }
     public TextMeshProUGUI QuantityText;
     public UIDeployController UIDeployController;
-    // public CreatureController CreatureController { get; private set; }
     [SerializeField] private CreatureCatalog CreatureCatalog;
 
     public void InstantiateNewCreature(ECreaturesNames creatureName)
@@ -16,7 +15,7 @@ public class DeploySlotController : MonoBehaviour
         GameObject CreaturePrefabGO = CreatureCatalog.GetUIPrefab(creatureName);
         if (CreaturePrefabGO == null)
         {
-            Debug.LogWarning($"[DeploySlotController] ⚠ No se Pudo instanciar el deploy slot de '{creatureName}'");
+            // Debug.LogWarning($"[DeploySlotController] ⚠ No se Pudo instanciar el deploy slot de '{creatureName}'");
             return;
         }
         GameObject CreaturePrefabUI = Instantiate(CreaturePrefabGO, transform);
@@ -24,8 +23,12 @@ public class DeploySlotController : MonoBehaviour
 
     private void OnMouseDown()
     {
+        UIDeployController.HandleSlotClicked(this);
+    }
+
+    public void SlotSelected()
+    {
         View.SelectSlot();
-        UIDeployController.SetSlotSelected(this);
     }
 
     public void UnselectSlot()
