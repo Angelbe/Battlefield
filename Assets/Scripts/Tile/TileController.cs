@@ -16,7 +16,7 @@ public class TileController : MonoBehaviour, ITileController
     public TileModel Model { get; private set; }
     public BattlefieldController BfController { get; private set; }
     public TileHighlightController Highlight { get; private set; }
-    public CreatureController OccupantModel { get; private set; }
+    public CreatureController OccupantCreature { get; private set; }
 
     public void Init(TileModel model, BattlefieldController newBfController)
     {
@@ -40,6 +40,15 @@ public class TileController : MonoBehaviour, ITileController
     public void ResetPaint()
     {
         Highlight.ResetHighlight();
+    }
+
+    public void SetOcupantCreature(CreatureController newOcuppantCreature)
+    {
+        OccupantCreature = newOcuppantCreature;
+    }
+    public void ClearOcupantCreature()
+    {
+        OccupantCreature = null;
     }
 
     private void OnMouseEnter() => BfController.HandleHoverTile(Model.Coord);

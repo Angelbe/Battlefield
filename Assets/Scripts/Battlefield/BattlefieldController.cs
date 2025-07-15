@@ -143,8 +143,9 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfMouse = new(TileControllers);
         BfGrid = new(BfConfig);
         GameObject BfSpawnGO = Instantiate(BattlefieldSpawnPrefab, transform);
+        BfSpawnGO.name = "Units";
         BfSpawn = BfSpawnGO.GetComponent<BattlefieldSpawnController>();
-        BfSpawn.Init(creatureCatalog, newUiDeployController.UIDeployController, BfMouse);
+        BfSpawn.Init(this, creatureCatalog, newUiDeployController.UIDeployController, BfMouse);
         GenerateGrid();
         GenerateBattlefieldBackground();
         BfDeploymentZones = new(this, BfConfig);

@@ -6,17 +6,18 @@ public interface IUIDeployController
     public DeploySlotController SlotSelected { get; set; }
     public Army Attacker { get; }
     public Army Defender { get; }
-    public event Action<CreatureStack> OnSlotSelected;
+    public event Action<DeploySlotController> OnSlotSelected;
     public event Action OnSlotUnselected;
 }
 
 public class UIDeployController : MonoBehaviour, IUIDeployController
 {
+    public BattlefieldController bfController;
     public ReservePanelController ReservePanelController;
     public DeploySlotController SlotSelected { get; set; }
     public Army Attacker { get; private set; }
     public Army Defender { get; private set; }
-    public event Action<CreatureStack> OnSlotSelected;
+    public event Action<DeploySlotController> OnSlotSelected;
     public event Action OnSlotUnselected;
 
 
@@ -34,39 +35,15 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
         ReservePanelController.ShowNewReserve(Defender.Reserve);
     }
 
-    public void HandleSlotClicked(DeploySlotController slotClicked)
+    public void HandleDeployslotSelected(DeploySlotController slotClicked)
     {
-        if (SlotSelected == null)
-        {
-            SetSlotSelected(slotClicked);
-            return;
-        }
-        if (SlotSelected.Model.StackInTheSlot.ID == slotClicked.Model.StackInTheSlot.ID)
-        {
-            ClearSlotSelected();
-            return;
-        }
-        ClearSlotSelected();
-        SetSlotSelected(slotClicked);
+        bfController.BfSpawn.HandleSlotClicked(slotClicked);
     }
 
-    public void SetSlotSelected(DeploySlotController newSlotSelected)
-    {
-        SlotSelected = newSlotSelected;
-        SlotSelected.SlotSelected();
-        OnSlotSelected?.Invoke(newSlotSelected.Model.StackInTheSlot);
-    }
-
-    public void ClearSlotSelected()
-    {
-        SlotSelected.UnselectSlot();
-        SlotSelected = null;
-        OnSlotUnselected?.Invoke();
-    }
-
-    public void Init(BattlefieldController bfController)
+    public void Init(BattlefieldController newBfController)
     {
         enabled = true;
+        bfController = newBfController;
         Attacker = bfController.bfModel.Attacker;
         Defender = bfController.bfModel.Defender;
         ShowAttackerDeploy();
@@ -76,7 +53,6 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
     {
         Attacker = null;
         Defender = null;
-        ClearSlotSelected();
         enabled = false;
     }
 }

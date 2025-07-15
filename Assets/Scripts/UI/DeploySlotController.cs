@@ -22,12 +22,12 @@ public class DeploySlotController : MonoBehaviour, IDeploySlotController
     {
         Model = newDeployModel;
         SetNewCreatureUI();
-        UpdateQuantityText(Model.StackInTheSlot.Quantity);
+        UpdateQuantityText(Model.CreatureStack.Quantity);
     }
 
     public void SetNewCreatureUI()
     {
-        GameObject CreatureUIPrefab = CreatureCatalog.GetUIPrefab(Model.StackInTheSlot.Creature.Name);
+        GameObject CreatureUIPrefab = CreatureCatalog.GetUIPrefab(Model.CreatureStack.Creature.Name);
         if (CreatureUIPrefab == null)
         {
             // Debug.LogWarning($"[DeploySlotController] ⚠ No se Pudo instanciar el deploy slot de '{creatureName}'");
@@ -45,8 +45,6 @@ public class DeploySlotController : MonoBehaviour, IDeploySlotController
         QuantityText.text = newQuantity.ToString();
     }
 
-
-
     public void SlotSelected()
     {
         View.SelectSlot();
@@ -58,7 +56,7 @@ public class DeploySlotController : MonoBehaviour, IDeploySlotController
     }
     private void OnMouseDown()
     {
-        UIDeployController.HandleSlotClicked(this);
+        UIDeployController.HandleDeployslotSelected(this);
     }
 
     public void Init(DeploySlotModel ModelToShow, UIDeployController uIDeployController)

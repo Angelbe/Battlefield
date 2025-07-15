@@ -47,7 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2295025c6043171a2b1a8f54fa7339b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghostParent: {fileID: 1844028498465923042}
+  ghostUnitsGO: {fileID: 8204780521954405609}
+  attackerUnitsGO: {fileID: 6010887738215394141}
+  defenderUnitsGO: {fileID: 3837948596194821059}
 --- !u!1 &3837948596194821059
 GameObject:
   m_ObjectHideFlags: 0

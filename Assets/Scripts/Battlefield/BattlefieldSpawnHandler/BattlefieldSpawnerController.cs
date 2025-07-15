@@ -1,35 +1,31 @@
 using UnityEngine;
 
-public class BattlefieldSpawnController : MonoBehaviour
+public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnController
 {
     [SerializeField]
-    private Transform ghostParent;
+    private GameObject ghostUnitsGO;
+    [SerializeField]
+    private GameObject attackerUnitsGO;
+    [SerializeField]
+    private GameObject defenderUnitsGO;
+    private BattlefieldController bfController;
     private BattlefieldMouseHandler bfMouseHandler;
     private UIDeployController uIDeployController;
     private CreatureCatalog creatureCatalog;
     private GhostCreatureHandler ghostHandler;
     private CreatureShapeCatalog shapeCatalog;
-    public bool isShowingGhosts = false;
+    public bool isShowingGhosts { get; set; } = false;
     private CreatureStack selectedStack;
+    private DeploySlotController selectedSlot;
     private TileController tileHovered;
 
-
-
-    private void OnDestroy()
-    {
-        uIDeployController.OnSlotSelected -= StackSelectedToDeploy;
-        uIDeployController.OnSlotUnselected -= ClearStackSelectedToDeploy;
-        bfMouseHandler.OnTileHovered -= UpdateHoverTile;
-        bfMouseHandler.OnTileUnhovered -= ClearGhost;
-    }
-
-    public bool IsCreatureShapeCorrect()
+    private bool IsCreatureShapeCorrect(Creature creatureToCheck, TileController tileAnchor)
     {
         if (selectedStack == null || tileHovered == null)
             return false;
 
-        CubeCoord anchor = tileHovered.Model.Coord;
-        CubeCoord[] shapeOffsets = shapeCatalog.GetShape(selectedStack.Creature.Shape);
+        CubeCoord anchor = tileAnchor.Model.Coord;
+        CubeCoord[] shapeOffsets = shapeCatalog.GetShape(creatureToCheck.Shape);
 
         foreach (var offset in shapeOffsets)
         {
@@ -43,7 +39,7 @@ public class BattlefieldSpawnController : MonoBehaviour
             }
 
             // Si hay algo ocupando la tile
-            if (tile.OccupantModel != null)
+            if (tile.OccupantCreature != null)
             {
                 // Debug.LogWarning($"[Spawn] Tile en {targetCoord} ya ocupada.");
                 return false;
@@ -60,26 +56,46 @@ public class BattlefieldSpawnController : MonoBehaviour
         return true;
     }
 
-    public void StackSelectedToDeploy(CreatureStack creature)
+    public void HandleSlotClicked(DeploySlotController slotClicked)
     {
-        selectedStack = creature;
+        if (selectedSlot == null)
+        {
+            StackSelectedToDeploy(slotClicked);
+            return;
+        }
+        if (selectedSlot.Model.CreatureStack.ID == slotClicked.Model.CreatureStack.ID)
+        {
+            ClearStackSelectedToDeploy();
+            return;
+        }
+        ClearStackSelectedToDeploy();
+        StackSelectedToDeploy(slotClicked);
+    }
+
+    private void StackSelectedToDeploy(DeploySlotController newDeploySlotSelected)
+    {
+        selectedSlot = newDeploySlotSelected;
+        selectedSlot.SlotSelected();
+        selectedStack = selectedSlot.Model.CreatureStack;
         ShowGhosts();
     }
 
-    public void ClearStackSelectedToDeploy()
+    private void ClearStackSelectedToDeploy()
     {
+        selectedSlot.UnselectSlot();
+        selectedSlot = null;
         selectedStack = null;
         StopShowingGhosts();
     }
 
-    public void UpdateHoverTile(TileController newTileHovered)
+    private void UpdateHoverTile(TileController newTileHovered)
     {
         ClearGhost();
         tileHovered = newTileHovered;
 
         if (isShowingGhosts && selectedStack != null)
         {
-            if (IsCreatureShapeCorrect())
+            if (IsCreatureShapeCorrect(selectedStack.Creature, newTileHovered))
             {
                 ghostHandler.ShowGhost(selectedStack, newTileHovered);
             }
@@ -91,37 +107,61 @@ public class BattlefieldSpawnController : MonoBehaviour
     }
 
 
-    public void ShowGhosts()
+    private void ShowGhosts()
     {
         isShowingGhosts = true;
     }
 
-    public void StopShowingGhosts()
+    private void StopShowingGhosts()
     {
         isShowingGhosts = false;
     }
 
-    public void ClearGhost()
+    private void ClearGhost()
     {
         ghostHandler.HideGhost();
     }
 
-    public void TrySpawnCreatureAt(CubeCoord coord)
+    public void HandleTileClicked(TileController tileClicked)
     {
-        // Aquí más adelante iría la lógica real de deploy
-        Debug.Log($"[BattlefieldSpawnHandler] Intentando desplegar {selectedStack.Creature.Name} en {coord}");
+        if (!isShowingGhosts || tileClicked != null)
+        {
+            if (!IsCreatureShapeCorrect(selectedStack.Creature, tileClicked))
+            {
+                return;
+            }
+        }
+        bool isAttacker = bfController.ActiveArmy.IsAttacker;
+        Transform ArmyTransform = isAttacker ? attackerUnitsGO.transform : defenderUnitsGO.transform;
+        GameObject CreaturePrefab = creatureCatalog.GetCombatPrefab(selectedStack.Creature.Name);
+        GameObject CreatureGO = Instantiate(CreaturePrefab, ArmyTransform);
+        CreatureController creaturecontroller = CreatureGO.GetComponent<CreatureController>();
+        CreatureGO.transform.position = tileClicked.Model.WorldPosition;
+        ClearStackSelectedToDeploy();
+        tileClicked.SetOcupantCreature(creaturecontroller);
     }
 
-    public void Init(CreatureCatalog newCreatureCatalog, UIDeployController newUIDeployController, BattlefieldMouseHandler newBFMouseHandler)
+    public void Init(BattlefieldController newBfcontroller, CreatureCatalog newCreatureCatalog, UIDeployController newUIDeployController, BattlefieldMouseHandler newBFMouseHandler)
     {
         creatureCatalog = newCreatureCatalog;
-        ghostHandler = new GhostCreatureHandler(ghostParent, creatureCatalog);
         uIDeployController = newUIDeployController;
         bfMouseHandler = newBFMouseHandler;
+        bfController = newBfcontroller;
+        ghostHandler = new GhostCreatureHandler(ghostUnitsGO.transform, creatureCatalog);
+        shapeCatalog = new CreatureShapeCatalog();
         uIDeployController.OnSlotSelected += StackSelectedToDeploy;
         uIDeployController.OnSlotUnselected += ClearStackSelectedToDeploy;
         bfMouseHandler.OnTileHovered += UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered += ClearGhost;
-        shapeCatalog = new CreatureShapeCatalog();
+        bfMouseHandler.OnTileClicked += HandleTileClicked;
+    }
+
+    public void Shutdown()
+    {
+        uIDeployController.OnSlotSelected -= StackSelectedToDeploy;
+        uIDeployController.OnSlotUnselected -= ClearStackSelectedToDeploy;
+        bfMouseHandler.OnTileHovered -= UpdateHoverTile;
+        bfMouseHandler.OnTileUnhovered -= ClearGhost;
+        bfMouseHandler.OnTileClicked -= HandleTileClicked;
     }
 }
