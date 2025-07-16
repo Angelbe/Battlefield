@@ -77,10 +77,11 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         ShowGhosts();
     }
 
-    private void StackDeployed()
+    private void StackDeployed(CreatureController creatureDeployed)
     {
         slotSelected.UnselectSlot();
         slotSelected.SlotDeployed();
+        bfController.ActiveArmy.Deployed.AddStackToDeploy(slotSelected.Model.CreatureStack, creatureDeployed);
         slotSelected = null;
         selectedStack = null;
         StopShowingGhosts();
@@ -142,7 +143,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         GameObject CreatureGO = Instantiate(CreaturePrefab, ArmyTransform);
         CreatureController creaturecontroller = CreatureGO.GetComponent<CreatureController>();
         CreatureGO.transform.position = tileClicked.Model.WorldPosition;
-        StackDeployed();
+        StackDeployed(creaturecontroller);
         tileClicked.SetOcupantCreature(creaturecontroller);
     }
 
