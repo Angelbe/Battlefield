@@ -5,9 +5,10 @@ public interface IArmy
 {
     string Name { get; }
     bool IsAttacker { get; }
+    public ReserveHandler Reserve { get; }
+    public DeployHandler Deployed { get; }
     ChampionModel Champion { get; }
     Color ArmyColor { get; }
-    public List<CreatureStack> Deployed { get; }
 }
 
 public class Army : IArmy
@@ -15,8 +16,8 @@ public class Army : IArmy
     public string Name { get; private set; }
     public bool IsAttacker { get; private set; }
     public ChampionModel Champion { get; private set; } = new("ChampionName");
-    public ReserveHandler Reserve { get; private set; } = new();
-    public List<CreatureStack> Deployed { get; private set; } = new();
+    public ReserveHandler Reserve { get; private set; }
+    public DeployHandler Deployed { get; private set; }
     public Color ArmyColor { get; private set; }
 
     public Army(string newArmyName, Color newArmyColor)
@@ -31,7 +32,7 @@ public class Army : IArmy
         Champion = newChampionModel;
     }
 
-    public void AddNewCreatureToTheArmy(Creature creatureToAdd, int quantity)
+    public void AddNewCreatureToTheArmy(CreatureModel creatureToAdd, int quantity)
     {
         Reserve.TryAddToReserve(creatureToAdd, quantity);
     }

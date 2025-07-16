@@ -21,7 +21,7 @@ public class CreatureCatalog : ScriptableObject
         if (wrapper == null || wrapper.creatures == null) return;
 
         // Convertir las criaturas desde JSON y mapearlas por nombre string
-        var creatureDataByName = new Dictionary<ECreaturesNames, Creature>();
+        var creatureDataByName = new Dictionary<ECreaturesNames, CreatureModel>();
 
         foreach (var dto in wrapper.creatures)
         {
@@ -55,7 +55,7 @@ public class CreatureCatalog : ScriptableObject
         return null;
     }
 
-    public Creature GetCreatureData(ECreaturesNames id)
+    public CreatureModel GetCreatureData(ECreaturesNames id)
         => GetDefinition(id)?.Data;
 
     public GameObject GetCombatPrefab(ECreaturesNames id)

@@ -7,7 +7,7 @@ using UnityEngine;
 public interface ICreatureController
 {
     public CreatureView View { get; }
-    public Creature Model { get; }
+    public CreatureModel Model { get; }
     public void addQuantity(int newCreaturesToAdd);
     public void removeQuantity(int newCreaturesToAdd);
 }
@@ -16,17 +16,22 @@ public class CreatureController : MonoBehaviour
 {
     public Guid InstanceId { get; private set; } = Guid.NewGuid();
     public CreatureView View { get; private set; }
-    public Creature Model { get; private set; }
+    public CreatureModel Model { get; private set; }
     private CubeCoord[] positions;
+    public bool IsDefender;
     public int Quantity;
 
 
-    public void Init(Creature model, CubeCoord anchor, int newQuantity)
+    public void Init(CreatureModel model, CubeCoord anchor, int newQuantity, bool isDefender)
     {
         Model = model;
         Quantity = newQuantity;
         View.GetComponent<CreatureView>();
         View.Init(Model);
+        if (isDefender)
+        {
+            SetAsDefender();
+        }
     }
 
     public void addQuantity(int newCreaturesToAdd)
@@ -37,5 +42,11 @@ public class CreatureController : MonoBehaviour
     public void removeQuantity(int newCreaturesToAdd)
     {
         Quantity += newCreaturesToAdd;
+    }
+
+    public void SetAsDefender()
+    {
+        IsDefender = true;
+        View.FlipSprite();
     }
 }

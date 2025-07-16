@@ -30,11 +30,11 @@ public class CreaturePrefabEntry : IEntry
 
 public class CreatureDefinition
 {
-    public Creature Data { get; }
+    public CreatureModel Data { get; }
     public GameObject CombatPrefab { get; }
     public GameObject UIPrefab { get; }
 
-    public CreatureDefinition(Creature data, GameObject combatPrefab, GameObject uiPrefab)
+    public CreatureDefinition(CreatureModel data, GameObject combatPrefab, GameObject uiPrefab)
     {
         Data = data;
         CombatPrefab = combatPrefab;

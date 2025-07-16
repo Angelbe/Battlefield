@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICreature
+public interface ICreatureModel
 {
     public ECreaturesNames Name { get; }
     public ECreatureShape Shape { get; }
@@ -17,7 +17,7 @@ public interface ICreature
     public int Retaliations { get; }
 }
 
-public class Creature : ICreature
+public class CreatureModel : ICreatureModel
 {
     public ECreaturesNames Name { get; protected set; }
     public ECreatureShape Shape { get; protected set; }
@@ -32,7 +32,7 @@ public class Creature : ICreature
     public int Retaliations { get; protected set; }
     public virtual EAttackType AttackType => EAttackType.Melee;
 
-    public Creature(ECreaturesNames name, ECreatureShape shape, int healthPoint, int attack, int defense, int minDamage, int maxDamage, int initiative, int speed, EMovementType movementType, int retaliations)
+    public CreatureModel(ECreaturesNames name, ECreatureShape shape, int healthPoint, int attack, int defense, int minDamage, int maxDamage, int initiative, int speed, EMovementType movementType, int retaliations)
     {
         Name = name;
         Shape = shape;
@@ -50,18 +50,18 @@ public class Creature : ICreature
 
 }
 
-public interface ICreatureRange
+public interface ICreatureRangeModel
 {
     public int OptimalRange { get; }
     public int Ammunition { get; }
 }
 
-public class RangedCreature : Creature, ICreatureRange
+public class RangedCreatureModel : CreatureModel, ICreatureRangeModel
 {
     public int OptimalRange { get; private set; }
     public int Ammunition { get; private set; }
 
-    public RangedCreature(
+    public RangedCreatureModel(
         ECreaturesNames name,
         ECreatureShape shape,
         int healthPoint,
@@ -106,7 +106,7 @@ public class CreatureDTO
     public int ammunition;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-    public Creature? ToModel()
+    public CreatureModel? ToModel()
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
     {
         if (!Enum.TryParse<ECreaturesNames>(name, true, out var parsedName))
@@ -128,12 +128,12 @@ public class CreatureDTO
         }
 
         return type == "Ranged"
-            ? new RangedCreature(
+            ? new RangedCreatureModel(
                 parsedName, parsedShape, healthPoint, attack, defense,
                 minDamage, maxDamage, initiative, speed,
                 parsedMovement, retaliations, optimalRange, ammunition
             )
-            : new Creature(
+            : new CreatureModel(
                 parsedName, parsedShape, healthPoint, attack, defense,
                 minDamage, maxDamage, initiative, speed,
                 parsedMovement, retaliations

@@ -3,11 +3,9 @@ using UnityEngine;
 
 public interface IUIDeployController
 {
-    public DeploySlotController SlotSelected { get; set; }
     public Army Attacker { get; }
     public Army Defender { get; }
-    public event Action<DeploySlotController> OnSlotSelected;
-    public event Action OnSlotUnselected;
+    public event Action<DeploySlotController> OnSlotClicked;
 }
 
 public class UIDeployController : MonoBehaviour, IUIDeployController
@@ -16,11 +14,9 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
     public DeploymentPhaseController DeploymentPhaseController;
     public UIReservePanelController ReservePanelController;
     public FinishDeployButtonView FinishDeployButtonView;
-    public DeploySlotController SlotSelected { get; set; }
     public Army Attacker { get; private set; }
     public Army Defender { get; private set; }
-    public event Action<DeploySlotController> OnSlotSelected;
-    public event Action OnSlotUnselected;
+    public event Action<DeploySlotController> OnSlotClicked;
 
 
     public void DisableUI()
@@ -39,7 +35,7 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
 
     public void HandleDeploySlotSelected(DeploySlotController slotClicked)
     {
-        bfController.BfSpawn.HandleSlotClicked(slotClicked);
+        OnSlotClicked?.Invoke(slotClicked);
     }
 
     public void HandleFinishButtonClicked()

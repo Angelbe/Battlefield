@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public interface IReserveHandler
 {
     public Dictionary<int, CreatureStack> CreaturesInReserve { get; }     // slot index → criatura
-    public bool TryAddToReserve(Creature creature, int quantity);
+    public bool TryAddToReserve(CreatureModel creature, int quantity);
     public bool RemoveFromReserve(int slotIndex, int quantity);
     public bool RemoveAllFromSlot(int slotIndex);
     public bool AddToStack(int slotIndex, int quantity);
@@ -14,7 +16,7 @@ public class ReserveHandler : IReserveHandler
 {
     public Dictionary<int, CreatureStack> CreaturesInReserve { get; private set; } = new();     // slot index → criatura
 
-    public bool TryAddToReserve(Creature creature, int quantity)
+    public bool TryAddToReserve(CreatureModel creature, int quantity)
     {
         if (creature == null) return false;
         // ¿Ya existe una pila con esta criatura?
@@ -80,4 +82,15 @@ public class ReserveHandler : IReserveHandler
 
         return true;
     }
+
+    public CreatureStack FindStackByID(Guid idToSearch)
+    {
+        foreach (var stack in CreaturesInReserve.Values)
+        {
+            if (stack.ID == idToSearch)
+                return stack;
+        }
+        return null; // o lanzar excepción si lo prefieres
+    }
+
 }

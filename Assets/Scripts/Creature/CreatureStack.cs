@@ -4,7 +4,7 @@ using UnityEngine;
 public interface ICreatureStack
 {
     public Guid ID { get; }
-    public Creature Creature { get; }
+    public CreatureModel Creature { get; }
     public int Quantity { get; }
     void Add(int amount);
     void Remove(int amount);
@@ -13,10 +13,10 @@ public interface ICreatureStack
 public class CreatureStack
 {
     public Guid ID { get; private set; } = Guid.NewGuid();
-    public Creature Creature { get; private set; }
+    public CreatureModel Creature { get; private set; }
     public int Quantity { get; private set; }
 
-    public CreatureStack(Creature creature, int quantity)
+    public CreatureStack(CreatureModel creature, int quantity)
     {
         Creature = creature;
         Quantity = quantity;

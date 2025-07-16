@@ -12,7 +12,7 @@ public interface IBattlefieldController
     public BattlefieldDeploymentHandler BfDeploymentZones { get; }
     public Dictionary<CubeCoord, TileController> TileControllers { get; }
     public Army ActiveArmy { get; }
-    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel, SetupHelpers newsetupHelper, CreatureCatalog creatureCatalog, UIController newIUController);
+    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel, CreatureCatalog creatureCatalog, UIController newIUController);
     public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType);
     public void GenerateGrid();
 }
@@ -21,7 +21,6 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 {
     [SerializeField]
     private GameObject BattlefieldSpawnPrefab;
-    private SetupHelpers setupHelpers;
     public BattlefieldModel bfModel { get; private set; }
     public Vector2 Center { get; private set; }
     public BattlefieldConfig BfConfig { get; private set; }
@@ -142,9 +141,8 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         ActiveArmy = bfModel.Attacker;
     }
 
-    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, SetupHelpers newSetuphelpers, CreatureCatalog creatureCatalog, UIController newUiDeployController)
+    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, CreatureCatalog creatureCatalog, UIController newUiDeployController)
     {
-        setupHelpers = newSetuphelpers;
         bfModel = newBfConfig;
         BfConfig = newBfModel;
         SetActiveArmy(bfModel.Attacker);

@@ -36,17 +36,17 @@ public class BattleSetup : MonoBehaviour
         CameraBattlefieldController cameraController = camGO.GetComponent<CameraBattlefieldController>();
         UIController UIController = UIGO.GetComponent<UIController>();
         PhaseManager phaseMgr = new PhaseManager(bfModel, bfController, UIController);
-        bfController.Init(battlefieldConfig, bfModel, setupUtils, creatureCatalog, UIController);
+        bfController.Init(battlefieldConfig, bfModel, creatureCatalog, UIController);
         cameraController.Init(cameraBattlefieldConfig);
         UIController.Init(bfController, phaseMgr);
         cameraController.ChangeCameraPosition(bfController.Center);
         UIController.AssignCamera(camGO.GetComponent<Camera>());
 
-        Creature Bandit = creatureCatalog.GetCreatureData(ECreaturesNames.Bandit);
-        Creature Knight = creatureCatalog.GetCreatureData(ECreaturesNames.Knight);
-        Creature Mage = creatureCatalog.GetCreatureData(ECreaturesNames.Mage);
-        Creature Fighter = creatureCatalog.GetCreatureData(ECreaturesNames.Fighter);
-        Creature Archer = creatureCatalog.GetCreatureData(ECreaturesNames.Archer);
+        CreatureModel Bandit = creatureCatalog.GetCreatureData(ECreaturesNames.Bandit);
+        CreatureModel Knight = creatureCatalog.GetCreatureData(ECreaturesNames.Knight);
+        CreatureModel Mage = creatureCatalog.GetCreatureData(ECreaturesNames.Mage);
+        CreatureModel Fighter = creatureCatalog.GetCreatureData(ECreaturesNames.Fighter);
+        CreatureModel Archer = creatureCatalog.GetCreatureData(ECreaturesNames.Archer);
         attacker.AddNewCreatureToTheArmy(Bandit, 10);
         defender.AddNewCreatureToTheArmy(Fighter, 8);
         attacker.AddNewCreatureToTheArmy(Knight, 3);
@@ -58,7 +58,7 @@ public class BattleSetup : MonoBehaviour
         attacker.AddNewCreatureToTheArmy(Archer, 6);
         defender.AddNewCreatureToTheArmy(Knight, 3);
 
-        if (FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+        if (FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
         {
             GameObject eventSystem = new GameObject("EventSystem");
             eventSystem.AddComponent<UnityEngine.EventSystems.EventSystem>();

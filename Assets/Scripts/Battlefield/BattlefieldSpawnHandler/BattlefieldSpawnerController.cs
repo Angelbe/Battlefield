@@ -16,7 +16,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     private DeploySlotController slotSelected;
     private TileController tileHovered;
 
-    private bool IsCreatureShapeCorrect(Creature creatureToCheck, TileController tileAnchor)
+    private bool IsCreatureShapeCorrect(CreatureModel creatureToCheck, TileController tileAnchor)
     {
         if (selectedStack == null || tileHovered == null)
             return false;
@@ -154,8 +154,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         bfController = newBfcontroller;
         ghostHandler = new GhostCreatureHandler(ghostUnitsGO.transform, creatureCatalog);
         shapeCatalog = new CreatureShapeCatalog();
-        uIDeployController.OnSlotSelected += StackSelectedToDeploy;
-        uIDeployController.OnSlotUnselected += StackUnselected;
+        uIDeployController.OnSlotClicked += HandleSlotClicked;
         bfMouseHandler.OnTileHovered += UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered += ClearGhost;
         bfMouseHandler.OnTileClicked += HandleTileClicked;
@@ -163,8 +162,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
 
     public void Shutdown()
     {
-        uIDeployController.OnSlotSelected -= StackSelectedToDeploy;
-        uIDeployController.OnSlotUnselected -= StackUnselected;
+        uIDeployController.OnSlotClicked -= HandleSlotClicked;
         bfMouseHandler.OnTileHovered -= UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered -= ClearGhost;
         bfMouseHandler.OnTileClicked -= HandleTileClicked;
