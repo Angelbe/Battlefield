@@ -41,7 +41,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 
         GameObject bg = new GameObject("BattlefieldBackground");
         bg.transform.SetParent(transform);
-        bg.transform.position = Center; 
+        bg.transform.position = Center;
         float scaleX = 1.04f;
         float scaleY = 1.04f;
 
@@ -82,49 +82,21 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
     {
         BfMouse.HandleClickTile(TileClickedCoord);
     }
-    public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType)
-    {
-        BfHighlight.SetManyHl(coord, newHighlightType);
-    }
-
-    public void PaintManyOriginalTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType)
-    {
-        BfHighlight.SetManyOriginalHl(coord, newHighlightType);
-    }
-    public void ResetManyTilesWithType(ETileHighlightType newHighlightType)
-    {
-        BfHighlight.SetManyToBase(newHighlightType);
-    }
-
-    public void PaintAttackerDeploymentZone()
-    {
-        PaintManyOriginalTiles(BfDeploymentZones.AttackerZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
-    }
-
-    public void PaintDefenderDeploymentZone()
-    {
-        PaintManyOriginalTiles(BfDeploymentZones.DefenderZones[bfModel.Attacker.Champion.DeploymentLevel], ETileHighlightType.DeployZone);
-    }
-
-    public void ClearDeploymentZones()
-    {
-        BfHighlight.ClearAllDeployments();
-    }
 
     public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, CreatureCatalog creatureCatalog, UIController newUiDeployController)
     {
         BfConfig = newBfConfig;
         bfModel = newBfModel;
-        BfHighlight = new(TileControllers);
-        BfMouse = new(TileControllers);
+        BfMouse = new(TileControllers, BfConfig);
         BfGrid = new(BfConfig);
+        BfDeploymentZones = new(this, BfConfig);
+        BfHighlight = new(TileControllers, BfDeploymentZones, BfConfig, bfModel);
         GameObject BfSpawnGO = Instantiate(BattlefieldSpawnPrefab, transform);
         BfSpawnGO.name = "Units";
         BfSpawn = BfSpawnGO.GetComponent<BattlefieldSpawnController>();
         BfSpawn.Init(this, creatureCatalog, newUiDeployController.UIDeployController, BfMouse);
         GenerateGrid();
         GenerateBattlefieldBackground();
-        BfDeploymentZones = new(this, BfConfig);
     }
 
 }

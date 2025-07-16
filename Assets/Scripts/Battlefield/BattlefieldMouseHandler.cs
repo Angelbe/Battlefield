@@ -1,51 +1,58 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class BattlefieldMouseHandler : IBattlefieldMouseHandler
 {
-    public Dictionary<CubeCoord, TileController> TileControllers;
+    private readonly Dictionary<CubeCoord, TileController> tileControllers;
+    private readonly BattlefieldConfig config;
+
     private TileController currentTileHovered;
     private TileController currentTileClicked;
+
     public event Action<TileController> OnTileHovered;
     public event Action OnTileUnhovered;
     public event Action<TileController> OnTileClicked;
 
+    private Color hoverColor => config.GetColor(ETileHighlightType.Hover);
+    private Color selectedColor => config.GetColor(ETileHighlightType.Selected);
 
-    public BattlefieldMouseHandler(Dictionary<CubeCoord, TileController> newTileControllers)
+    public BattlefieldMouseHandler(Dictionary<CubeCoord, TileController> newTileControllers, BattlefieldConfig battlefieldConfig)
     {
-        TileControllers = newTileControllers;
+        tileControllers = newTileControllers;
+        config = battlefieldConfig;
     }
 
     public void HandleHoverTile(CubeCoord newTileCoordHovered)
     {
-        ETileHighlightType TileHoveredType = TileControllers[newTileCoordHovered].Highlight.currentHl;
-        if (TileHoveredType == ETileHighlightType.Selected || TileHoveredType == ETileHighlightType.Hover)
-        {
-            return;
-        }
-        currentTileHovered = TileControllers[newTileCoordHovered];
-        currentTileHovered.PaintTile(ETileHighlightType.Hover);
+        var tile = tileControllers[newTileCoordHovered];
+        if (tile == currentTileClicked)
+            return; // ya está seleccionada, no aplicar hover
+
+        currentTileHovered = tile;
+        currentTileHovered.Highlight.AddColor(4, hoverColor);
         OnTileHovered?.Invoke(currentTileHovered);
     }
 
     public void HandleUnhoverTile()
     {
-        if (currentTileHovered == null || currentTileHovered.Highlight.currentHl == ETileHighlightType.Selected)
-        {
+        if (currentTileHovered == null || currentTileHovered == currentTileClicked)
             return;
-        }
-        currentTileHovered.ResetPaint();
+
+        currentTileHovered.Highlight.RemoveColor(4, hoverColor);
         currentTileHovered = null;
         OnTileUnhovered?.Invoke();
     }
-    public void HandleClickTile(CubeCoord TileClickedCoord)
+
+    public void HandleClickTile(CubeCoord tileClickedCoord)
     {
         if (currentTileClicked != null)
         {
-            currentTileClicked.ResetPaint();
+            currentTileClicked.Highlight.RemoveColor(5, selectedColor);
         }
-        currentTileClicked = TileControllers[TileClickedCoord];
-        currentTileClicked.PaintTile(ETileHighlightType.Selected);
+
+        currentTileClicked = tileControllers[tileClickedCoord];
+        currentTileClicked.Highlight.AddColor(5, selectedColor);
         OnTileClicked?.Invoke(currentTileClicked);
     }
 }

@@ -3,44 +3,81 @@ using UnityEngine;
 
 public class BattlefieldHighlightHandler
 {
-    private Dictionary<CubeCoord, TileController> tileControllers;
+    private readonly Dictionary<CubeCoord, TileController> tileControllers;
+    private BattlefieldDeploymentZones deploymentZones;
+    private BattlefieldConfig config;
+    private BattlefieldModel bfModel;
 
-    public BattlefieldHighlightHandler(Dictionary<CubeCoord, TileController> tileControllersFromBattlefield)
+    public BattlefieldHighlightHandler(Dictionary<CubeCoord, TileController> tileControllersFromBattlefield, BattlefieldDeploymentZones zones, BattlefieldConfig battlefieldConfig, BattlefieldModel model)
     {
         tileControllers = tileControllersFromBattlefield;
+        deploymentZones = zones;
+        config = battlefieldConfig;
+        bfModel = model;
     }
 
-    public void SetManyOriginalHl(IEnumerable<CubeCoord> coords, ETileHighlightType type)
+    public void AddColorToLevel(int level, CubeCoord coord, Color color)
+    {
+        if (tileControllers.TryGetValue(coord, out var tile))
+            tile.Highlight.AddColor(level, color);
+    }
+
+    public void RemoveColorFromLevel(int level, CubeCoord coord, Color color)
+    {
+        if (tileControllers.TryGetValue(coord, out var tile))
+            tile.Highlight.RemoveColor(level, color);
+    }
+
+    public void ClearLevel(int level, CubeCoord coord)
+    {
+        if (tileControllers.TryGetValue(coord, out var tile))
+            tile.Highlight.ClearLevel(level);
+    }
+
+    public void ClearLevelForAll(int level)
+    {
+        foreach (var tile in tileControllers.Values)
+            tile.Highlight.ClearLevel(level);
+    }
+
+    public void ClearAll()
+    {
+        foreach (var tile in tileControllers.Values)
+            tile.Highlight.ClearAll();
+    }
+
+    public void AddColorToLevel(int level, IEnumerable<CubeCoord> coords, Color color)
     {
         foreach (var coord in coords)
-            tileControllers[coord].PaintOriginalHlTile(type);
+            AddColorToLevel(level, coord, color);
     }
 
-    public void SetManyHl(IEnumerable<CubeCoord> coords, ETileHighlightType type)
+    public void RemoveColorFromLevel(int level, IEnumerable<CubeCoord> coords, Color color)
     {
         foreach (var coord in coords)
-            tileControllers[coord].PaintTile(type);
+            RemoveColorFromLevel(level, coord, color);
     }
 
-    public void SetManyToBase(ETileHighlightType typeToFilter)
+    public void ClearLevel(int level, IEnumerable<CubeCoord> coords)
     {
-        foreach (TileController tileController in tileControllers.Values)
-        {
-            if (tileController.Highlight.currentHl == typeToFilter)
-            {
-                tileController.ResetPaint();
-            }
-        }
+        foreach (var coord in coords)
+            ClearLevel(level, coord);
+    }
+    public void ShowAttackerDeploymentZone(EDeploymentLevel level)
+    {
+        if (!deploymentZones.AttackerZones.TryGetValue(level, out var coords)) return;
+        var color = config.GetColor(ETileHighlightType.DeployZone);
+        AddColorToLevel(2, coords, color);
     }
 
-    public void ClearAllDeployments()
+    public void ShowDefenderDeploymentZone(EDeploymentLevel level)
     {
-        foreach (TileController tileController in tileControllers.Values)
-            tileController.ResetOriginalTypeHiglightedToTrransparent(ETileHighlightType.DeployZone);
+        if (!deploymentZones.DefenderZones.TryGetValue(level, out var coords)) return;
+        var color = config.GetColor(ETileHighlightType.DeployZone);
+        AddColorToLevel(2, coords, color);
     }
-    public void ClearAllHighlights()
+    public void ClearDeploymentZones()
     {
-        foreach (TileController tileController in tileControllers.Values)
-            tileController.ResetPaint();
+        ClearLevelForAll(2); 
     }
 }

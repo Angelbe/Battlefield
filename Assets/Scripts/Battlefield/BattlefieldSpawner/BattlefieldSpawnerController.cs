@@ -16,6 +16,9 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     private DeploySlotController slotSelected;
     private TileController tileHovered;
     private Army activeArmy;
+    private Color hoverColor => bfController.BfConfig.GetColor(ETileHighlightType.Hover);
+    private Color deployColor => bfController.BfConfig.GetColor(ETileHighlightType.DeployZone);
+
 
     private bool IsCreatureShapeCorrect(CreatureModel creatureToCheck, TileController tileAnchor)
     {
@@ -30,7 +33,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
             CubeCoord targetCoord = anchor + offset;
 
             // Si no existe en el diccionario de TileControllers, está fuera del mapa
-            if (!bfMouseHandler.TileControllers.TryGetValue(targetCoord, out var tile))
+            if (!bfController.TileControllers.TryGetValue(targetCoord, out var tile))
             {
                 // Debug.LogWarning($"[Spawn] Tile en {targetCoord} no existe.");
                 return false;
@@ -44,11 +47,13 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
             }
 
             // Si no está dentro de una zona de despliegue válida (simplificable más adelante)
-            if (tile.Highlight.originalHl != ETileHighlightType.DeployZone)
+            bool tileHasDeploy = tile.Highlight.HasColorInLevel(2, deployColor);
+            if (!tileHasDeploy)
             {
                 // Debug.LogWarning($"[Spawn] Tile en {targetCoord} fuera de zona de despliegue.");
                 return false;
             }
+ 
         }
 
         return true;
@@ -98,7 +103,9 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
 
     private void UpdateHoverTile(TileController newTileHovered)
     {
-        ClearGhost();
+        if (tileHovered != null)
+            tileHovered.Highlight.RemoveColor(4, hoverColor);
+
         tileHovered = newTileHovered;
 
         if (isShowingGhosts && selectedStack != null)
@@ -106,13 +113,15 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
             if (IsCreatureShapeCorrect(selectedStack.Creature, newTileHovered))
             {
                 ghostHandler.ShowGhost(selectedStack, newTileHovered);
+                tileHovered.Highlight.AddColor(4, hoverColor);
             }
             else
             {
-                // Debug.LogWarning($"[Spawn] No se puede colocar {selectedStack.Creature.Name} en {tileHovered.Model.Coord}");
+                ghostHandler.HideGhost(); // por si acaso
             }
         }
     }
+
 
     private void ShowGhosts()
     {
@@ -126,8 +135,12 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
 
     private void ClearGhost()
     {
+        if (tileHovered != null)
+            tileHovered.Highlight.RemoveColor(4, hoverColor);
+
         ghostHandler.HideGhost();
     }
+
 
     public void SetActiveArmy(Army army)
     {

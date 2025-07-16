@@ -10,11 +10,16 @@ public class TileView : MonoBehaviour, ITileView
     public void Init()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        SetColor(ETileHighlightType.Transparent);
+        SetColor(bfConfig.GetColor(ETileHighlightType.Transparent));
     }
 
-    public void SetColor(ETileHighlightType newColor)
+    public void SetColor(Color newColor)
     {
-        spriteRenderer.color = bfConfig.GetColor(newColor);
+        spriteRenderer.color = newColor;
+    }
+
+    public Color GetColorFromType(ETileHighlightType type)
+    {
+        return bfConfig.GetColor(type);
     }
 }

@@ -1,5 +1,6 @@
+using UnityEngine;
 
 public interface ITileView
 {
-    void SetColor(ETileHighlightType newColor);
+    void SetColor(Color newColor);
 }

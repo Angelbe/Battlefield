@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class TileController : MonoBehaviour, ITileController
@@ -14,34 +13,15 @@ public class TileController : MonoBehaviour, ITileController
         Model = model;
         View = GetComponent<TileView>();
         View.Init();
-        Highlight = new(View);
+        Highlight = new(View); // Aquí View actúa como MonoBehaviour para StartCoroutine
         BfController = newBfController;
-    }
-
-    public void PaintTile(ETileHighlightType newHighlight)
-    {
-        Highlight.SetCurrentHighlight(newHighlight);
-    }
-
-    public void PaintOriginalHlTile(ETileHighlightType newHighlight)
-    {
-        Highlight.SetOriginalHighLight(newHighlight);
-    }
-
-    public void ResetPaint()
-    {
-        Highlight.ResetCurrentHighlight();
-    }
-
-    public void ResetOriginalTypeHiglightedToTrransparent(ETileHighlightType TypeToReset)
-    {
-        Highlight.ResetOriginalTypeSelectedToTransparent(TypeToReset);
     }
 
     public void SetOcupantCreature(CreatureController newOcuppantCreature)
     {
         OccupantCreature = newOcuppantCreature;
     }
+
     public void ClearOcupantCreature()
     {
         OccupantCreature = null;

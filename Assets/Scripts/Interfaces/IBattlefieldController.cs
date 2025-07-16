@@ -11,6 +11,5 @@ public interface IBattlefieldController
     public BattlefieldDeploymentZones BfDeploymentZones { get; }
     public Dictionary<CubeCoord, TileController> TileControllers { get; }
     public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, CreatureCatalog creatureCatalog, UIController newIUController);
-    public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType);
     public void GenerateGrid();
 }

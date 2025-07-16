@@ -1,50 +1,115 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class TileHighlightController
 {
-    public ETileHighlightType originalHl { get; private set; } = ETileHighlightType.Transparent; // Cambiar esto a un  sistema de niveles (nivel 1 transparente nivel 2 deployment, nivel 3 selected etc)
-    public ETileHighlightType currentHl { get; private set; } = ETileHighlightType.Transparent;
-    public event Action<ETileHighlightType> OnHighlightCurrentChanged;
-    public event Action<ETileHighlightType> OnHighlightBaseChanged;
-    public TileView View { get; private set; }
+    private readonly Dictionary<int, HashSet<Color>> highlightLevels = new();
+    private readonly TileView view;
+    private readonly MonoBehaviour coroutineHost;
+    private Coroutine colorCycleCoroutine;
+    private Color currentDisplayedColor = Color.clear;
 
-    public TileHighlightController(TileView tileView, ETileHighlightType originalHiglight = ETileHighlightType.Transparent)
+    public TileHighlightController(TileView tileView)
     {
-        View = tileView;
-        originalHl = originalHiglight;
+        view = tileView;
+        coroutineHost = tileView; // Asumimos que TileView es MonoBehaviour
+        for (int i = 1; i <= 5; i++)
+            highlightLevels[i] = new HashSet<Color>();
     }
 
-    public void SetCurrentHighlight(ETileHighlightType newtemporaryHl)
+    public void AddColor(int level, Color color)
     {
-        if (currentHl == newtemporaryHl) return;
-        currentHl = newtemporaryHl;
-        OnHighlightCurrentChanged?.Invoke(newtemporaryHl);
-        ApplyHighlight(newtemporaryHl);
+        if (level < 1 || level > 5) return;
+        if (highlightLevels[level].Add(color))
+            ApplyHighestPriorityColor();
     }
 
-    public void SetOriginalHighLight(ETileHighlightType newOriginalHl)
+    public void RemoveColor(int level, Color color)
     {
-        originalHl = newOriginalHl;
-        OnHighlightBaseChanged?.Invoke(originalHl);
-        ApplyHighlight(originalHl);
+        if (level < 1 || level > 5) return;
+        if (highlightLevels[level].Remove(color))
+            ApplyHighestPriorityColor();
     }
 
-    public void ResetCurrentHighlight()
+    public void ClearLevel(int level)
     {
-        SetCurrentHighlight(originalHl);
+        if (level < 1 || level > 5) return;
+        highlightLevels[level].Clear();
+        ApplyHighestPriorityColor();
     }
-    public void ResetOriginalTypeSelectedToTransparent(ETileHighlightType typeTilesToreset)
+
+    public void ClearAll()
     {
-        if (typeTilesToreset == originalHl)
+        foreach (var level in highlightLevels.Keys.ToList())
+            highlightLevels[level].Clear();
+        ApplyHighestPriorityColor();
+    }
+
+    private void ApplyHighestPriorityColor()
+    {
+        for (int level = 5; level >= 1; level--)
         {
-            SetOriginalHighLight(ETileHighlightType.Transparent);
+            var colors = highlightLevels[level];
+            if (colors.Count == 0) continue;
+
+            if (colors.Count == 1)
+            {
+                StopCyclingColors();
+                var color = colors.First();
+                if (currentDisplayedColor != color)
+                {
+                    view.SetColor(color);
+                    currentDisplayedColor = color;
+                }
+            }
+            else
+            {
+                StartCyclingColors(colors.ToList());
+            }
+            return;
+        }
+
+        // Si ningún nivel tiene color → transparente
+        StopCyclingColors();
+        var fallback = view.GetColorFromType(ETileHighlightType.Transparent);
+        view.SetColor(fallback);
+        currentDisplayedColor = fallback;
+
+    }
+
+    private void StartCyclingColors(List<Color> colors)
+    {
+        StopCyclingColors();
+        colorCycleCoroutine = coroutineHost.StartCoroutine(CycleColors(colors));
+    }
+
+    private void StopCyclingColors()
+    {
+        if (colorCycleCoroutine != null)
+        {
+            coroutineHost.StopCoroutine(colorCycleCoroutine);
+            colorCycleCoroutine = null;
         }
     }
 
-    private void ApplyHighlight(ETileHighlightType key)
+    private IEnumerator CycleColors(List<Color> colors)
     {
-        View.SetColor(key);
+        int index = 0;
+        while (true)
+        {
+            var color = colors[index];
+            view.SetColor(color);
+            currentDisplayedColor = color;
+            index = (index + 1) % colors.Count;
+            yield return new WaitForSeconds(0.5f);
+        }
     }
-
+    public bool HasColorInLevel(int level, Color color)
+    {
+        return highlightLevels.TryGetValue(level, out var colors) && colors.Contains(color);
+    }
 
 }

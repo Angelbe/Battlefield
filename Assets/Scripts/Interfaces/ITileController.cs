@@ -4,5 +4,4 @@ public interface ITileController
     TileView View { get; }
     TileModel Model { get; }
     TileHighlightController Highlight { get; }
-    public void PaintTile(ETileHighlightType newHighLightType);
 }

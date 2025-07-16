@@ -6,10 +6,16 @@ using UnityEngine;
 public class BattlefieldConfig : ScriptableObject
 {
     [Header("Battlefield Colors")]
-    public Color noneColor = new(0f, 0f, 0f, 0.33f);
-    public Color hoverColor = Color.cyan;
-    public Color selectedColor = Color.yellow;
-    public Color deployZoneColor = Color.green;
+    [SerializeField] private List<HighlightColorEntry> highlightColors;
+
+    private Dictionary<ETileHighlightType, Color> colorLookup;
+
+    [Serializable]
+    private struct HighlightColorEntry
+    {
+        public ETileHighlightType type;
+        public Color color;
+    }
     [Header("Prefabs")]
     public GameObject tilePrefab;
     public GameObject battlefieldPrefab;
@@ -25,15 +31,15 @@ public class BattlefieldConfig : ScriptableObject
     [Header("Deployment zones")]
     public TextAsset deploymentZonesJson;
 
-    public Color GetColor(ETileHighlightType highlight)
+    public Color GetColor(ETileHighlightType type)
     {
-        return highlight switch
-        {
-            ETileHighlightType.Hover => hoverColor,
-            ETileHighlightType.Selected => selectedColor,
-            ETileHighlightType.DeployZone => deployZoneColor,
-            ETileHighlightType.Transparent => noneColor,
-            _ => noneColor,
-        };
+        return colorLookup.TryGetValue(type, out var color) ? color : Color.clear;
+    }
+
+    private void OnEnable()
+    {
+        colorLookup = new();
+        foreach (var entry in highlightColors)
+            colorLookup[entry.type] = entry.color;
     }
 }

@@ -21,7 +21,7 @@ public class DeploymentPhase : IBattlePhase
 
     public void ExitPhase()
     {
-        bfController.ClearDeploymentZones();
+        bfController.BfHighlight.ClearDeploymentZones();
         uIDeployController.OnFinishButtonclicked -= HandleFinishButtonClicked;
         uIDeployController.Shutdown();
         phaseManager.StartCombatPhase();
@@ -57,19 +57,19 @@ public class DeploymentPhase : IBattlePhase
 
     public void StartAttackerDeployment()
     {
-        bfController.ClearDeploymentZones();
+        bfController.BfHighlight.ClearDeploymentZones();
         SetActiveArmy(bfController.bfModel.Attacker);
         bfController.BfSpawn.SetActiveArmy(ActiveArmy);
-        bfController.PaintAttackerDeploymentZone();
+        bfController.BfHighlight.ShowAttackerDeploymentZone(ActiveArmy.Champion.DeploymentLevel);
         uIDeployController.ShowAttackerDeploy();
     }
 
     public void StartDefenderDeployment()
     {
-        bfController.ClearDeploymentZones();
+        bfController.BfHighlight.ClearDeploymentZones();
         SetActiveArmy(bfController.bfModel.Defender);
         bfController.BfSpawn.SetActiveArmy(ActiveArmy);
-        bfController.PaintDefenderDeploymentZone();
+        bfController.BfHighlight.ShowDefenderDeploymentZone(ActiveArmy.Champion.DeploymentLevel);
         uIDeployController.ShowDefenderDeploy();
     }
 
