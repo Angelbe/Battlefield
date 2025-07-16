@@ -16,8 +16,6 @@ public class CreatureStats : ICreatureStats
     [SerializeField] private int speed;
     [SerializeField] private EMovementType movementType;
     [SerializeField] private int retaliations;
-
-    // Propiedades públicas solo lectura para cumplir la interfaz
     public ECreatureShape CreatureShape => creatureShape;
     public int HealthPoint => healthPoint;
     public int Attack => attack;

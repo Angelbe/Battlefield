@@ -1,10 +1,6 @@
 using System;
 using UnityEngine;
 
-/// <remarks>
-/// Representa una posición en una cuadrícula “offset” (columna-fila).
-/// Ideal como clave en diccionarios o para lógica de pathfinding.
-/// </remarks>
 public readonly struct ColRow : IEquatable<ColRow>
 {
     public int Col { get; }
@@ -16,14 +12,12 @@ public readonly struct ColRow : IEquatable<ColRow>
         Row = row;
     }
 
-    /* ───── Deconstrucción (tupla) ───── */
     public void Deconstruct(out int col, out int row)
     {
         col = Col;
         row = Row;
     }
 
-    /* ───── Igualdad & hashing ───── */
     public bool Equals(ColRow other) => Col == other.Col && Row == other.Row;
     public override bool Equals(object obj) => obj is ColRow other && Equals(other);
     public override int GetHashCode() => HashCode.Combine(Col, Row);
@@ -31,11 +25,9 @@ public readonly struct ColRow : IEquatable<ColRow>
     public static bool operator ==(ColRow left, ColRow right) => left.Equals(right);
     public static bool operator !=(ColRow left, ColRow right) => !(left == right);
 
-    /* ───── Operadores aritméticos opcionales ───── */
     public static ColRow operator +(ColRow a, ColRow b) => new ColRow(a.Col + b.Col, a.Row + b.Row);
     public static ColRow operator -(ColRow a, ColRow b) => new ColRow(a.Col - b.Col, a.Row - b.Row);
 
-    /* ───── Conversión explícita a Vector2Int (útil para Gizmos, etc.) ───── */
     public static explicit operator Vector2Int(ColRow cr) => new Vector2Int(cr.Col, cr.Row);
     public static ColRow FromCubeCoord(CubeCoord coord)
     {

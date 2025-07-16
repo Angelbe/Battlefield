@@ -1,16 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
-
-public enum ECreatureShape
-{
-    Single,
-    Line
-}
-
-public interface ICreatureShapeCatalog
-{
-    CubeCoord[] GetShape(ECreatureShape shape);
-}
 
 public class CreatureShapeCatalog : ICreatureShapeCatalog
 {

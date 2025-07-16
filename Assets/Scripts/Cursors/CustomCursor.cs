@@ -18,7 +18,7 @@ public class CursorFollower : MonoBehaviour
         }
         Vector3 mouseScreenPos = Input.mousePosition;
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-        worldPos.z = 0f; // o el valor que quieras para la capa
+        worldPos.z = 0f;
         transform.position = worldPos;
     }
 }

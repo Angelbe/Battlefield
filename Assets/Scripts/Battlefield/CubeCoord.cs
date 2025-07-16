@@ -16,14 +16,12 @@ public struct CubeCoord : IEquatable<CubeCoord>
         X = x; Y = y; Z = z;
     }
 
-    /* ---------- Operadores aritméticos ---------- */
     public static CubeCoord operator +(CubeCoord a, CubeCoord b)
         => new CubeCoord(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
 
     public static CubeCoord operator -(CubeCoord a, CubeCoord b)
         => new CubeCoord(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
 
-    /* ---------- Igualdad (=> usable en diccionarios) ---------- */
     public bool Equals(CubeCoord other) => X == other.X && Y == other.Y && Z == other.Z;
 
     public override bool Equals(object obj) => obj is CubeCoord other && Equals(other);

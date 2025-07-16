@@ -1,11 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IBattlefieldGridHandler
-{
-    public Dictionary<CubeCoord, TileModel> GenerateGridModel(int numberOfRows, int numberOfColumns, float HexSize);
-}
-
 public class BattlefieldGridHandler
 {
     private BattlefieldConfig bfConfiguration;

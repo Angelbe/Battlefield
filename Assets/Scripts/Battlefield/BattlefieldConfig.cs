@@ -2,17 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IBattlefieldConfig
-{
-    int Rows { get; set; }
-    int Cols { get; set; }
-    float HexSize { get; set; }
-    GameObject tilePrefab { get; set; }
-    GameObject battlefieldPrefab { get; set; }
-    TextAsset deploymentZonesJson { get; set; }
-}
-
-
 [CreateAssetMenu(fileName = "BattlefieldConfig", menuName = "Uroboros/BattlefieldConfig")]
 public class BattlefieldConfig : ScriptableObject
 {

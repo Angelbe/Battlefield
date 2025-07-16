@@ -1,15 +1,6 @@
 using System;
 using UnityEngine;
 
-public interface ITileController
-{
-    BattlefieldController BfController { get; }
-    TileView View { get; }
-    TileModel Model { get; }
-    TileHighlightController Highlight { get; }
-    public void PaintTile(ETileHighlightType newHighLightType);
-}
-
 public class TileController : MonoBehaviour, ITileController
 {
     public TileView View { get; private set; }

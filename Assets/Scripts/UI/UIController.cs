@@ -2,14 +2,6 @@ using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public interface IUIController
-{
-    public PhaseManager PhaseManager { get; }
-    public BattlefieldController BattlefieldController { get; }
-    public void AssignCamera(Camera camera);
-    public void Init(BattlefieldController newBattlefieldController, PhaseManager newPhaseManager);
-}
-
 [RequireComponent(typeof(Canvas))]
 public class UIController : MonoBehaviour, IUIController
 {

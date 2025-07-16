@@ -4,14 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public interface ICreatureController
-{
-    public CreatureView View { get; }
-    public CreatureModel Model { get; }
-    public void addQuantity(int newCreaturesToAdd);
-    public void removeQuantity(int newCreaturesToAdd);
-}
-
 public class CreatureController : MonoBehaviour
 {
     public Guid InstanceId { get; private set; } = Guid.NewGuid();

@@ -2,13 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public interface IDeploySlotController
-{
-    public DeploySlotModel Model { get; }
-
-    public UIDeployController UIDeployController { get; }
-}
-
 public class DeploySlotController : MonoBehaviour, IDeploySlotController
 {
     public DeploySlotView View;

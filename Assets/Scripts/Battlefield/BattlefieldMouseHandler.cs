@@ -1,13 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-public interface IBattlefieldMouseHandler
-{
-    public void HandleHoverTile(CubeCoord newTileCoordHovered);
-    public void HandleUnhoverTile();
-    public void HandleClickTile(CubeCoord TileClickedCoord);
-}
-
 public class BattlefieldMouseHandler : IBattlefieldMouseHandler
 {
     public Dictionary<CubeCoord, TileController> TileControllers;

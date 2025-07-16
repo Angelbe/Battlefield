@@ -1,11 +1,6 @@
 // CreatureView.cs
 using UnityEngine;
 
-public interface ICreatureView
-{
-    public void Init(CreatureModel model);
-}
-
 public class CreatureView : MonoBehaviour, ICreatureView
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
