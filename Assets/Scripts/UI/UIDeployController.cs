@@ -14,7 +14,7 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
 {
     public BattlefieldController bfController { get; private set; }
     public DeploymentPhaseController DeploymentPhaseController;
-    public ReservePanelController ReservePanelController;
+    public UIReservePanelController ReservePanelController;
     public FinishDeployButtonView FinishDeployButtonView;
     public DeploySlotController SlotSelected { get; set; }
     public Army Attacker { get; private set; }

@@ -62,10 +62,10 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         }
         if (slotSelected.Model.CreatureStack.ID == slotClicked.Model.CreatureStack.ID)
         {
-            ClearStackSelectedToDeploy();
+            StackUnselected();
             return;
         }
-        ClearStackSelectedToDeploy();
+        StackUnselected();
         StackSelectedToDeploy(slotClicked);
     }
 
@@ -77,8 +77,18 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         ShowGhosts();
     }
 
-    private void ClearStackSelectedToDeploy()
+    private void StackDeployed()
     {
+        slotSelected.UnselectSlot();
+        slotSelected.SlotDeployed();
+        slotSelected = null;
+        selectedStack = null;
+        StopShowingGhosts();
+    }
+
+    private void StackUnselected()
+    {
+        slotSelected.UnselectSlot();
         slotSelected = null;
         selectedStack = null;
         StopShowingGhosts();
@@ -132,9 +142,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         GameObject CreatureGO = Instantiate(CreaturePrefab, ArmyTransform);
         CreatureController creaturecontroller = CreatureGO.GetComponent<CreatureController>();
         CreatureGO.transform.position = tileClicked.Model.WorldPosition;
-        slotSelected.UnselectSlot();
-        slotSelected.SlotDeployed();
-        ClearStackSelectedToDeploy();
+        StackDeployed();
         tileClicked.SetOcupantCreature(creaturecontroller);
     }
 
@@ -147,7 +155,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         ghostHandler = new GhostCreatureHandler(ghostUnitsGO.transform, creatureCatalog);
         shapeCatalog = new CreatureShapeCatalog();
         uIDeployController.OnSlotSelected += StackSelectedToDeploy;
-        uIDeployController.OnSlotUnselected += ClearStackSelectedToDeploy;
+        uIDeployController.OnSlotUnselected += StackUnselected;
         bfMouseHandler.OnTileHovered += UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered += ClearGhost;
         bfMouseHandler.OnTileClicked += HandleTileClicked;
@@ -156,7 +164,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     public void Shutdown()
     {
         uIDeployController.OnSlotSelected -= StackSelectedToDeploy;
-        uIDeployController.OnSlotUnselected -= ClearStackSelectedToDeploy;
+        uIDeployController.OnSlotUnselected -= StackUnselected;
         bfMouseHandler.OnTileHovered -= UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered -= ClearGhost;
         bfMouseHandler.OnTileClicked -= HandleTileClicked;

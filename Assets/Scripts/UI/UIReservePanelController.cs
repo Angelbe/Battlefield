@@ -2,14 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IReservePanelController
-{
-    public ReserveHandler ReserveToShow { get; set; }
-    public void ShowNewReserve(ReserveHandler newReserve);
-    public void ClearReserve();
-}
 
-public class ReservePanelController : MonoBehaviour, IReservePanelController
+public class UIReservePanelController : MonoBehaviour, IUIReservePanelController
 {
     public UIDeployController UIDeployController;
     public GameObject DeploySlotPrefab;
