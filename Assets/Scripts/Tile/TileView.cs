@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class TileView : MonoBehaviour, ITileView
 {
-    [SerializeField] private BattlefieldConfig colorPalette;
+    [SerializeField] private BattlefieldConfig bfConfig;
     private SpriteRenderer spriteRenderer;
 
     public void Init()
@@ -15,6 +15,6 @@ public class TileView : MonoBehaviour, ITileView
 
     public void SetColor(ETileHighlightType newColor)
     {
-        spriteRenderer.color = colorPalette.GetColor(newColor);
+        spriteRenderer.color = bfConfig.GetColor(newColor);
     }
 }

@@ -5,6 +5,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 {
     [SerializeField]
     private GameObject BattlefieldSpawnPrefab;
+    public PhaseManager PhaseManager { get; private set; }
     public BattlefieldModel bfModel { get; private set; }
     public Vector2 Center { get; private set; }
     public BattlefieldConfig BfConfig { get; private set; }
@@ -12,9 +13,8 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
     public BattlefieldHighlightHandler BfHighlight { get; private set; }
     public BattlefieldMouseHandler BfMouse { get; private set; }
     public BattlefieldGridHandler BfGrid { get; private set; }
-    public BattlefieldDeploymentHandler BfDeploymentZones { get; private set; }
+    public BattlefieldDeploymentZones BfDeploymentZones { get; private set; }
     public Dictionary<CubeCoord, TileController> TileControllers { get; private set; } = new();
-    public Army ActiveArmy { get; private set; }
     public Transform GridContainer;
 
     public void GenerateGrid()
@@ -40,17 +40,16 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         }
 
         GameObject bg = new GameObject("BattlefieldBackground");
-        bg.transform.SetParent(transform); // lo agrupa en la jerarquía del battlefield
-        bg.transform.position = Center; // o ajusta según la escala del mapa
-        bg.transform.position = Center; // o ajusta según la escala del mapa
+        bg.transform.SetParent(transform);
+        bg.transform.position = Center; 
         float scaleX = 1.04f;
         float scaleY = 1.04f;
 
         bg.transform.localScale = new Vector3(scaleX, scaleY, 1f);
 
-        var sr = bg.AddComponent<SpriteRenderer>();
-        sr.sprite = BfConfig.battlefieldBackgroundSprite;
-        sr.sortingOrder = -10; // para que quede por debajo de las tiles
+        SpriteRenderer spriteRenderer = bg.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = BfConfig.battlefieldBackgroundSprite;
+        spriteRenderer.sortingOrder = -10;
     }
 
 
@@ -69,10 +68,6 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         return (min + max) / 2f;
     }
 
-    public void SetActiveArmy(Army newActiveArmy)
-    {
-        ActiveArmy = newActiveArmy;
-    }
 
     public void HandleHoverTile(CubeCoord newTileCoordHovered)
     {
@@ -116,20 +111,10 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfHighlight.ClearAllDeployments();
     }
 
-    public void ChangeActiveArmyToDefender()
+    public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, CreatureCatalog creatureCatalog, UIController newUiDeployController)
     {
-        ActiveArmy = bfModel.Defender;
-    }
-    public void ChangeActiveArmyToAttacker()
-    {
-        ActiveArmy = bfModel.Attacker;
-    }
-
-    public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, CreatureCatalog creatureCatalog, UIController newUiDeployController)
-    {
-        bfModel = newBfConfig;
-        BfConfig = newBfModel;
-        SetActiveArmy(bfModel.Attacker);
+        BfConfig = newBfConfig;
+        bfModel = newBfModel;
         BfHighlight = new(TileControllers);
         BfMouse = new(TileControllers);
         BfGrid = new(BfConfig);

@@ -11,8 +11,8 @@ public class BattlefieldModel
     public BattlefieldModel(Army attacker, Army defender)
     {
         Attacker = attacker;
+        Attacker.SetIsAttacker(true);
         Defender = defender;
     }
-
 
 }

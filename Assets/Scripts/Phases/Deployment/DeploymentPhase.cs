@@ -3,11 +3,9 @@ public class DeploymentPhase : IBattlePhase
     private readonly BattlefieldController bfController;
     private readonly PhaseManager phaseManager;
     private readonly UIDeployController uIDeployController;
+    public Army ActiveArmy;
 
-    public DeploymentPhase(
-        BattlefieldController bfController,
-        UIController newUIController,
-        PhaseManager newPhaseManager)
+    public DeploymentPhase(BattlefieldController bfController, UIController newUIController, PhaseManager newPhaseManager)
     {
         this.bfController = bfController;
         uIDeployController = newUIController.UIDeployController;
@@ -16,9 +14,9 @@ public class DeploymentPhase : IBattlePhase
 
     public void StartPhase()
     {
-        bfController.PaintAttackerDeploymentZone();
         uIDeployController.Init(bfController, this);
         uIDeployController.OnFinishButtonclicked += HandleFinishButtonClicked;
+        StartAttackerDeployment();
     }
 
     public void ExitPhase()
@@ -29,9 +27,15 @@ public class DeploymentPhase : IBattlePhase
         phaseManager.StartCombatPhase();
     }
 
+    public void SetActiveArmy(Army newActiveArmy)
+    {
+        ActiveArmy = newActiveArmy;
+    }
+
+
     public void HandleFinishButtonClicked()
     {
-        if (bfController.ActiveArmy == bfController.bfModel.Attacker)
+        if (ActiveArmy == bfController.bfModel.Attacker)
         {
             HandleAttackerFinishDeploy();
             return;
@@ -47,16 +51,26 @@ public class DeploymentPhase : IBattlePhase
 
     public void HandleDefenderFinishDeploy()
     {
-        bfController.SetActiveArmy(bfController.bfModel.Attacker);
+        SetActiveArmy(bfController.bfModel.Attacker);
         phaseManager.FinishDeploymentPhase();
+    }
+
+    public void StartAttackerDeployment()
+    {
+        bfController.ClearDeploymentZones();
+        SetActiveArmy(bfController.bfModel.Attacker);
+        bfController.BfSpawn.SetActiveArmy(ActiveArmy);
+        bfController.PaintAttackerDeploymentZone();
+        uIDeployController.ShowAttackerDeploy();
     }
 
     public void StartDefenderDeployment()
     {
         bfController.ClearDeploymentZones();
-        bfController.SetActiveArmy(bfController.bfModel.Defender);
+        SetActiveArmy(bfController.bfModel.Defender);
+        bfController.BfSpawn.SetActiveArmy(ActiveArmy);
         bfController.PaintDefenderDeploymentZone();
-        bfController.BfSpawn.uIDeployController.ShowDefenderDeploy();
+        uIDeployController.ShowDefenderDeploy();
     }
 
 }

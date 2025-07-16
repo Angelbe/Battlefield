@@ -15,6 +15,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     private CreatureStack selectedStack;
     private DeploySlotController slotSelected;
     private TileController tileHovered;
+    private Army activeArmy;
 
     private bool IsCreatureShapeCorrect(CreatureModel creatureToCheck, TileController tileAnchor)
     {
@@ -81,7 +82,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     {
         slotSelected.UnselectSlot();
         slotSelected.SlotDeployed();
-        bfController.ActiveArmy.Deployed.AddStackToDeploy(slotSelected.Model.CreatureStack, creatureDeployed);
+        activeArmy.Deployed.AddStackToDeploy(slotSelected.Model.CreatureStack, creatureDeployed);
         slotSelected = null;
         selectedStack = null;
         StopShowingGhosts();
@@ -128,6 +129,12 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         ghostHandler.HideGhost();
     }
 
+    public void SetActiveArmy(Army army)
+    {
+        activeArmy = army;
+    }
+
+
     public void HandleTileClicked(TileController tileClicked)
     {
         if (!isShowingGhosts || tileClicked != null)
@@ -137,7 +144,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
                 return;
             }
         }
-        bool isAttacker = bfController.ActiveArmy.IsAttacker;
+        bool isAttacker = activeArmy.IsAttacker;
         Transform ArmyTransform = isAttacker ? attackerUnitsGO.transform : defenderUnitsGO.transform;
         GameObject CreaturePrefab = creatureCatalog.GetCombatPrefab(selectedStack.Creature.Name);
         GameObject CreatureGO = Instantiate(CreaturePrefab, ArmyTransform);
@@ -169,3 +176,6 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         bfMouseHandler.OnTileClicked -= HandleTileClicked;
     }
 }
+
+
+//TODO: Conseguir Active Army aquí

@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e497e350d64f4989b8a6fb6f10cc35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorPalette: {fileID: 11400000, guid: 3b27ce9f1989d40d8a456a23cc47c252, type: 2}
+  bfConfig: {fileID: 11400000, guid: 3b27ce9f1989d40d8a456a23cc47c252, type: 2}
 --- !u!114 &8061109793421227552
 MonoBehaviour:
   m_ObjectHideFlags: 0

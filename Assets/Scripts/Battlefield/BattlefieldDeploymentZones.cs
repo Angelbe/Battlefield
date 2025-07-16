@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
-//TODO: Arreglar esto con deploymentController
-public class BattlefieldDeploymentHandler
+public class BattlefieldDeploymentZones
 {
     private BattlefieldConfig bfConfig;
     private BattlefieldController bfController;
@@ -18,7 +16,7 @@ public class BattlefieldDeploymentHandler
     public IReadOnlyDictionary<EDeploymentLevel, List<CubeCoord>> AttackerZones => attackerZones;
     public IReadOnlyDictionary<EDeploymentLevel, List<CubeCoord>> DefenderZones => defenderZones;
 
-    public BattlefieldDeploymentHandler(BattlefieldController newBfController, BattlefieldConfig newBfConfig)
+    public BattlefieldDeploymentZones(BattlefieldController newBfController, BattlefieldConfig newBfConfig)
     {
         bfController = newBfController;
         bfConfig = newBfConfig;
@@ -55,11 +53,6 @@ public class BattlefieldDeploymentHandler
             foreach (var dto in zone.tiles)
                 list.Add(dto.ToModel());
         }
-    }
-
-    public void PaintDeploymentZone(List<CubeCoord> deploymentCoords, Color ArmyColor)
-    {
-        bfController.PaintManyTiles(deploymentCoords, ETileHighlightType.DeployZone);
     }
 
 }

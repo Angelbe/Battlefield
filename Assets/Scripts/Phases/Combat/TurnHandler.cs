@@ -21,6 +21,11 @@ public class TurnHandler
         movedThisTurn = new HashSet<CreatureController>();
     }
 
+    public CreatureController PeekCurrentCreature()
+    {
+        return currentTurnQueue.Peek();
+    }
+
     public CreatureController GetNextCreature()
     {
         while (currentTurnQueue.Count > 0)

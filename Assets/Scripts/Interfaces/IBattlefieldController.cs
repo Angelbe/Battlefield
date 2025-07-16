@@ -8,10 +8,9 @@ public interface IBattlefieldController
     public BattlefieldHighlightHandler BfHighlight { get; }
     public BattlefieldMouseHandler BfMouse { get; }
     public BattlefieldGridHandler BfGrid { get; }
-    public BattlefieldDeploymentHandler BfDeploymentZones { get; }
+    public BattlefieldDeploymentZones BfDeploymentZones { get; }
     public Dictionary<CubeCoord, TileController> TileControllers { get; }
-    public Army ActiveArmy { get; }
-    public void Init(BattlefieldConfig newBfConfig, BattlefieldModel newBfModel, CreatureCatalog creatureCatalog, UIController newIUController);
+    public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, CreatureCatalog creatureCatalog, UIController newIUController);
     public void PaintManyTiles(IEnumerable<CubeCoord> coord, ETileHighlightType newHighlightType);
     public void GenerateGrid();
 }

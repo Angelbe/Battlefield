@@ -6,14 +6,14 @@ public class PhaseManager
     public readonly DeploymentPhase DeploymentPhase;
     public readonly CombatPhase CombatPhase;
     public UIController UIController { get; private set; }
-    private readonly BattlefieldController bfCtrl;
+    private readonly BattlefieldController bfController;
 
     public PhaseManager(BattlefieldController controller, UIController newUIController)
     {
         UIController = newUIController;
-        bfCtrl = controller;
-        DeploymentPhase = new DeploymentPhase(bfCtrl, UIController, this);
-        CombatPhase = new CombatPhase(bfCtrl, UIController);
+        bfController = controller;
+        DeploymentPhase = new DeploymentPhase(bfController, UIController, this);
+        CombatPhase = new CombatPhase(bfController, UIController);
     }
     public void StartBattle()
     {
