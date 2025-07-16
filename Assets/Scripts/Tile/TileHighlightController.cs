@@ -14,7 +14,7 @@ public class TileHighlightController
         originalHl = originalHiglight;
     }
 
-    public void SetHighlight(ETileHighlightType newtemporaryHl)
+    public void SetCurrentHighlight(ETileHighlightType newtemporaryHl)
     {
         if (currentHl == newtemporaryHl) return;
         currentHl = newtemporaryHl;
@@ -29,9 +29,16 @@ public class TileHighlightController
         ApplyHighlight(originalHl);
     }
 
-    public void ResetHighlight()
+    public void ResetCurrentHighlight()
     {
-        SetHighlight(originalHl);
+        SetCurrentHighlight(originalHl);
+    }
+    public void ResetOriginalTypeSelectedToTransparent(ETileHighlightType typeTilesToreset)
+    {
+        if (typeTilesToreset == originalHl)
+        {
+            SetOriginalHighLight(ETileHighlightType.Transparent);
+        }
     }
 
     private void ApplyHighlight(ETileHighlightType key)

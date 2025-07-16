@@ -130,7 +130,16 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
 
     public void ClearDeploymentZones()
     {
-        ResetManyTilesWithType(ETileHighlightType.DeployZone);
+        BfHighlight.ClearAllDeployments();
+    }
+
+    public void ChangeActiveArmyToDefender()
+    {
+        ActiveArmy = bfModel.Defender;
+    }
+    public void ChangeActiveArmyToAttacker()
+    {
+        ActiveArmy = bfModel.Attacker;
     }
 
     public void Init(BattlefieldConfig newBfModel, BattlefieldModel newBfConfig, SetupHelpers newSetuphelpers, CreatureCatalog creatureCatalog, UIController newUiDeployController)

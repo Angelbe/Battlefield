@@ -12,9 +12,9 @@ public interface IDeploySlotController
 public class DeploySlotController : MonoBehaviour, IDeploySlotController
 {
     public DeploySlotView View;
+    public DeploySlotModel Model { get; private set; }
     public bool isDeployed;
     public TextMeshProUGUI QuantityText;
-    public DeploySlotModel Model { get; private set; }
     public UIDeployController UIDeployController { get; private set; }
     public GameObject CreatureUIGO { get; set; }
     [SerializeField] private CreatureCatalog CreatureCatalog;
@@ -63,7 +63,7 @@ public class DeploySlotController : MonoBehaviour, IDeploySlotController
         {
             return;
         }
-        UIDeployController.HandleDeployslotSelected(this);
+        UIDeployController.HandleDeploySlotSelected(this);
     }
 
     public void SlotDeployed()

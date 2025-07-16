@@ -12,8 +12,10 @@ public interface IUIDeployController
 
 public class UIDeployController : MonoBehaviour, IUIDeployController
 {
-    public BattlefieldController bfController;
+    public BattlefieldController bfController { get; private set; }
+    public DeploymentPhaseController DeploymentPhaseController;
     public ReservePanelController ReservePanelController;
+    public FinishDeployButtonView FinishDeployButtonView;
     public DeploySlotController SlotSelected { get; set; }
     public Army Attacker { get; private set; }
     public Army Defender { get; private set; }
@@ -35,18 +37,34 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
         ReservePanelController.ShowNewReserve(Defender.Reserve);
     }
 
-    public void HandleDeployslotSelected(DeploySlotController slotClicked)
+    public void HandleDeploySlotSelected(DeploySlotController slotClicked)
     {
         bfController.BfSpawn.HandleSlotClicked(slotClicked);
     }
 
-    public void Init(BattlefieldController newBfController)
+    public void HandleFinishButtonClicked()
+    {
+        if (bfController.ActiveArmy == Attacker)
+        {
+            HandleAttackerFinishDeploy();
+        }
+    }
+
+    public void HandleAttackerFinishDeploy()
+    {
+
+        DeploymentPhaseController.StartDefenderDeployment();
+    }
+
+    public void Init(BattlefieldController newBfController, DeploymentPhaseController newDeploymentPhasecontroller)
     {
         enabled = true;
         bfController = newBfController;
+        DeploymentPhaseController = newDeploymentPhasecontroller;
         Attacker = bfController.bfModel.Attacker;
         Defender = bfController.bfModel.Defender;
         ShowAttackerDeploy();
+        FinishDeployButtonView.SetEnabledState(true);
     }
 
     public void Shutdown()

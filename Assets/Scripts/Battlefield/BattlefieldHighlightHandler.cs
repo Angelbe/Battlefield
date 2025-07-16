@@ -33,6 +33,11 @@ public class BattlefieldHighlightHandler
         }
     }
 
+    public void ClearAllDeployments()
+    {
+        foreach (TileController tileController in tileControllers.Values)
+            tileController.ResetOriginalTypeHiglightedToTrransparent(ETileHighlightType.DeployZone);
+    }
     public void ClearAllHighlights()
     {
         foreach (TileController tileController in tileControllers.Values)

@@ -4,16 +4,18 @@ using UnityEngine;
 
 public interface IUIController
 {
+    public PhaseManager PhaseManager { get; }
     public BattlefieldController BattlefieldController { get; }
     public void AssignCamera(Camera camera);
     public void StartUIDeploy();
     public void StopUIDeploy();
-    public void Init(BattlefieldController newBattlefieldController);
+    public void Init(BattlefieldController newBattlefieldController, PhaseManager newPhaseManager);
 }
 
 [RequireComponent(typeof(Canvas))]
 public class UIController : MonoBehaviour, IUIController
 {
+    public PhaseManager PhaseManager { get; private set; }
     public BattlefieldController BattlefieldController { get; private set; }
     public UIDeployController UIDeployController;
     public Canvas Canvas;
@@ -26,7 +28,7 @@ public class UIController : MonoBehaviour, IUIController
 
     public void StartUIDeploy()
     {
-        UIDeployController.Init(BattlefieldController);
+        UIDeployController.Init(BattlefieldController, PhaseManager.deploymentPhaseController);
     }
 
     public void StopUIDeploy()
@@ -34,8 +36,9 @@ public class UIController : MonoBehaviour, IUIController
         UIDeployController.Shutdown();
     }
 
-    public void Init(BattlefieldController newBattlefieldController)
+    public void Init(BattlefieldController newBattlefieldController, PhaseManager newPhaseManager)
     {
+        PhaseManager = newPhaseManager;
         BattlefieldController = newBattlefieldController;
 
     }

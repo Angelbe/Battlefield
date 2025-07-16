@@ -29,7 +29,7 @@ public class TileController : MonoBehaviour, ITileController
 
     public void PaintTile(ETileHighlightType newHighlight)
     {
-        Highlight.SetHighlight(newHighlight);
+        Highlight.SetCurrentHighlight(newHighlight);
     }
 
     public void PaintOriginalHlTile(ETileHighlightType newHighlight)
@@ -39,7 +39,12 @@ public class TileController : MonoBehaviour, ITileController
 
     public void ResetPaint()
     {
-        Highlight.ResetHighlight();
+        Highlight.ResetCurrentHighlight();
+    }
+
+    public void ResetOriginalTypeHiglightedToTrransparent(ETileHighlightType TypeToReset)
+    {
+        Highlight.ResetOriginalTypeSelectedToTransparent(TypeToReset);
     }
 
     public void SetOcupantCreature(CreatureController newOcuppantCreature)

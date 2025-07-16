@@ -3,7 +3,7 @@ using System.Diagnostics;
 public class PhaseManager
 {
     private IBattlePhase currentPhase;
-    private readonly DeploymentPhaseController deploymentPhaseController;
+    public  readonly DeploymentPhaseController deploymentPhaseController;
     public UIController UIController { get; private set; }
     private readonly BattlefieldModel bfModel;
     private readonly BattlefieldController bfCtrl;

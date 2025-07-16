@@ -35,29 +35,35 @@ public class BattleSetup : MonoBehaviour
         BattlefieldController bfController = bfGO.GetComponent<BattlefieldController>();
         CameraBattlefieldController cameraController = camGO.GetComponent<CameraBattlefieldController>();
         UIController UIController = UIGO.GetComponent<UIController>();
+        PhaseManager phaseMgr = new PhaseManager(bfModel, bfController, UIController);
         bfController.Init(battlefieldConfig, bfModel, setupUtils, creatureCatalog, UIController);
         cameraController.Init(cameraBattlefieldConfig);
+        UIController.Init(bfController, phaseMgr);
         cameraController.ChangeCameraPosition(bfController.Center);
-        UIController.Init(bfController);
         UIController.AssignCamera(camGO.GetComponent<Camera>());
 
-        /* PhaseManager con todas las dependencias */
-        PhaseManager phaseMgr = new PhaseManager(bfModel, bfController, UIController);
         Creature Bandit = creatureCatalog.GetCreatureData(ECreaturesNames.Bandit);
         Creature Knight = creatureCatalog.GetCreatureData(ECreaturesNames.Knight);
         Creature Mage = creatureCatalog.GetCreatureData(ECreaturesNames.Mage);
         Creature Fighter = creatureCatalog.GetCreatureData(ECreaturesNames.Fighter);
         Creature Archer = creatureCatalog.GetCreatureData(ECreaturesNames.Archer);
         attacker.AddNewCreatureToTheArmy(Bandit, 10);
-        defender.AddNewCreatureToTheArmy(Bandit, 10);
-        attacker.AddNewCreatureToTheArmy(Knight, 3);
-        defender.AddNewCreatureToTheArmy(Knight, 3);
-        attacker.AddNewCreatureToTheArmy(Mage, 4);
-        defender.AddNewCreatureToTheArmy(Mage, 4);
-        attacker.AddNewCreatureToTheArmy(Fighter, 8);
         defender.AddNewCreatureToTheArmy(Fighter, 8);
-        attacker.AddNewCreatureToTheArmy(Archer, 6);
+        attacker.AddNewCreatureToTheArmy(Knight, 3);
+        defender.AddNewCreatureToTheArmy(Mage, 4);
+        attacker.AddNewCreatureToTheArmy(Mage, 4);
         defender.AddNewCreatureToTheArmy(Archer, 6);
+        attacker.AddNewCreatureToTheArmy(Fighter, 8);
+        defender.AddNewCreatureToTheArmy(Bandit, 10);
+        attacker.AddNewCreatureToTheArmy(Archer, 6);
+        defender.AddNewCreatureToTheArmy(Knight, 3);
+
+        if (FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+        {
+            GameObject eventSystem = new GameObject("EventSystem");
+            eventSystem.AddComponent<UnityEngine.EventSystems.EventSystem>();
+            eventSystem.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+        }
 
 
         /* Arranque de la fase inicial */

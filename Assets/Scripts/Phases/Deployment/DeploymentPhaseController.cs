@@ -35,6 +35,7 @@ public class DeploymentPhaseController : IBattlePhase
         bfController.ClearDeploymentZones();
         bfController.SetActiveArmy(bfModel.Defender);
         bfController.PaintDefenderDeploymentZone();
+        bfController.BfSpawn.uIDeployController.ShowDefenderDeploy();
     }
 
 }

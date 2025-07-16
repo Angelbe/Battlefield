@@ -2,15 +2,12 @@ using UnityEngine;
 
 public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnController
 {
-    [SerializeField]
-    private GameObject ghostUnitsGO;
-    [SerializeField]
-    private GameObject attackerUnitsGO;
-    [SerializeField]
-    private GameObject defenderUnitsGO;
+    [SerializeField] private GameObject ghostUnitsGO;
+    [SerializeField] private GameObject attackerUnitsGO;
+    [SerializeField] private GameObject defenderUnitsGO;
     private BattlefieldController bfController;
     private BattlefieldMouseHandler bfMouseHandler;
-    private UIDeployController uIDeployController;
+    public UIDeployController uIDeployController;
     private CreatureCatalog creatureCatalog;
     private GhostCreatureHandler ghostHandler;
     private CreatureShapeCatalog shapeCatalog;
@@ -105,7 +102,6 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         }
     }
 
-
     private void ShowGhosts()
     {
         isShowingGhosts = true;
@@ -125,7 +121,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     {
         if (!isShowingGhosts || tileClicked != null)
         {
-            if (!IsCreatureShapeCorrect(selectedStack.Creature, tileClicked))
+            if (selectedStack == null || !IsCreatureShapeCorrect(selectedStack.Creature, tileClicked))
             {
                 return;
             }
