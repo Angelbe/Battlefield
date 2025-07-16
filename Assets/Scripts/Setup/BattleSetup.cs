@@ -16,9 +16,10 @@ public class BattleSetup : MonoBehaviour
         setupUtils = new();
         // setupUtils.CreateMainCamera(new Vector3(8.5f, 4, -10));
         setupUtils.CreateGlobalLight2D();
-
-        Army attacker = new("Attacker", Color.red, new(), new("Goku"));
-        Army defender = new("Defender", Color.blue, new(), new("Vegeta"));
+        ChampionModel championGoku = new("Goku");
+        ChampionModel championVegeta = new("Vegeta");
+        Army attacker = new("Attacker", Color.red, championGoku);
+        Army defender = new("Defender", Color.blue, championVegeta);
 
         BattlefieldModel bfModel = new BattlefieldModel(attacker, defender);
 
@@ -35,7 +36,7 @@ public class BattleSetup : MonoBehaviour
         BattlefieldController bfController = bfGO.GetComponent<BattlefieldController>();
         CameraBattlefieldController cameraController = camGO.GetComponent<CameraBattlefieldController>();
         UIController UIController = UIGO.GetComponent<UIController>();
-        PhaseManager phaseMgr = new PhaseManager(bfModel, bfController, UIController);
+        PhaseManager phaseMgr = new PhaseManager(bfController, UIController);
         bfController.Init(battlefieldConfig, bfModel, creatureCatalog, UIController);
         cameraController.Init(cameraBattlefieldConfig);
         UIController.Init(bfController, phaseMgr);

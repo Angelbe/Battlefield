@@ -15,21 +15,18 @@ public class Army : IArmy
 {
     public string Name { get; private set; }
     public bool IsAttacker { get; private set; }
-    public ChampionModel Champion { get; private set; } = new("ChampionName");
+    public ChampionModel Champion { get; private set; }
     public ReserveHandler Reserve { get; private set; }
     public DeployHandler Deployed { get; private set; }
     public Color ArmyColor { get; private set; }
 
-    public Army(string newArmyName, Color newArmyColor)
+    public Army(string newArmyName, Color newArmyColor, ChampionModel ChampionOfTheArmy)
     {
         Name = newArmyName;
         ArmyColor = newArmyColor;
-    }
-    public Army(string newArmyName, Color newArmyColor, Dictionary<int, CreatureStack> newReserve, ChampionModel newChampionModel)
-    {
-        Name = newArmyName;
-        ArmyColor = newArmyColor;
-        Champion = newChampionModel;
+        Champion = ChampionOfTheArmy;
+        Reserve = new();
+        Deployed = new(Reserve);
     }
 
     public void AddNewCreatureToTheArmy(CreatureModel creatureToAdd, int quantity)

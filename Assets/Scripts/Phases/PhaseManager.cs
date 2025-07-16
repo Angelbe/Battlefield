@@ -3,26 +3,33 @@ using System.Diagnostics;
 public class PhaseManager
 {
     private IBattlePhase currentPhase;
-    public  readonly DeploymentPhaseController deploymentPhaseController;
+    public readonly DeploymentPhase DeploymentPhase;
+    public readonly CombatPhase CombatPhase;
     public UIController UIController { get; private set; }
-    private readonly BattlefieldModel bfModel;
     private readonly BattlefieldController bfCtrl;
 
-    public PhaseManager(BattlefieldModel model, BattlefieldController controller, UIController newUIController)
+    public PhaseManager(BattlefieldController controller, UIController newUIController)
     {
         UIController = newUIController;
-        bfModel = model;
         bfCtrl = controller;
-        deploymentPhaseController = new DeploymentPhaseController(bfCtrl, bfModel, UIController, this);
+        DeploymentPhase = new DeploymentPhase(bfCtrl, UIController, this);
+        CombatPhase = new CombatPhase(bfCtrl, UIController);
     }
     public void StartBattle()
     {
-        currentPhase = deploymentPhaseController;
-        deploymentPhaseController.StartPhase();
+        currentPhase = DeploymentPhase;
+        currentPhase.StartPhase();
     }
 
-    public void StartCombat()
+    public void FinishDeploymentPhase()
     {
-        Debug.Print("Start combat");
+        currentPhase.ExitPhase();
+        StartCombatPhase();
+    }
+
+    public void StartCombatPhase()
+    {
+        currentPhase = CombatPhase;
+        currentPhase.StartPhase();
     }
 }

@@ -11,7 +11,7 @@ public interface IUIDeployController
 public class UIDeployController : MonoBehaviour, IUIDeployController
 {
     public BattlefieldController bfController { get; private set; }
-    public DeploymentPhaseController DeploymentPhaseController;
+    public DeploymentPhase DeploymentPhaseController;
     public UIReservePanelController ReservePanelController;
     public FinishDeployButtonView FinishDeployButtonView;
     public Army Attacker { get; private set; }
@@ -52,7 +52,7 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
         DeploymentPhaseController.StartDefenderDeployment();
     }
 
-    public void Init(BattlefieldController newBfController, DeploymentPhaseController newDeploymentPhasecontroller)
+    public void Init(BattlefieldController newBfController, DeploymentPhase newDeploymentPhasecontroller)
     {
         enabled = true;
         bfController = newBfController;

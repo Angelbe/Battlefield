@@ -16,6 +16,10 @@ public class ReserveHandler : IReserveHandler
 {
     public Dictionary<int, CreatureStack> CreaturesInReserve { get; private set; } = new();     // slot index → criatura
 
+    public void SetNewReserve(Dictionary<int, CreatureStack> newReserve)
+    {
+        CreaturesInReserve = newReserve;
+    }
     public bool TryAddToReserve(CreatureModel creature, int quantity)
     {
         if (creature == null) return false;

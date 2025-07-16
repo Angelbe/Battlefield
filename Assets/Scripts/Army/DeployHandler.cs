@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class DeployHandler
 {
-    private BattlefieldController bfController;
     public ReserveHandler ArmyReserve { get; private set; }
     public Dictionary<Guid, CreatureController> Deployed { get; private set; } = new();
 
-    public DeployHandler(BattlefieldController newBFController, ReserveHandler newArmyReserve)
+    public DeployHandler(ReserveHandler newArmyReserve)
     {
-        bfController = newBFController;
         ArmyReserve = newArmyReserve;
     }
 
