@@ -1,32 +1,51 @@
-using UnityEngine;
-
-[System.Serializable]
-public class CreatureStats : ICreatureStats
+public class CreatureStats
 {
-    [SerializeField] private ECreatureShape creatureShape;
-    [SerializeField] private int healthPoint;
-    [SerializeField] private int attack;
-    [SerializeField] private int defense;
-    [SerializeField] private EAttackType attackType;
-    [SerializeField] private int minDamage;
-    [SerializeField] private int maxDamage;
-    [SerializeField] private int optimalRange;
-    [SerializeField] private int ammunition;
-    [SerializeField] private int initiative;
-    [SerializeField] private int speed;
-    [SerializeField] private EMovementType movementType;
-    [SerializeField] private int retaliations;
-    public ECreatureShape CreatureShape => creatureShape;
-    public int HealthPoint => healthPoint;
-    public int Attack => attack;
-    public int Defense => defense;
-    public EAttackType AttackType => attackType;
-    public int MinDamage => minDamage;
-    public int MaxDamage => maxDamage;
-    public int OptimalRange => optimalRange;
-    public int Ammunition => ammunition;
-    public int Initiative => initiative;
-    public int Speed => speed;
-    public EMovementType MovementType => movementType;
-    public int Retaliations => retaliations;
+    public int HealthPoint;
+    public int Attack;
+    public int Defense;
+    public int MinDamage;
+    public int MaxDamage;
+    public int Initiative;
+    public int Speed;
+    public int Retaliations;
+
+    public CreatureStats(CreatureModel baseModel)
+    {
+        HealthPoint = baseModel.HealthPoint;
+        Attack = baseModel.Attack;
+        Defense = baseModel.Defense;
+        MinDamage = baseModel.MinDamage;
+        MaxDamage = baseModel.MaxDamage;
+        Initiative = baseModel.Initiative;
+        Speed = baseModel.Speed;
+        Retaliations = baseModel.Retaliations;
+    }
+
+    public void ModifyStat(ECreatureStat stat, int value)
+    {
+        switch (stat)
+        {
+            case ECreatureStat.Health: HealthPoint += value; break;
+            case ECreatureStat.Attack: Attack += value; break;
+            case ECreatureStat.Defense: Defense += value; break;
+            case ECreatureStat.MinDamage: MinDamage += value; break;
+            case ECreatureStat.MaxDamage: MaxDamage += value; break;
+            case ECreatureStat.Initiative: Initiative += value; break;
+            case ECreatureStat.Speed: Speed += value; break;
+            case ECreatureStat.Retaliations: Retaliations += value; break;
+        }
+    }
+
+    public int GetStat(ECreatureStat stat) => stat switch
+    {
+        ECreatureStat.Health => HealthPoint,
+        ECreatureStat.Attack => Attack,
+        ECreatureStat.Defense => Defense,
+        ECreatureStat.MinDamage => MinDamage,
+        ECreatureStat.MaxDamage => MaxDamage,
+        ECreatureStat.Initiative => Initiative,
+        ECreatureStat.Speed => Speed,
+        ECreatureStat.Retaliations => Retaliations,
+        _ => 0
+    };
 }

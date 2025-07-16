@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class UICombatController : MonoBehaviour
 {
+    public UITurnOrder TurnOrder;
     public void Init()
     {
         gameObject.SetActive(true);
@@ -10,4 +11,6 @@ public class UICombatController : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+
 }
