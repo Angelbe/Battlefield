@@ -17,6 +17,7 @@ public class PhaseManager
     }
     public void StartBattle()
     {
+        CombatPhase.ExitPhase();
         currentPhase = DeploymentPhase;
         currentPhase.StartPhase();
     }

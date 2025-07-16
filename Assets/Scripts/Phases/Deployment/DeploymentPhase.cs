@@ -18,11 +18,13 @@ public class DeploymentPhase : IBattlePhase
     {
         bfController.PaintAttackerDeploymentZone();
         uIDeployController.Init(bfController, this);
+        uIDeployController.OnFinishButtonclicked += HandleFinishButtonClicked;
     }
 
     public void ExitPhase()
     {
         bfController.ClearDeploymentZones();
+        uIDeployController.OnFinishButtonclicked -= HandleFinishButtonClicked;
         uIDeployController.Shutdown();
         phaseManager.StartCombatPhase();
     }
@@ -32,7 +34,9 @@ public class DeploymentPhase : IBattlePhase
         if (bfController.ActiveArmy == bfController.bfModel.Attacker)
         {
             HandleAttackerFinishDeploy();
+            return;
         }
+        HandleDefenderFinishDeploy();
     }
 
     public void HandleAttackerFinishDeploy()

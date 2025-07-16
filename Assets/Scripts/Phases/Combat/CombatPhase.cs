@@ -16,6 +16,6 @@ public class CombatPhase : IBattlePhase
 
     public void ExitPhase()
     {
-
+        uICombatController.Shutdown();
     }
 }

@@ -4,10 +4,10 @@ public class UICombatController : MonoBehaviour
 {
     public void Init()
     {
-        enabled = true;
+        gameObject.SetActive(true);
     }
     public void Shutdown()
     {
-        enabled = false;
+        gameObject.SetActive(false);
     }
 }

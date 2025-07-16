@@ -9,13 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8791214935137866292}
+  - component: {fileID: 6698765970959695720}
   m_Layer: 0
   m_Name: UICombat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8791214935137866292
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36,6 +37,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6698765970959695720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63565554171504666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8f13e1c7ee15cfe90ce1c19b7e61e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &868480338533243359
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,7 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIDeployController: {fileID: 80909618365619982}
-  UICombatController: {fileID: 0}
+  UICombatController: {fileID: 6698765970959695720}
   Canvas: {fileID: 6570356922974615975}
 --- !u!223 &6570356922974615975
 Canvas:
@@ -659,7 +672,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &593737156886413830
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1073,9 +1086,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5033131871834501876}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -45}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &920223316694413023

@@ -10,6 +10,7 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
     public Army Attacker { get; private set; }
     public Army Defender { get; private set; }
     public event Action<DeploySlotController> OnSlotClicked;
+    public event Action OnFinishButtonclicked;
 
 
     public void DisableUI()
@@ -33,21 +34,12 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
 
     public void HandleFinishButtonClicked()
     {
-        if (bfController.ActiveArmy == Attacker)
-        {
-            HandleAttackerFinishDeploy();
-        }
-    }
-
-    public void HandleAttackerFinishDeploy()
-    {
-
-        DeploymentPhaseController.StartDefenderDeployment();
+        OnFinishButtonclicked?.Invoke();
     }
 
     public void Init(BattlefieldController newBfController, DeploymentPhase newDeploymentPhasecontroller)
     {
-        enabled = true;
+        gameObject.SetActive(true);
         bfController = newBfController;
         DeploymentPhaseController = newDeploymentPhasecontroller;
         Attacker = bfController.bfModel.Attacker;
@@ -60,6 +52,6 @@ public class UIDeployController : MonoBehaviour, IUIDeployController
     {
         Attacker = null;
         Defender = null;
-        enabled = false;
+        gameObject.SetActive(false);
     }
 }
