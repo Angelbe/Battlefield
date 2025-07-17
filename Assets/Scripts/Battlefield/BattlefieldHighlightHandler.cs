@@ -5,14 +5,14 @@ public class BattlefieldHighlightHandler
 {
     private readonly Dictionary<CubeCoord, TileController> tileControllers;
     private BattlefieldDeploymentZones deploymentZones;
-    private BattlefieldConfig config;
+    private BattlefieldConfig bfConfig;
     private BattlefieldModel bfModel;
 
     public BattlefieldHighlightHandler(Dictionary<CubeCoord, TileController> tileControllersFromBattlefield, BattlefieldDeploymentZones zones, BattlefieldConfig battlefieldConfig, BattlefieldModel model)
     {
         tileControllers = tileControllersFromBattlefield;
         deploymentZones = zones;
-        config = battlefieldConfig;
+        bfConfig = battlefieldConfig;
         bfModel = model;
     }
 
@@ -66,18 +66,24 @@ public class BattlefieldHighlightHandler
     public void ShowAttackerDeploymentZone(EDeploymentLevel level)
     {
         if (!deploymentZones.AttackerZones.TryGetValue(level, out var coords)) return;
-        var color = config.GetColor(ETileHighlightType.DeployZone);
+        var color = bfConfig.GetColor(ETileHighlightType.DeployZone);
         AddColorToLevel(2, coords, color);
     }
 
     public void ShowDefenderDeploymentZone(EDeploymentLevel level)
     {
         if (!deploymentZones.DefenderZones.TryGetValue(level, out var coords)) return;
-        var color = config.GetColor(ETileHighlightType.DeployZone);
+        var color = bfConfig.GetColor(ETileHighlightType.DeployZone);
         AddColorToLevel(2, coords, color);
     }
     public void ClearDeploymentZones()
     {
-        ClearLevelForAll(2); 
+        Color deployColor = bfConfig.GetColor(ETileHighlightType.DeployZone);
+
+        foreach (var tile in tileControllers.Values)
+        {
+            tile.Highlight.RemoveColor(2, deployColor);
+        }
     }
+
 }

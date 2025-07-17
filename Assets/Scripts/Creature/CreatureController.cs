@@ -7,7 +7,7 @@ using UnityEngine;
 public class CreatureController : MonoBehaviour
 {
     public Guid InstanceId { get; private set; } = Guid.NewGuid();
-    public CreatureView View { get; private set; }
+    public CreatureView View;
     public CreatureModel Model { get; private set; }
     public CreatureStats Stats { get; private set; }
     private CubeCoord[] positions;
@@ -34,7 +34,6 @@ public class CreatureController : MonoBehaviour
     {
         Model = model;
         Quantity = newQuantity;
-        View.GetComponent<CreatureView>();
         View.Init(Model);
         Stats = new CreatureStats(Model);
         if (isDefender)

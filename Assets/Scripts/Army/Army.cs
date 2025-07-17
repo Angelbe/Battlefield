@@ -3,7 +3,7 @@ using UnityEngine;
 public class Army : IArmy
 {
     public string Name { get; private set; }
-    public bool IsAttacker { get; private set; }
+    public bool IsDefender { get; private set; }
     public ChampionModel Champion { get; private set; }
     public ReserveHandler Reserve { get; private set; }
     public DeployHandler Deployed { get; private set; }
@@ -28,8 +28,8 @@ public class Army : IArmy
         Reserve.RemoveFromReserve(slot, quantity);
     }
 
-    public void SetIsAttacker(bool isAttacler)
+    public void SetIsDefender(bool isDefender)
     {
-        IsAttacker = isAttacler;
+        IsDefender = isDefender;
     }
 }

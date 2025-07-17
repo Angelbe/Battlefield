@@ -55,10 +55,12 @@ public class TileHighlightController
             var colors = highlightLevels[level];
             if (colors.Count == 0) continue;
 
-            if (colors.Count == 1)
+            StopCyclingColors();
+            List<Color> colorList = colors.ToList();
+
+            if (colorList.Count == 1)
             {
-                StopCyclingColors();
-                var color = colors.First();
+                var color = colorList[0];
                 if (currentDisplayedColor != color)
                 {
                     view.SetColor(color);
@@ -67,7 +69,8 @@ public class TileHighlightController
             }
             else
             {
-                StartCyclingColors(colors.ToList());
+                StartCyclingColors(colorList);
+                currentDisplayedColor = colorList.Aggregate(Color.clear, (acc, c) => acc + c) / colorList.Count;
             }
             return;
         }
@@ -98,13 +101,25 @@ public class TileHighlightController
     private IEnumerator CycleColors(List<Color> colors)
     {
         int index = 0;
+        float transitionDuration = 1f;
+
         while (true)
         {
-            var color = colors[index];
-            view.SetColor(color);
-            currentDisplayedColor = color;
+            Color startColor = view.GetCurrentColor();
+            Color targetColor = colors[index];
+            float elapsed = 0f;
+
+            while (elapsed < transitionDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / transitionDuration;
+                view.SetRawColor(Color.Lerp(startColor, targetColor, t));
+                yield return null;
+            }
+
+            view.SetRawColor(targetColor);
             index = (index + 1) % colors.Count;
-            yield return new WaitForSeconds(0.5f);
+            yield return null;
         }
     }
     public bool HasColorInLevel(int level, Color color)

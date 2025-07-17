@@ -16,6 +16,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     private DeploySlotController slotSelected;
     private TileController tileHovered;
     private Army activeArmy;
+    private Color selectedColor => bfController.BfConfig.GetColor(ETileHighlightType.Selected);
     private Color hoverColor => bfController.BfConfig.GetColor(ETileHighlightType.Hover);
     private Color deployColor => bfController.BfConfig.GetColor(ETileHighlightType.DeployZone);
     private CreaturePlacementValidator placementValidator;
@@ -119,14 +120,19 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
                 return;
             }
         }
-        bool isAttacker = activeArmy.IsAttacker;
-        Transform ArmyTransform = isAttacker ? attackerUnitsGO.transform : defenderUnitsGO.transform;
-        GameObject CreaturePrefab = creatureCatalog.GetCombatPrefab(selectedStack.Creature.Name);
+        bool isDefender = activeArmy.IsDefender;
+        CreatureModel creatureModel = selectedStack.Creature;
+        TileModel tileModel = tileClicked.Model;
+        Transform ArmyTransform = isDefender ? attackerUnitsGO.transform : defenderUnitsGO.transform;
+        GameObject CreaturePrefab = creatureCatalog.GetCombatPrefab(creatureModel.Name);
         GameObject CreatureGO = Instantiate(CreaturePrefab, ArmyTransform);
-        CreatureController creaturecontroller = CreatureGO.GetComponent<CreatureController>();
-        CreatureGO.transform.position = tileClicked.Model.WorldPosition;
-        StackDeployed(creaturecontroller);
-        tileClicked.SetOcupantCreature(creaturecontroller);
+        CreatureController creatureController = CreatureGO.GetComponent<CreatureController>();
+        CreatureGO.transform.position = tileModel.WorldPosition;
+        creatureController.Init(creatureModel, tileModel.Coord, selectedStack.Quantity, isDefender);
+        StackDeployed(creatureController);
+        tileClicked.SetOcupantCreature(creatureController);
+        tileClicked.Highlight.RemoveColor(5, selectedColor);
+        tileClicked.Highlight.AddColor(2, activeArmy.ArmyColor);
     }
 
     public void Init(BattlefieldController newBfcontroller, CreatureCatalog newCreatureCatalog, UIDeployController newUIDeployController, BattlefieldMouseHandler newBFMouseHandler)
