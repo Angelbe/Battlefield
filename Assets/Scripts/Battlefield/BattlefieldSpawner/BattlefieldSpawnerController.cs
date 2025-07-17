@@ -18,46 +18,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     private Army activeArmy;
     private Color hoverColor => bfController.BfConfig.GetColor(ETileHighlightType.Hover);
     private Color deployColor => bfController.BfConfig.GetColor(ETileHighlightType.DeployZone);
-
-
-    private bool IsCreatureShapeCorrect(CreatureModel creatureToCheck, TileController tileAnchor)
-    {
-        if (selectedStack == null || tileHovered == null)
-            return false;
-
-        CubeCoord anchor = tileAnchor.Model.Coord;
-        CubeCoord[] shapeOffsets = shapeCatalog.GetShape(creatureToCheck.Shape);
-
-        foreach (var offset in shapeOffsets)
-        {
-            CubeCoord targetCoord = anchor + offset;
-
-            // Si no existe en el diccionario de TileControllers, está fuera del mapa
-            if (!bfController.TileControllers.TryGetValue(targetCoord, out var tile))
-            {
-                // Debug.LogWarning($"[Spawn] Tile en {targetCoord} no existe.");
-                return false;
-            }
-
-            // Si hay algo ocupando la tile
-            if (tile.OccupantCreature != null)
-            {
-                // Debug.LogWarning($"[Spawn] Tile en {targetCoord} ya ocupada.");
-                return false;
-            }
-
-            // Si no está dentro de una zona de despliegue válida (simplificable más adelante)
-            bool tileHasDeploy = tile.Highlight.HasColorInLevel(2, deployColor);
-            if (!tileHasDeploy)
-            {
-                // Debug.LogWarning($"[Spawn] Tile en {targetCoord} fuera de zona de despliegue.");
-                return false;
-            }
- 
-        }
-
-        return true;
-    }
+    private CreaturePlacementValidator placementValidator;
 
     public void HandleSlotClicked(DeploySlotController slotClicked)
     {
@@ -75,14 +36,6 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         StackSelectedToDeploy(slotClicked);
     }
 
-    private void StackSelectedToDeploy(DeploySlotController newDeploySlotSelected)
-    {
-        slotSelected = newDeploySlotSelected;
-        slotSelected.SlotSelected();
-        selectedStack = slotSelected.Model.CreatureStack;
-        ShowGhosts();
-    }
-
     private void StackDeployed(CreatureController creatureDeployed)
     {
         slotSelected.UnselectSlot();
@@ -91,6 +44,15 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         slotSelected = null;
         selectedStack = null;
         StopShowingGhosts();
+    }
+
+
+    private void StackSelectedToDeploy(DeploySlotController newDeploySlotSelected)
+    {
+        slotSelected = newDeploySlotSelected;
+        slotSelected.SlotSelected();
+        selectedStack = slotSelected.Model.CreatureStack;
+        ShowGhosts();
     }
 
     private void StackUnselected()
@@ -110,7 +72,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
 
         if (isShowingGhosts && selectedStack != null)
         {
-            if (IsCreatureShapeCorrect(selectedStack.Creature, newTileHovered))
+            if (placementValidator.DoesTheCreatureFitInTile(selectedStack.Creature, newTileHovered.Model.Coord))
             {
                 ghostHandler.ShowGhost(selectedStack, newTileHovered);
                 tileHovered.Highlight.AddColor(4, hoverColor);
@@ -152,7 +114,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
     {
         if (!isShowingGhosts || tileClicked != null)
         {
-            if (selectedStack == null || !IsCreatureShapeCorrect(selectedStack.Creature, tileClicked))
+            if (selectedStack == null || !placementValidator.DoesTheCreatureFitInTile(selectedStack.Creature, tileClicked.Model.Coord))
             {
                 return;
             }
@@ -175,6 +137,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         bfController = newBfcontroller;
         ghostHandler = new GhostCreatureHandler(ghostUnitsGO.transform, creatureCatalog);
         shapeCatalog = new CreatureShapeCatalog();
+        placementValidator = new CreaturePlacementValidator(bfController, shapeCatalog, deployColor);
         uIDeployController.OnSlotClicked += HandleSlotClicked;
         bfMouseHandler.OnTileHovered += UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered += ClearGhost;
@@ -189,6 +152,3 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         bfMouseHandler.OnTileClicked -= HandleTileClicked;
     }
 }
-
-
-//TODO: Conseguir Active Army aquí

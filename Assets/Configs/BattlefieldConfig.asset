@@ -12,10 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98cb647740b0ca1a989e08f9554cef44, type: 3}
   m_Name: BattlefieldConfig
   m_EditorClassIdentifier: 
-  noneColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3137255}
-  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  selectedColor: {r: 0.30968508, g: 0.6887079, b: 0.7203761, a: 1}
-  deployZoneColor: {r: 0, g: 1, b: 0, a: 1}
+  highlightColors:
+  - type: 0
+    color: {r: 0.41719544, g: 0.41719544, b: 0.41719544, a: 0.45490196}
+  - type: 1
+    color: {r: 0.5461754, g: 0.5566038, b: 0.33343717, a: 0.5882353}
+  - type: 2
+    color: {r: 0.38845798, g: 0.5647017, b: 0.6660922, a: 0.5882353}
+  - type: 3
+    color: {r: 0.19783811, g: 0.5419271, b: 0.04643894, a: 0.5882353}
   tilePrefab: {fileID: 3200075118856896099, guid: 0e0078ac78b4b2fb4ab4b50306994d2f, type: 3}
   battlefieldPrefab: {fileID: 7710286814033475010, guid: 0338ee16dcbbd30b8a3cb0c19644569c, type: 3}
   battlefieldBackgroundSprite: {fileID: 9119414098855660196, guid: 11106b9ab9e1411df995f070333e4d1b, type: 3}
