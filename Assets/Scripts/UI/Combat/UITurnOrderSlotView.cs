@@ -11,8 +11,12 @@ public class UITurnOrderSlotView : MonoBehaviour
         var sprite = creature.GetComponentInChildren<SpriteRenderer>().sprite;
         CreatureImage.sprite = sprite;
 
-        // Opcional: cambiar color del fondo según el ejército
-        var color = creature.IsDefender ? Color.blue : Color.red;
-        BackgroundImage.color = color;
+        // Cambia el color de fondo según el ejército
+        BackgroundImage.color = creature.IsDefender ? Color.blue : Color.red;
+
+        // Gira horizontalmente si es defensor (escala X negativa)
+        Vector3 scale = CreatureImage.rectTransform.localScale;
+        scale.x = creature.IsDefender ? -1f : 1f;
+        CreatureImage.rectTransform.localScale = scale;
     }
 }
