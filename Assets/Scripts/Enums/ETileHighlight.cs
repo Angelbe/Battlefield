@@ -1,1 +1,1 @@
-public enum ETileHighlightType { Transparent, Hover, Selected, DeployZone }
+public enum ETileHighlightType { Transparent, Hover, Selected, DeployZone, MovementRange }

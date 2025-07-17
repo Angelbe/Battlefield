@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 public class PhaseManager
 {
-    private IBattlePhase currentPhase;
+    public IBattlePhase CurrentPhase { get; private set; }
     public readonly DeploymentPhase DeploymentPhase;
     public readonly CombatPhase CombatPhase;
     public UIController UIController { get; private set; }
@@ -17,20 +17,19 @@ public class PhaseManager
     }
     public void StartBattle()
     {
-        CombatPhase.ExitPhase();
-        currentPhase = DeploymentPhase;
+        CurrentPhase = DeploymentPhase;
         DeploymentPhase.StartPhase();
     }
 
     public void FinishDeploymentPhase()
     {
-        currentPhase.ExitPhase();
+        DeploymentPhase.ExitPhase();
         StartCombatPhase();
     }
 
     public void StartCombatPhase()
     {
-        currentPhase = CombatPhase;
+        CurrentPhase = CombatPhase;
         CombatPhase.StartPhase();
     }
 }

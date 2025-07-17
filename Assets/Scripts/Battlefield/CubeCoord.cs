@@ -32,7 +32,10 @@ public struct CubeCoord : IEquatable<CubeCoord>
     public static bool operator !=(CubeCoord left, CubeCoord right) => !left.Equals(right);
 
     public override string ToString() => $"({X}, {Y}, {Z})";
-
+    public static int Distance(CubeCoord a, CubeCoord b)
+    {
+        return Mathf.Max(Mathf.Abs(a.X - b.X), Mathf.Abs(a.Y - b.Y), Mathf.Abs(a.Z - b.Z));
+    }
     public static CubeCoord FromColRow(int col, int row)
     {
         int x = col - (row - (row & 1)) / 2;

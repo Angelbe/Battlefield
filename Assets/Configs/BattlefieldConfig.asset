@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightColors:
   - type: 0
-    color: {r: 0.41719544, g: 0.41719544, b: 0.41719544, a: 0.45490196}
+    color: {r: 0.5669331, g: 0.5669331, b: 0.5669331, a: 0.45490196}
   - type: 1
     color: {r: 0.5461754, g: 0.5566038, b: 0.33343717, a: 0.5882353}
   - type: 2
     color: {r: 0.38845798, g: 0.5647017, b: 0.6660922, a: 0.5882353}
   - type: 3
     color: {r: 0.19783811, g: 0.5419271, b: 0.04643894, a: 0.5882353}
+  - type: 4
+    color: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 0.45490196}
   tilePrefab: {fileID: 3200075118856896099, guid: 0e0078ac78b4b2fb4ab4b50306994d2f, type: 3}
   battlefieldPrefab: {fileID: 7710286814033475010, guid: 0338ee16dcbbd30b8a3cb0c19644569c, type: 3}
   battlefieldBackgroundSprite: {fileID: 9119414098855660196, guid: 11106b9ab9e1411df995f070333e4d1b, type: 3}

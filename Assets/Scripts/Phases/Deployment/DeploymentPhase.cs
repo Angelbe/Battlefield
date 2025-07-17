@@ -24,7 +24,6 @@ public class DeploymentPhase : IBattlePhase
         bfController.BfHighlight.ClearDeploymentZones();
         uIDeployController.OnFinishButtonclicked -= HandleFinishButtonClicked;
         uIDeployController.Shutdown();
-        phaseManager.StartCombatPhase();
     }
 
     public void SetActiveArmy(Army newActiveArmy)

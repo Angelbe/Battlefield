@@ -69,25 +69,26 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
     }
 
 
-    public void HandleHoverTile(CubeCoord newTileCoordHovered)
+    public void HandleHoverTile(TileController tileHovered)
     {
-        BfMouse.HandleHoverTile(newTileCoordHovered);
+        BfMouse.HandleHoverTile(tileHovered);
     }
 
     public void HandleUnhoverTile()
     {
         BfMouse.HandleUnhoverTile();
     }
-    public void HandleclickTile(CubeCoord TileClickedCoord)
+    public void HandleclickTile(TileController tileClicked)
     {
-        BfMouse.HandleClickTile(TileClickedCoord);
+        BfMouse.HandleClickTile(tileClicked);
     }
 
-    public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, CreatureCatalog creatureCatalog, UIController newUiDeployController)
+    public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, PhaseManager newPhaseManager, CreatureCatalog creatureCatalog, UIController newUiDeployController)
     {
         BfConfig = newBfConfig;
         bfModel = newBfModel;
-        BfMouse = new(TileControllers, BfConfig);
+        PhaseManager = newPhaseManager;
+        BfMouse = new(TileControllers, BfConfig, PhaseManager);
         BfGrid = new(BfConfig);
         BfDeploymentZones = new(this, BfConfig);
         BfHighlight = new(TileControllers, BfDeploymentZones, BfConfig, bfModel);

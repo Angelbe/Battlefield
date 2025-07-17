@@ -1,6 +1,6 @@
 public interface IBattlefieldMouseHandler
 {
-    public void HandleHoverTile(CubeCoord newTileCoordHovered);
+    public void HandleHoverTile(TileController tileHovered);
     public void HandleUnhoverTile();
-    public void HandleClickTile(CubeCoord TileClickedCoord);
+    public void HandleClickTile(TileController tileClicked);
 }

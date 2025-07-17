@@ -20,14 +20,16 @@ public class TileController : MonoBehaviour, ITileController
     public void SetOcupantCreature(CreatureController newOcuppantCreature)
     {
         OccupantCreature = newOcuppantCreature;
+        Highlight.AddColor(2, OccupantCreature.Army.ArmyColor);
     }
 
-    public void ClearOcupantCreature()
+    public void ClearOcupantCreature(CreatureController newOcuppantCreature)
     {
+        Highlight.RemoveColor(2, OccupantCreature.Army.ArmyColor);
         OccupantCreature = null;
     }
 
-    private void OnMouseEnter() => BfController.HandleHoverTile(Model.Coord);
+    private void OnMouseEnter() => BfController.HandleHoverTile(this);
     private void OnMouseExit() => BfController.HandleUnhoverTile();
-    private void OnMouseDown() => BfController.HandleclickTile(Model.Coord);
+    private void OnMouseDown() => BfController.HandleclickTile(this);
 }

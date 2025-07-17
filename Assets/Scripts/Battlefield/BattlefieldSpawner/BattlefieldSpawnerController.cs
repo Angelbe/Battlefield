@@ -128,11 +128,10 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         GameObject CreatureGO = Instantiate(CreaturePrefab, ArmyTransform);
         CreatureController creatureController = CreatureGO.GetComponent<CreatureController>();
         CreatureGO.transform.position = tileModel.WorldPosition;
-        creatureController.Init(creatureModel, tileModel.Coord, selectedStack.Quantity, isDefender);
+        creatureController.Init(creatureModel, bfController, activeArmy, tileClicked, selectedStack.Quantity, isDefender);
         StackDeployed(creatureController);
         tileClicked.SetOcupantCreature(creatureController);
         tileClicked.Highlight.RemoveColor(5, selectedColor);
-        tileClicked.Highlight.AddColor(2, activeArmy.ArmyColor);
     }
 
     public void Init(BattlefieldController newBfcontroller, CreatureCatalog newCreatureCatalog, UIDeployController newUIDeployController, BattlefieldMouseHandler newBFMouseHandler)
@@ -147,7 +146,7 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         uIDeployController.OnSlotClicked += HandleSlotClicked;
         bfMouseHandler.OnTileHovered += UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered += ClearGhost;
-        bfMouseHandler.OnTileClicked += HandleTileClicked;
+        bfMouseHandler.OnTileClickedDeploymentPhase += HandleTileClicked;
     }
 
     public void Shutdown()
@@ -155,6 +154,6 @@ public class BattlefieldSpawnController : MonoBehaviour, IBattlefieldSpawnContro
         uIDeployController.OnSlotClicked -= HandleSlotClicked;
         bfMouseHandler.OnTileHovered -= UpdateHoverTile;
         bfMouseHandler.OnTileUnhovered -= ClearGhost;
-        bfMouseHandler.OnTileClicked -= HandleTileClicked;
+        bfMouseHandler.OnTileClickedDeploymentPhase -= HandleTileClicked;
     }
 }
