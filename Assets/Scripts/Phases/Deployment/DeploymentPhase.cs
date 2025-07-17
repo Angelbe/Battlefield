@@ -60,6 +60,7 @@ public class DeploymentPhase : IBattlePhase
         bfController.BfHighlight.ClearDeploymentZones();
         SetActiveArmy(bfController.bfModel.Attacker);
         bfController.BfSpawn.SetActiveArmy(ActiveArmy);
+        ActiveArmy.SetIsDefender(false);
         bfController.BfHighlight.ShowAttackerDeploymentZone(ActiveArmy.Champion.DeploymentLevel);
         uIDeployController.ShowAttackerDeploy();
     }
@@ -69,6 +70,7 @@ public class DeploymentPhase : IBattlePhase
         bfController.BfHighlight.ClearDeploymentZones();
         SetActiveArmy(bfController.bfModel.Defender);
         bfController.BfSpawn.SetActiveArmy(ActiveArmy);
+        ActiveArmy.SetIsDefender(true);
         bfController.BfHighlight.ShowDefenderDeploymentZone(ActiveArmy.Champion.DeploymentLevel);
         uIDeployController.ShowDefenderDeploy();
     }

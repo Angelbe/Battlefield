@@ -11,7 +11,7 @@ public class CreatureController : MonoBehaviour
     public CreatureModel Model { get; private set; }
     public CreatureStats Stats { get; private set; }
     private CubeCoord[] positions;
-    public bool IsDefender;
+    public bool IsDefender { get; private set; }
     public bool isDead;
     public int Quantity;
 
@@ -24,10 +24,13 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-    public void SetAsDefender()
+    public void SetAsDefender(bool isDefender)
     {
-        IsDefender = true;
-        View.FlipSprite();
+        IsDefender = isDefender;
+        if (IsDefender)
+        {
+            View.FlipSprite();
+        }
     }
 
     public void Init(CreatureModel model, CubeCoord anchor, int newQuantity, bool isDefender)
@@ -38,7 +41,7 @@ public class CreatureController : MonoBehaviour
         Stats = new CreatureStats(Model);
         if (isDefender)
         {
-            SetAsDefender();
+            SetAsDefender(isDefender);
         }
     }
 }

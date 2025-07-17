@@ -31,5 +31,9 @@ public class Army : IArmy
     public void SetIsDefender(bool isDefender)
     {
         IsDefender = isDefender;
+        foreach (CreatureStack creatureStack in Reserve.CreaturesInReserve.Values)
+        {
+            creatureStack.SetAsDefender(isDefender);
+        }
     }
 }

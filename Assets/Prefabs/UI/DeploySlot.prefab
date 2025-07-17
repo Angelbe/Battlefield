@@ -199,8 +199,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   View: {fileID: 380522489323547445}
+  isDeployed: 0
   QuantityText: {fileID: 7353383548621715867}
-  CreatureUIGO: {fileID: 8680070923598811554}
   CreatureCatalog: {fileID: 11400000, guid: 2e836d9ea0278934bb89e1cc965425ea, type: 2}
 --- !u!114 &380522489323547445
 MonoBehaviour:
@@ -216,6 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CreatureImage: {fileID: 8247574946229943100}
   SelectionFrame: {fileID: 6702152900646262103}
+  creatureCatalog: {fileID: 11400000, guid: 2e836d9ea0278934bb89e1cc965425ea, type: 2}
 --- !u!61 &4791769389611286185
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -444,14 +445,9 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4088140898844407123, guid: 31ab324b5e453a2cba5150ce8c09557d, type: 3}
   m_PrefabInstance: {fileID: 5390452286762749551}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8680070923598811554}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &8680070923598811554 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3655644507277516749, guid: 31ab324b5e453a2cba5150ce8c09557d, type: 3}
-  m_PrefabInstance: {fileID: 5390452286762749551}
-  m_PrefabAsset: {fileID: 0}

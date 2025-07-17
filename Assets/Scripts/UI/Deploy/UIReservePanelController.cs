@@ -37,7 +37,7 @@ public class UIReservePanelController : MonoBehaviour, IUIReservePanelController
 
         foreach (CreatureStack creatureStack in ReserveToShow.CreaturesInReserve.Values)
         {
-            var deploySlotModel = new DeploySlotModel(creatureStack);
+            var deploySlotModel = new DeploySlotModel(creatureStack, creatureStack.IsDefender);
             var slotGO = Instantiate(DeploySlotPrefab, transform);
             var deploySlotController = slotGO.GetComponent<DeploySlotController>();
             deploySlotController.Init(deploySlotModel, UIDeployController);

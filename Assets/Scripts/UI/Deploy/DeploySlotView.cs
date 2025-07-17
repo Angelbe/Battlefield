@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class DeploySlotView : MonoBehaviour
     public bool isSelected { get; private set; } = false;
     public Image CreatureImage;
     public GameObject SelectionFrame;
+    [SerializeField] private CreatureCatalog creatureCatalog;
 
     public void SelectSlot()
     {
@@ -34,5 +36,15 @@ public class DeploySlotView : MonoBehaviour
     public void ResetColor()
     {
         CreatureImage.color = Color.white;
+    }
+
+    public void SetCreature(CreatureModel creature, bool isDefender)
+    {
+        GameObject CreatureUIPrefab = creatureCatalog.GetUIPrefab(creature.Name);
+        CreatureImage = CreatureUIPrefab.GetComponent<Image>();
+
+        Vector3 scale = CreatureImage.rectTransform.localScale;
+        scale.x = isDefender ? -1f : 1f;
+        CreatureImage.rectTransform.localScale = scale;
     }
 }

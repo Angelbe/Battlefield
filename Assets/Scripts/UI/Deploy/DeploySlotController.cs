@@ -75,6 +75,7 @@ public class DeploySlotController : MonoBehaviour, IDeploySlotController
     {
         UIDeployController = uIDeployController;
         Model = ModelToShow;
+        View.SetCreature(Model.CreatureStack.Creature, ModelToShow.IsDefender);
         UpdateModelInTheSlot(Model);
         View.UnselectSlot();
     }

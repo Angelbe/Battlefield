@@ -14,7 +14,9 @@ public class GhostCreatureHandler
 
     public void ShowGhost(CreatureStack creatureStack, TileController tileController)
     {
-        var prefab = creatureCatalog.GetCombatPrefab(creatureStack.Creature.Name);
+        GameObject prefab = creatureCatalog.GetCombatPrefab(creatureStack.Creature.Name);
+        CreatureController crController = prefab.GetComponent<CreatureController>();
+        crController.SetAsDefender(creatureStack.IsDefender);
         if (prefab == null) return;
 
         currentGhost = GameObject.Instantiate(prefab, GhostGO);

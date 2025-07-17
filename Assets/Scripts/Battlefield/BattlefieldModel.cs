@@ -12,7 +12,6 @@ public class BattlefieldModel
     {
         Attacker = attacker;
         Defender = defender;
-        Defender.SetIsDefender(true);
     }
 
 }

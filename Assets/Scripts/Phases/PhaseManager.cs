@@ -19,7 +19,7 @@ public class PhaseManager
     {
         CombatPhase.ExitPhase();
         currentPhase = DeploymentPhase;
-        currentPhase.StartPhase();
+        DeploymentPhase.StartPhase();
     }
 
     public void FinishDeploymentPhase()
@@ -31,6 +31,6 @@ public class PhaseManager
     public void StartCombatPhase()
     {
         currentPhase = CombatPhase;
-        currentPhase.StartPhase();
+        CombatPhase.StartPhase();
     }
 }
