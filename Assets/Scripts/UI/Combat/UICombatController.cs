@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UICombatController : MonoBehaviour
@@ -11,6 +12,12 @@ public class UICombatController : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+    public void ShowTurnOrder(List<CreatureController> upcomingOrder)
+    {
+        TurnOrder.Show(upcomingOrder);
+    }
+
 
 
 }

@@ -20,11 +20,19 @@ public class CombatPhase : IBattlePhase
         TurnHandler = new(AttackerCreatures, DefenderCreatures);
         uICombatController.Init();
         ActiveCreature = TurnHandler.PeekCurrentCreature();
+        UpdateUITurnOrder();
+    }
+
+    public void UpdateUITurnOrder()
+    {
+        var upcoming = TurnHandler.GetNextTurnOrder(15);
+        uICombatController.ShowTurnOrder(upcoming);
     }
 
     public void HandleCreatureFinishedTurn()
     {
         ActiveCreature = TurnHandler.GetNextCreature();
+        UpdateUITurnOrder();
     }
 
     public void ExitPhase()

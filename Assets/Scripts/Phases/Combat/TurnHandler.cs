@@ -49,5 +49,33 @@ public class TurnHandler
         RecalculateInitiativeOrder();
     }
 
+    public List<CreatureController> GetNextTurnOrder(int count)
+    {
+        List<CreatureController> result = new();
+        Queue<CreatureController> tempQueue = new(currentTurnQueue);
+        HashSet<CreatureController> seen = new(movedThisTurn);
+
+        while (result.Count < count)
+        {
+            if (tempQueue.Count == 0)
+            {
+                // Simula próximo turno
+                StartNewTurn();
+                tempQueue = new(currentTurnQueue);
+                seen.Clear();
+            }
+
+            CreatureController creature = tempQueue.Dequeue();
+            if (!seen.Contains(creature))
+            {
+                result.Add(creature);
+                seen.Add(creature);
+            }
+        }
+
+        return result;
+    }
+
+
     public bool HasEveryoneMovedThisTurn() => movedThisTurn.Count >= allCreatures.Count;
 }
