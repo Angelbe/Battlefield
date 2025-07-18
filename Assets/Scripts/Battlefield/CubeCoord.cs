@@ -1,6 +1,7 @@
 // CubeCoord.cs
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -43,6 +44,28 @@ public struct CubeCoord : IEquatable<CubeCoord>
         int y = -x - z;
         return new CubeCoord(x, y, z);
     }
+
+    public static List<CubeCoord> GetNeighbors(List<TileController> tiles)
+    {
+        HashSet<CubeCoord> inputCoords = new();
+        HashSet<CubeCoord> neighborCoords = new();
+
+        foreach (TileController tile in tiles)
+        {
+            CubeCoord coord = tile.Model.Coord;
+            inputCoords.Add(coord);
+
+            foreach (CubeCoord dir in CubeCoord.CubeDirections.Values)
+            {
+                CubeCoord neighbor = coord + dir;
+                if (!inputCoords.Contains(neighbor))
+                    neighborCoords.Add(neighbor);
+            }
+        }
+
+        return neighborCoords.ToList();
+    }
+
 
     public static readonly Dictionary<string, CubeCoord> CubeDirections = new()
     {

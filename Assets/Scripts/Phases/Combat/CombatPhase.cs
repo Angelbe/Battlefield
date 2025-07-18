@@ -32,31 +32,80 @@ public class CombatPhase : IBattlePhase
 
     public void HandleCreatureFinishedTurn()
     {
+        UpdateUITurnOrder();
         CreatureController nextCreature = TurnHandler.GetNextCreature();
         SetNewActiveCreature(nextCreature);
-        UpdateUITurnOrder();
     }
 
     private void HandleClickTile(TileController tileClicked)
     {
-
-        MoveCreatureTo(tileClicked);
+        if (TryHandleMeleeAttack(tileClicked)) return;
+        if (TryHandleRangedAttack(tileClicked)) return;
+        if (TryHandleMovement(tileClicked)) return;
     }
 
-    private void MoveCreatureTo(TileController TileDestination)
+    private bool TryHandleMeleeAttack(TileController tileClicked)
     {
-        CubeCoord destination = TileDestination.Model.Coord;
-        if (!ActiveCreature.Movement.IsTileReachable(destination)) return;
+        CreatureController occupant = tileClicked.OccupantCreature;
 
-        List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(ActiveCreature.OccupiedTiles[0].Model.Coord, destination);
+        if (occupant == null || occupant.Army == ActiveCreature.Army) return false;
+        if (!ActiveCreature.Combat.CanMeleeAttack(occupant)) return false;
+
+        TileController attackFromTile = ActiveCreature.Combat.FindClosestAttackTile(occupant, tileClicked.Model.WorldPosition);
+        if (attackFromTile == null) return false;
+
+        CubeCoord destination = attackFromTile.Model.Coord;
+        if (!ActiveCreature.Movement.IsTileReachable(destination)) return false;
+
+        List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(
+            ActiveCreature.OccupiedTiles[0].Model.Coord,
+            destination
+        );
+
         ActiveCreature.Movement.ClearReachableTiles();
-
-        foreach (var tile in ActiveCreature.OccupiedTiles)
-        {
+        foreach (TileController tile in ActiveCreature.OccupiedTiles)
             tile.ClearOcupantCreature(ActiveCreature);
-        }
 
-        ActiveCreature.Movement.MoveAlongPath(path);
+        ActiveCreature.Movement.MoveAlongPath(path, () =>
+        {
+            ActiveCreature.Combat.ExecuteMeleeAttack(occupant);
+        });
+
+        return true;
+    }
+
+    private bool TryHandleRangedAttack(TileController tileClicked)
+    {
+        CreatureController occupant = tileClicked.OccupantCreature;
+
+        if (occupant == null || occupant.Army == ActiveCreature.Army) return false;
+        if (ActiveCreature.Model.AttackType != EAttackType.Range) return false;
+        if (!ActiveCreature.Combat.CanRangedAttack(occupant)) return false;
+
+        ActiveCreature.Combat.ExecuteRangedAttack(occupant);
+        return true;
+    }
+
+    private bool TryHandleMovement(TileController tileClicked)
+    {
+        CubeCoord destination = tileClicked.Model.Coord;
+        if (!ActiveCreature.Movement.IsTileReachable(destination)) return false;
+
+        List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(
+            ActiveCreature.OccupiedTiles[0].Model.Coord,
+            destination
+        );
+
+        ActiveCreature.Movement.ClearReachableTiles();
+        foreach (TileController tile in ActiveCreature.OccupiedTiles)
+            tile.ClearOcupantCreature(ActiveCreature);
+
+        ActiveCreature.Movement.MoveAlongPath(path, () =>
+        {
+            HandleCreatureFinishedTurn();
+        });
+
+        return true;
     }
 
 
@@ -66,9 +115,7 @@ public class CombatPhase : IBattlePhase
         DefenderCreatures = bfController.bfModel.Defender.Deployed;
         TurnHandler = new(AttackerCreatures, DefenderCreatures);
         uICombatController.Init();
-        CreatureController FirstCreatureToMove = TurnHandler.GetNextCreature();
-        SetNewActiveCreature(FirstCreatureToMove);
-        UpdateUITurnOrder();
+        HandleCreatureFinishedTurn();
         bfController.BfMouse.OnTileClickedCombatPhase += HandleClickTile;
 
     }

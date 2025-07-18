@@ -7,13 +7,15 @@ public class TileController : MonoBehaviour, ITileController
     public BattlefieldController BfController { get; private set; }
     public TileHighlightController Highlight { get; private set; }
     public CreatureController OccupantCreature { get; private set; }
+    public AttackCursor AttackCursor { get; private set; }
+    [SerializeField] private GameObject AttackCursorPrefab;
 
     public void Init(TileModel model, BattlefieldController newBfController)
     {
         Model = model;
         View = GetComponent<TileView>();
         View.Init();
-        Highlight = new(View); // Aquí View actúa como MonoBehaviour para StartCoroutine
+        Highlight = new(View);
         BfController = newBfController;
     }
 
@@ -35,4 +37,14 @@ public class TileController : MonoBehaviour, ITileController
     private void OnMouseEnter() => BfController.HandleHoverTile(this);
     private void OnMouseExit() => BfController.HandleUnhoverTile();
     private void OnMouseDown() => BfController.HandleclickTile(this);
+
+    public void InstatiateAttackCursor()
+    {
+
+    }
+
+    public void Update()
+    {
+
+    }
 }

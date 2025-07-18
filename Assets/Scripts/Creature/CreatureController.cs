@@ -10,9 +10,10 @@ public class CreatureController : MonoBehaviour
     public CreatureModel Model { get; private set; }
     public CreatureStats Stats { get; private set; }
     public MovementHandler Movement { get; private set; }
+    public CreatureCombatHandler Combat { get; private set; }
     private CreatureShapeCatalog shapeCatalog = new();
     public bool IsDefender { get; private set; }
-    public TileController[] OccupiedTiles { get; private set; }
+    public List<TileController> OccupiedTiles { get; private set; }
     public bool isDead;
     public int Quantity;
     public Army Army;
@@ -59,7 +60,7 @@ public class CreatureController : MonoBehaviour
             }
         }
 
-        OccupiedTiles = newTiles.ToArray();
+        OccupiedTiles = newTiles;
     }
 
 
@@ -73,6 +74,7 @@ public class CreatureController : MonoBehaviour
         View.Init(Model);
         Stats = new CreatureStats(Model);
         Movement = new MovementHandler(this, newBfController, new Pathfinder(newBfController.TileControllers));
+        Combat = new CreatureCombatHandler(this, newBfController);
         SetNewPosition(tileClicked);
         if (isDefender)
         {

@@ -31,6 +31,10 @@ public class BattlefieldConfig : ScriptableObject
     [Header("Deployment zones")]
     public TextAsset deploymentZonesJson;
 
+    [Header("Cursor attack")]
+    public GameObject CursorSword;
+    public Texture2D CursorArrow;
+
     public Color GetColor(ETileHighlightType type)
     {
         return colorLookup.TryGetValue(type, out var color) ? color : Color.clear;

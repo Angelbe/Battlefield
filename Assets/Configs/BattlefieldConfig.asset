@@ -30,3 +30,5 @@ MonoBehaviour:
   Cols: 19
   HexSize: 0.48
   deploymentZonesJson: {fileID: 4900000, guid: 0b45319c9b04f51088f75788ad65f727, type: 3}
+  CursorSword: {fileID: 2800000, guid: b42a97bf7651a421f82929373515922b, type: 3}
+  CursorArrow: {fileID: 2800000, guid: e2e905a97fc32a6a58b2665d60069e95, type: 3}

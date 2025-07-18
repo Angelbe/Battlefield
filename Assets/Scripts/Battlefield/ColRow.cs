@@ -35,12 +35,12 @@ public readonly struct ColRow : IEquatable<ColRow>
         int col = coord.X + (row - (row & 1)) / 2;
         return new ColRow(col, row);
     }
-    public static Vector2 FromColRowToWorldPosition(ColRow colRow, float size)
+    public static Vector3 FromColRowToWorldPosition(ColRow colRow, float size)
     {
         float width = Mathf.Sqrt(3f) * size;
         float height = 1.5f * size;
         float offsetX = (colRow.Row % 2 == 0) ? 0 : width / 2f;
-        return new Vector2(colRow.Col * width + offsetX, colRow.Row * height);
+        return new Vector3(colRow.Col * width + offsetX, colRow.Row * height);
     }
     public override string ToString() => $"({Col}, {Row})";
 }

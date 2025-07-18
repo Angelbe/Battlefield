@@ -16,7 +16,6 @@ public class Pathfinder
     {
         var origin = creature.OccupiedTiles[0].Model.Coord;
         var shapeOffsets = shapeCatalog.GetShape(creature.Model.Shape);
-        var excluded = new HashSet<CubeCoord>(creature.OccupiedTiles.Select(t => t.Model.Coord));
 
         int maxRange = creature.Stats.Speed;
 
@@ -61,7 +60,7 @@ public class Pathfinder
                 costSoFar[next] = newCost;
                 frontier.Enqueue(next, newCost);
 
-                if (!excluded.Contains(next))
+                if (origin != next)
                 {
                     result.Add(next);
                 }
