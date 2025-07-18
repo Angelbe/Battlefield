@@ -39,8 +39,13 @@ public class CombatPhase : IBattlePhase
 
     private void HandleClickTile(TileController tileClicked)
     {
-        CubeCoord destination = tileClicked.Model.Coord;
 
+        MoveCreatureTo(tileClicked);
+    }
+
+    private void MoveCreatureTo(TileController TileDestination)
+    {
+        CubeCoord destination = TileDestination.Model.Coord;
         if (!ActiveCreature.Movement.IsTileReachable(destination)) return;
 
         List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(ActiveCreature.OccupiedTiles[0].Model.Coord, destination);
