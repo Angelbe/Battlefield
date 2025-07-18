@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5d13eacbf43201c498c626dbe03ff39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bfController: {fileID: 0}
   View: {fileID: 827989120733740770}
-  IsDefender: 0
   isDead: 0
   Quantity: 0
 --- !u!114 &827989120733740770

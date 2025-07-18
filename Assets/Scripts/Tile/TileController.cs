@@ -23,10 +23,13 @@ public class TileController : MonoBehaviour, ITileController
         Highlight.AddColor(2, OccupantCreature.Army.ArmyColor);
     }
 
-    public void ClearOcupantCreature(CreatureController newOcuppantCreature)
+    public void ClearOcupantCreature(CreatureController creatureTryingToClear)
     {
-        Highlight.RemoveColor(2, OccupantCreature.Army.ArmyColor);
-        OccupantCreature = null;
+        if (OccupantCreature == creatureTryingToClear)
+        {
+            Highlight.RemoveColor(2, OccupantCreature.Army.ArmyColor);
+            OccupantCreature = null;
+        }
     }
 
     private void OnMouseEnter() => BfController.HandleHoverTile(this);

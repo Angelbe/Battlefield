@@ -1,46 +1,77 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class Pathfinder
 {
     private readonly Dictionary<CubeCoord, TileController> tileControllers;
+    private readonly CreatureShapeCatalog shapeCatalog = new();
 
     public Pathfinder(Dictionary<CubeCoord, TileController> tiles)
     {
         tileControllers = tiles;
     }
 
-    public List<CubeCoord> GetReachableTiles(CubeCoord origin, int range)
+    public List<CubeCoord> GetReachableTiles(CreatureController creature)
     {
-        HashSet<CubeCoord> visited = new() { origin };
-        Queue<CubeCoord> frontier = new();
-        frontier.Enqueue(origin);
+        var origin = creature.OccupiedTiles[0].Model.Coord;
+        var shapeOffsets = shapeCatalog.GetShape(creature.Model.Shape);
+        var excluded = new HashSet<CubeCoord>(creature.OccupiedTiles.Select(t => t.Model.Coord));
 
-        while (frontier.Count > 0)
+        int maxRange = creature.Stats.Speed;
+
+        Dictionary<CubeCoord, int> costSoFar = new();
+        PriorityQueue<CubeCoord> frontier = new();
+        List<CubeCoord> result = new();
+
+        frontier.Enqueue(origin, 0);
+        costSoFar[origin] = 0;
+
+        while (!frontier.IsEmpty)
         {
             CubeCoord current = frontier.Dequeue();
+            int currentCost = costSoFar[current];
 
             foreach (var dir in CubeCoord.CubeDirections.Values)
             {
                 CubeCoord next = current + dir;
 
-                if (visited.Contains(next)) continue;
-                if (!tileControllers.TryGetValue(next, out var tile)) continue;
-                if (tile.OccupantCreature != null) continue;
-                //Verificar también que en la casilla cabe el shape de la criatura, posiblemente usando el método DoesTheCreatureFitInTile del CreatureValidator class
-                //La casilla inicial no es una posición valida
+                if (costSoFar.ContainsKey(next)) continue;
 
-                int distance = CubeCoordDistance(origin, next);
-                if (distance <= range)
+                // Validar que todo el shape cabe en la casilla siguiente
+                bool isValid = true;
+                foreach (var offset in shapeOffsets)
                 {
-                    visited.Add(next);
-                    frontier.Enqueue(next);
+                    CubeCoord tileCoord = next + offset;
+                    if (!tileControllers.TryGetValue(tileCoord, out var tile))
+                    {
+                        isValid = false; break;
+                    }
+                    if (tile.OccupantCreature != null && tile.OccupantCreature != creature)
+                    {
+                        isValid = false; break;
+                    }
+                }
+
+                if (!isValid) continue;
+
+                int newCost = currentCost + 1;
+                if (newCost > maxRange) continue;
+
+                costSoFar[next] = newCost;
+                frontier.Enqueue(next, newCost);
+
+                if (!excluded.Contains(next))
+                {
+                    result.Add(next);
                 }
             }
         }
 
-        return visited.ToList();
+        return result;
     }
+
+
 
     public List<CubeCoord> GetPath(CubeCoord start, CubeCoord goal)
     {

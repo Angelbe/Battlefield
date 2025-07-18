@@ -10,8 +10,8 @@ public class CreatureView : MonoBehaviour, ICreatureView
     {
         Model = model;
     }
-    public void FlipSprite()
+    public void SetFlipSprite(bool isflip)
     {
-        spriteRenderer.flipX = true;
+        spriteRenderer.flipX = isflip;
     }
 }

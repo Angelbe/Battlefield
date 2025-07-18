@@ -30,11 +30,11 @@ public class TurnHandler
     {
         while (currentTurnQueue.Count > 0)
         {
-            var next = currentTurnQueue.Dequeue();
-            if (!movedThisTurn.Contains(next))
+            CreatureController NextCreature = currentTurnQueue.Dequeue();
+            if (!movedThisTurn.Contains(NextCreature))
             {
-                movedThisTurn.Add(next);
-                return next;
+                movedThisTurn.Add(NextCreature);
+                return NextCreature;
             }
         }
 
@@ -53,28 +53,35 @@ public class TurnHandler
     {
         List<CreatureController> result = new();
         Queue<CreatureController> tempQueue = new(currentTurnQueue);
-        HashSet<CreatureController> seen = new(movedThisTurn);
+        HashSet<CreatureController> simulatedMoved = new(movedThisTurn);
 
         while (result.Count < count)
         {
             if (tempQueue.Count == 0)
             {
-                // Simula próximo turno
-                StartNewTurn();
-                tempQueue = new(currentTurnQueue);
-                seen.Clear();
+                // Simular próximo turno sin modificar el real
+                var nextRound = allCreatures
+                    .Where(c => !c.isDead)
+                    .OrderByDescending(c => c.Stats.Initiative)
+                    .ToList();
+
+                tempQueue = new Queue<CreatureController>(nextRound);
+                simulatedMoved.Clear();
             }
 
-            CreatureController creature = tempQueue.Dequeue();
-            if (!seen.Contains(creature))
+            if (tempQueue.Count == 0) break;
+
+            var next = tempQueue.Dequeue();
+            if (!simulatedMoved.Contains(next))
             {
-                result.Add(creature);
-                seen.Add(creature);
+                result.Add(next);
+                simulatedMoved.Add(next);
             }
         }
 
         return result;
     }
+
 
 
     public bool HasEveryoneMovedThisTurn() => movedThisTurn.Count >= allCreatures.Count;

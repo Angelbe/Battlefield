@@ -12,7 +12,7 @@ public class CreatureController : MonoBehaviour
     public MovementHandler Movement { get; private set; }
     private CreatureShapeCatalog shapeCatalog = new();
     public bool IsDefender { get; private set; }
-    public CubeCoord[] Positions { get; private set; }
+    public TileController[] OccupiedTiles { get; private set; }
     public bool isDead;
     public int Quantity;
     public Army Army;
@@ -29,44 +29,39 @@ public class CreatureController : MonoBehaviour
     public void SetAsDefender(bool isDefender)
     {
         IsDefender = isDefender;
-        if (IsDefender)
-        {
-            View.FlipSprite();
-        }
+        View.SetFlipSprite(isDefender);
     }
 
     public void SetNewPosition(TileController newTile)
     {
+
+        if (OccupiedTiles != null)
+        {
+            foreach (var oldTile in OccupiedTiles)
+            {
+                if (oldTile.OccupantCreature == this)
+                    oldTile.ClearOcupantCreature(this);
+            }
+        }
+
+
         CubeCoord center = newTile.Model.Coord;
         CubeCoord[] shapeOffsets = shapeCatalog.GetShape(Model.Shape);
-        List<CubeCoord> newPositions = new();
+        List<TileController> newTiles = new();
 
         foreach (var offset in shapeOffsets)
         {
             CubeCoord tileCoord = center + offset;
-            newPositions.Add(tileCoord);
-
             if (bfController.TileControllers.TryGetValue(tileCoord, out var tile))
             {
                 tile.SetOcupantCreature(this);
+                newTiles.Add(tile);
             }
         }
 
-        //La limpieza de ocupaciones deberñia ocurrir al empezar el movimiento y no al acabarlo
-        if (Positions != null)
-        {
-            foreach (var oldCoord in Positions)
-            {
-                if (bfController.TileControllers.TryGetValue(oldCoord, out var tile))
-                {
-                    if (tile.OccupantCreature == this)
-                        tile.ClearOcupantCreature(this);
-                }
-            }
-        }
-
-        Positions = newPositions.ToArray();
+        OccupiedTiles = newTiles.ToArray();
     }
+
 
 
     public void Init(CreatureModel model, BattlefieldController newBfController, Army newArmy, TileController tileClicked, int newQuantity, bool isDefender)

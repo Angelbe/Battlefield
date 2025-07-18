@@ -32,7 +32,8 @@ public class CombatPhase : IBattlePhase
 
     public void HandleCreatureFinishedTurn()
     {
-        SetNewActiveCreature(TurnHandler.GetNextCreature());
+        CreatureController nextCreature = TurnHandler.GetNextCreature();
+        SetNewActiveCreature(nextCreature);
         UpdateUITurnOrder();
     }
 
@@ -42,9 +43,14 @@ public class CombatPhase : IBattlePhase
 
         if (!ActiveCreature.Movement.IsTileReachable(destination)) return;
 
-        List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(ActiveCreature.Positions[0], destination);
-        //Hay que limpiar las tiles de posible movimiento aquí antes de empezar a moverse
-        //Hay que limpiar las tiles ocupadas antes de empezar a moverse
+        List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(ActiveCreature.OccupiedTiles[0].Model.Coord, destination);
+        ActiveCreature.Movement.ClearReachableTiles();
+
+        foreach (var tile in ActiveCreature.OccupiedTiles)
+        {
+            tile.ClearOcupantCreature(ActiveCreature);
+        }
+
         ActiveCreature.Movement.MoveAlongPath(path);
     }
 
@@ -55,7 +61,8 @@ public class CombatPhase : IBattlePhase
         DefenderCreatures = bfController.bfModel.Defender.Deployed;
         TurnHandler = new(AttackerCreatures, DefenderCreatures);
         uICombatController.Init();
-        SetNewActiveCreature(TurnHandler.PeekCurrentCreature());
+        CreatureController FirstCreatureToMove = TurnHandler.GetNextCreature();
+        SetNewActiveCreature(FirstCreatureToMove);
         UpdateUITurnOrder();
         bfController.BfMouse.OnTileClickedCombatPhase += HandleClickTile;
 

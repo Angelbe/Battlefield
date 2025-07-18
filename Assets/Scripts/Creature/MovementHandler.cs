@@ -19,10 +19,7 @@ public class MovementHandler
 
     public void SetReachableTiles()
     {
-        int range = crController.Stats.Speed;
-        CubeCoord origin = crController.Positions[0];
-
-        List<CubeCoord> result = Pathfinder.GetReachableTiles(origin, range);
+        List<CubeCoord> result = Pathfinder.GetReachableTiles(crController);
         reachableTiles = new(result);
 
         Color movementColor = bfController.BfConfig.GetColor(ETileHighlightType.MovementRange);
@@ -59,7 +56,6 @@ public class MovementHandler
         TileController finalTile = bfController.TileControllers[finalCoord];
         crController.SetNewPosition(finalTile);
 
-        ClearReachableTiles();
         bfController.PhaseManager.CombatPhase.HandleCreatureFinishedTurn();
     }
 
