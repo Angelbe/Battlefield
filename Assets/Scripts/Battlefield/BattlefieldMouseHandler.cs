@@ -7,7 +7,6 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
     private readonly Dictionary<CubeCoord, TileController> tileControllers;
     private readonly BattlefieldConfig config;
     private readonly PhaseManager PhaseManager;
-    private GameObject cursorInstance;
 
     private TileController currentTileHovered;
     private TileController currentTileClicked;
@@ -19,12 +18,14 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
 
     private Color hoverColor => config.GetColor(ETileHighlightType.Hover);
     private Color selectedColor => config.GetColor(ETileHighlightType.Selected);
+    private CursorBattlefieldController cursor;
 
-    public BattlefieldMouseHandler(Dictionary<CubeCoord, TileController> newTileControllers, BattlefieldConfig battlefieldConfig, PhaseManager newPhaseManager)
+    public BattlefieldMouseHandler(Dictionary<CubeCoord, TileController> newTileControllers, BattlefieldConfig battlefieldConfig, PhaseManager newPhaseManager, CursorBattlefieldController newCursor)
     {
         tileControllers = newTileControllers;
         config = battlefieldConfig;
         PhaseManager = newPhaseManager;
+        cursor = newCursor;
     }
 
     public void HandleHoverTile(TileController tileHovered)
@@ -64,12 +65,7 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
         TileController attackFrom = attacker.Combat.FindClosestAttackTile(target, hoveredTile.Model.WorldPosition);
         if (attackFrom == null) return false;
 
-        Cursor.visible = false;
-        cursorInstance = GameObject.Instantiate(config.CursorSword); // asegúrate de que config.CursorSword sea un prefab, no un Texture2D
-        cursorInstance.transform.position = attackFrom.transform.position + new Vector3(0, 0.1f, 0); // levanta un poco si quieres
-        Vector3 dir = (target.transform.position - attackFrom.transform.position).normalized;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        cursorInstance.transform.rotation = Quaternion.Euler(0, 0, angle);
+        cursor.SetCursor(ECursorType.MeleeAttack);
         attackFrom.Highlight.AddColor(4, hoverColor);
         currentTileHovered = attackFrom;
         return true;
@@ -80,13 +76,10 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
         if (target == null || target.Army == attacker.Army) return false;
         if (attacker.Model.AttackType != EAttackType.Range) return false;
         if (!attacker.Combat.CanRangedAttack(target)) return false;
-
-        Cursor.SetCursor(config.CursorArrow, Vector2.zero, CursorMode.Auto);
+        cursor.SetCursor(ECursorType.RangedAttack);
         hoveredTile.Highlight.AddColor(4, hoverColor);
         return true;
     }
-
-
 
     public void HandleUnhoverTile()
     {
@@ -95,17 +88,15 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
             currentTileHovered.Highlight.RemoveColor(4, hoverColor);
             currentTileHovered = null;
         }
-        GameObject.Destroy(cursorInstance);
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         OnTileUnhovered?.Invoke();
     }
-
 
     private void handleClickOnDeploymentPhase(TileController tileClicked)
     {
         OnTileClickedDeploymentPhase?.Invoke(tileClicked);
 
     }
+
     private void handleClickOnCombatPhase(TileController tileClicked)
     {
         OnTileClickedCombatPhase?.Invoke(tileClicked);
@@ -116,7 +107,6 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
     {
         CubeCoord tileCoords = tileClicked.Model.Coord;
         if (tileControllers[tileCoords] == null) return;
-
         if (PhaseManager.CurrentPhase == PhaseManager.DeploymentPhase) handleClickOnDeploymentPhase(tileClicked);
         if (PhaseManager.CurrentPhase == PhaseManager.CombatPhase) handleClickOnCombatPhase(tileClicked);
 

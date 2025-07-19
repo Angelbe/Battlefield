@@ -26,12 +26,22 @@ public class SetupHelpers
         return camGO;
     }
 
-    public void CreateGlobalLight2D()
+    public GameObject CreateGlobalLight2D()
     {
         GameObject lightGO = new GameObject("Global Light 2D");
         var light2D = lightGO.AddComponent<Light2D>();
         light2D.lightType = Light2D.LightType.Global;
         light2D.intensity = 1f;
         light2D.color = Color.white;
+        return lightGO;
+    }
+
+    public CursorBattlefieldController CreateCursor(CursorCatalog cursorCatalog, CameraBattlefieldController BattlefieldCamera)
+    {
+        Cursor.visible = false;
+        GameObject CursorGO = GameObject.Instantiate(cursorCatalog.CursorPrefab);
+        CursorBattlefieldController CursorController = CursorGO.GetComponent<CursorBattlefieldController>();
+        CursorController.Init(cursorCatalog, BattlefieldCamera);
+        return CursorController;
     }
 }

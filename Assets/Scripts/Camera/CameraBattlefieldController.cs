@@ -4,10 +4,12 @@ using UnityEngine.U2D;
 [RequireComponent(typeof(Camera), typeof(PixelPerfectCamera), typeof(AudioListener))]
 public class CameraBattlefieldController : MonoBehaviour
 {
+    public Camera CameraComponent { get; private set; }
     public void Init(CameraBattlefieldConfig config)
     {
         Camera cam = GetComponent<Camera>();
-        cam.orthographic = true;
+        CameraComponent = cam;
+        CameraComponent.orthographic = true;
         transform.position = config.initialPosition;
 
         PixelPerfectCamera pp = GetComponent<PixelPerfectCamera>();

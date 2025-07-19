@@ -83,12 +83,18 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
         BfMouse.HandleClickTile(tileClicked);
     }
 
-    public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, PhaseManager newPhaseManager, CreatureCatalog creatureCatalog, UIController newUiDeployController)
+    public void Init(
+     BattlefieldModel newBfModel,
+     BattlefieldConfig newBfConfig,
+     CursorBattlefieldController newCursor,
+     PhaseManager newPhaseManager,
+     CreatureCatalog creatureCatalog,
+     UIController newUiDeployController)
     {
         BfConfig = newBfConfig;
         bfModel = newBfModel;
         PhaseManager = newPhaseManager;
-        BfMouse = new(TileControllers, BfConfig, PhaseManager);
+        BfMouse = new(TileControllers, BfConfig, PhaseManager, newCursor);
         BfGrid = new(BfConfig);
         BfDeploymentZones = new(this, BfConfig);
         BfHighlight = new(TileControllers, BfDeploymentZones, BfConfig, bfModel);

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Catalog Creatures", menuName = "Uroboros/Catalog/CreatureCatalog")]
+[CreateAssetMenu(fileName = "Catalog Creatures", menuName = "Uroboros/Catalogs/CreatureCatalog")]
 public class CreatureCatalog : ScriptableObject
 {
     [SerializeField] private TextAsset creatureJson;

@@ -10,6 +10,12 @@ public interface IBattlefieldController
     public BattlefieldGridHandler BfGrid { get; }
     public BattlefieldDeploymentZones BfDeploymentZones { get; }
     public Dictionary<CubeCoord, TileController> TileControllers { get; }
-    public void Init(BattlefieldModel newBfModel, BattlefieldConfig newBfConfig, PhaseManager newPhaseManager, CreatureCatalog creatureCatalog, UIController newIUController);
+    public void Init(BattlefieldModel newBfModel,
+    BattlefieldConfig newBfConfig,
+    CursorBattlefieldController newCursor,
+    PhaseManager newPhaseManager,
+    CreatureCatalog creatureCatalog,
+    UIController newIUController
+    );
     public void GenerateGrid();
 }
