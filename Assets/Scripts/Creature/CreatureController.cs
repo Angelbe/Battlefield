@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CreatureController : MonoBehaviour
 {
-    public Guid InstanceId { get; private set; } = Guid.NewGuid();
+    public Guid ID { get; private set; }
     public BattlefieldController bfController;
     public CreatureView View;
     public CreatureModel Model { get; private set; }
@@ -19,14 +19,25 @@ public class CreatureController : MonoBehaviour
     public int Quantity { get; private set; }
     public Army Army { get; private set; }
 
-    public void ModifyQuantity(int newCreaturesToAdd)
+    public void SetQuantityFromHealth()
     {
-        Quantity += newCreaturesToAdd;
+        int hpPerUnit = Model.HealthPoint;
+        Quantity = Mathf.CeilToInt((float)Stats.HealthPoint / hpPerUnit);
         if (Quantity <= 0)
         {
             isDead = true;
+            Death();
+
         }
     }
+
+    public void Death()
+    {
+        ClearOccupiedTiles();
+        bfController.PhaseManager.CombatPhase.HandleCreatureDeath(this);
+        Destroy(gameObject);
+    }
+
 
     public void SetAsDefender(bool isDefender)
     {
@@ -99,9 +110,28 @@ public class CreatureController : MonoBehaviour
         return false;
     }
 
+    public void CalculateHurt(int damage)
+    {
+        Stats.ModifyStat(ECreatureStat.Health, damage);
+
+        if (Stats.HealthPoint <= 0)
+        {
+            Stats.HealthPoint = 0;
+            Quantity = 0;
+            isDead = true;
+            Death();
+            return;
+        }
+
+        SetQuantityFromHealth();
+    }
+
+
+
     public void Init(CreatureModel model,
     BattlefieldController newBfController,
     Army newArmy,
+    Guid CreatureStackID,
     TileController tileClicked,
     int newQuantity,
     bool isDefender
@@ -111,6 +141,7 @@ public class CreatureController : MonoBehaviour
         Quantity = newQuantity;
         bfController = newBfController;
         Army = newArmy;
+        ID = CreatureStackID;
         View.Init(Model);
         Stats = new CreatureStats(Model);
         Movement = new CreatureMovementHandler(this, bfController, new Pathfinder(newBfController));

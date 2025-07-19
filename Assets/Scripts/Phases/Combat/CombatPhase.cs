@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class CombatPhase : IBattlePhase
@@ -39,8 +40,8 @@ public class CombatPhase : IBattlePhase
 
     private void HandleClickTile(TileController tileClicked)
     {
-        if (TryHandleMeleeAttack(tileClicked)) return;
         if (TryHandleRangedAttack(tileClicked)) return;
+        if (TryHandleMeleeAttack(tileClicked)) return;
         if (TryHandleMovement(tileClicked)) return;
     }
 
@@ -55,24 +56,34 @@ public class CombatPhase : IBattlePhase
         if (attackFromTile == null) return false;
 
         CubeCoord destination = attackFromTile.Model.Coord;
-        if (!ActiveCreature.Movement.IsTileReachable(destination)) return false;
+        bool isCurrentTile = ActiveCreature.OccupiedTiles.Exists(t => t.Model.Coord == destination);
 
-        List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(
-            ActiveCreature.OccupiedTiles[0].Model.Coord,
-            destination
-        );
+        if (!isCurrentTile && !ActiveCreature.Movement.IsTileReachable(destination)) return false;
 
-        ActiveCreature.Movement.ClearReachableTiles();
-        foreach (TileController tile in ActiveCreature.OccupiedTiles)
-            tile.ClearOcupantCreature(ActiveCreature);
-
-        ActiveCreature.Movement.MoveAlongPath(path, () =>
+        if (isCurrentTile)
         {
             ActiveCreature.Combat.ExecuteMeleeAttack(occupant);
-        });
+        }
+        else
+        {
+            List<CubeCoord> path = ActiveCreature.Movement.Pathfinder.GetPath(
+                ActiveCreature.OccupiedTiles[0].Model.Coord,
+                destination
+            );
+
+            ActiveCreature.Movement.ClearReachableTiles();
+            foreach (TileController tile in ActiveCreature.OccupiedTiles)
+                tile.ClearOcupantCreature(ActiveCreature);
+
+            ActiveCreature.Movement.MoveAlongPath(path, () =>
+            {
+                ActiveCreature.Combat.ExecuteMeleeAttack(occupant);
+            });
+        }
 
         return true;
     }
+
 
     private bool TryHandleRangedAttack(TileController tileClicked)
     {
@@ -107,6 +118,33 @@ public class CombatPhase : IBattlePhase
 
         return true;
     }
+
+    public void HandleCreatureDeath(CreatureController creature)
+    {
+        TurnHandler.RemoveCreature(creature);
+
+        DeployHandler handler = creature.IsDefender ? DefenderCreatures : AttackerCreatures;
+        handler.RemoveStackFromDeploy(creature.ID);
+        CheckCreaturesRemaining();
+    }
+
+    public void CheckCreaturesRemaining()
+    {
+        bool attackerAlive = AttackerCreatures.Deployed.Count > 0;
+        bool defenderAlive = DefenderCreatures.Deployed.Count > 0;
+
+        if (attackerAlive && defenderAlive) return;
+
+        Army winner = attackerAlive ? bfController.bfModel.Attacker : bfController.bfModel.Defender;
+        EndCombat(winner);
+    }
+
+
+    private void EndCombat(Army armyWinner)
+    {
+        Debug.Log($"⚔ El ejército de {armyWinner.Champion.Name} es el vencedor.");
+    }
+
 
 
     public void StartPhase()

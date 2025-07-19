@@ -82,6 +82,16 @@ public class TurnHandler
         return result;
     }
 
+    public void RemoveCreature(CreatureController creature)
+    {
+        allCreatures.Remove(creature);
+        movedThisTurn.Remove(creature);
+
+        Queue<CreatureController> newQueue = new();
+        foreach (var c in currentTurnQueue)
+            if (c != creature) newQueue.Enqueue(c);
+        currentTurnQueue = newQueue;
+    }
 
 
     public bool HasEveryoneMovedThisTurn() => movedThisTurn.Count >= allCreatures.Count;

@@ -32,7 +32,7 @@ public class CreatureSpawner
         creatureGO.transform.position = tile.Model.WorldPosition;
 
         CreatureController controller = creatureGO.GetComponent<CreatureController>();
-        controller.Init(model, bfController, army, tile, quantity, isDefender);
+        controller.Init(model, bfController, army, stack.ID, tile, quantity, isDefender);
 
         tile.SetOcupantCreature(controller);
         army.Deployed.AddStackToDeploy(stack, controller);

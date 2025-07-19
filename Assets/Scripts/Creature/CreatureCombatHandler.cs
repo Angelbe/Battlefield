@@ -18,13 +18,16 @@ public class CreatureCombatHandler
         int defense = defender.Stats.Defense;
         int min = attacker.Stats.MinDamage;
         int max = attacker.Stats.MaxDamage;
-        int baseDmg = (min + max) / 2;
 
-        float modifier = 1 + ((attack - defense) * 0.05f);
-        modifier = Mathf.Max(0.2f, modifier);
+        int baseDmgPerUnit = Random.Range(min, max + 1);
 
-        return Mathf.Max(1, Mathf.RoundToInt(baseDmg * attacker.Quantity * modifier));
+        float rawModifier = 1 + ((attack - defense) * 0.05f);
+        float modifier = Mathf.Clamp(rawModifier, 0.7f, 1.5f);
+
+        int totalDamage = Mathf.Max(1, Mathf.RoundToInt(baseDmgPerUnit * attacker.Quantity * modifier));
+        return totalDamage;
     }
+
 
 
     public bool CanMeleeAttack(CreatureController target)
@@ -99,7 +102,7 @@ public class CreatureCombatHandler
     {
 
         int totalDamage = CalculateDamage(crController, target);
-        target.ModifyQuantity(-totalDamage);
+        target.CalculateHurt(-totalDamage);
         Debug.Log($"🗡 {crController.name} hizo {totalDamage} de daño a {target.name} (quedan {target.Quantity})");
 
         if (!target.isDead && target.Stats.Retaliations > 0)
@@ -114,14 +117,14 @@ public class CreatureCombatHandler
     {
 
         int retaliationDamage = CalculateDamage(target, crController);
-        crController.ModifyQuantity(-retaliationDamage);
+        crController.CalculateHurt(-retaliationDamage);
         Debug.Log($"🔁 {target.name} contraatacó e hizo {retaliationDamage} de daño a {crController.name} (quedan {crController.Quantity})");
     }
 
     public void ExecuteRangedAttack(CreatureController target)
     {
         int totalDamage = CalculateDamage(crController, target);
-        target.ModifyQuantity(-totalDamage);
+        target.CalculateHurt(-totalDamage);
         Debug.Log($"🏹 {crController.name} hizo {totalDamage} de daño a distancia a {target.name}");
         bfController.PhaseManager.CombatPhase.HandleCreatureFinishedTurn();
     }
