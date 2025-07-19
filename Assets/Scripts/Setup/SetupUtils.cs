@@ -38,6 +38,11 @@ public class SetupHelpers
 
     public CursorBattlefieldController CreateCursor(CursorCatalog cursorCatalog)
     {
+        CursorBattlefieldController cursor = GameObject.FindFirstObjectByType<CursorBattlefieldController>();
+        if (cursor != null)
+        {
+            GameObject.Destroy(cursor.gameObject);
+        }
         Cursor.visible = false;
         GameObject CursorGO = GameObject.Instantiate(cursorCatalog.CursorPrefab);
         CursorGO.name = "Cursor";

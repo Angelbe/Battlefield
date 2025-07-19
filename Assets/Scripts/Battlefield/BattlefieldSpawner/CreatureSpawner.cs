@@ -26,7 +26,7 @@ public class CreatureSpawner
         int quantity = stack.Quantity;
 
         Transform parent = isDefender ? defenderParent : attackerParent;
-        GameObject creatureGO = GameObject.Instantiate(creatureCatalog.GetCombatPrefab(model.Name), parent);
+        GameObject creatureGO = creatureCatalog.GetCombatPrefab(model.Name, parent);
 
         creatureGO.transform.position = tile.Model.WorldPosition;
 

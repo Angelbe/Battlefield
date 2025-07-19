@@ -59,8 +59,26 @@ public class CreatureCatalog : ScriptableObject
         => GetDefinition(id)?.Data;
 
     public GameObject GetCombatPrefab(ECreaturesNames id)
-        => GetDefinition(id)?.CombatPrefab;
+    {
+        var prefab = GetDefinition(id)?.CombatPrefab;
+        return prefab == null ? null : Instantiate(prefab);
+    }
+
+    public GameObject GetCombatPrefab(ECreaturesNames id, Transform parent)
+    {
+        var prefab = GetDefinition(id)?.CombatPrefab;
+        return prefab == null ? null : Instantiate(prefab, parent);
+    }
 
     public GameObject GetUIPrefab(ECreaturesNames id)
-        => GetDefinition(id)?.UIPrefab;
+    {
+        var prefab = GetDefinition(id)?.UIPrefab;
+        return prefab == null ? null : Instantiate(prefab);
+    }
+
+    public GameObject GetUIPrefab(ECreaturesNames id, Transform parent)
+    {
+        var prefab = GetDefinition(id)?.UIPrefab;
+        return prefab == null ? null : Instantiate(prefab, parent);
+    }
 }

@@ -21,16 +21,15 @@ public class DeploySlotController : MonoBehaviour, IDeploySlotController
 
     public void SetNewCreatureUI()
     {
-        GameObject CreatureUIPrefab = CreatureCatalog.GetUIPrefab(Model.CreatureStack.Creature.Name);
+        GameObject CreatureUIPrefab = CreatureCatalog.GetUIPrefab(Model.CreatureStack.Creature.Name, transform);
         if (CreatureUIPrefab == null)
         {
             // Debug.LogWarning($"[DeploySlotController] ⚠ No se Pudo instanciar el deploy slot de '{creatureName}'");
             return;
         }
         Destroy(CreatureUIGO);
-        GameObject newGO = Instantiate(CreatureUIPrefab, transform);
-        CreatureUIGO = newGO;
-        Image ImageFromCreatureUI = newGO.GetComponent<Image>();
+        CreatureUIGO = CreatureUIPrefab;
+        Image ImageFromCreatureUI = CreatureUIPrefab.GetComponent<Image>();
         View.SetNewCreatureImage(ImageFromCreatureUI);
     }
 
