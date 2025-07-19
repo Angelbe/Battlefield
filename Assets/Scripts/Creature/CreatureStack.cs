@@ -4,14 +4,16 @@ using UnityEngine;
 public class CreatureStack
 {
     public Guid ID { get; private set; } = Guid.NewGuid();
+    public Army Army { get; private set; }
     public CreatureModel Creature { get; private set; }
     public int Quantity { get; private set; }
     public bool IsDefender { get; private set; }
 
-    public CreatureStack(CreatureModel creature, int quantity)
+    public CreatureStack(CreatureModel creature, Army newArmy, int quantity)
     {
         Creature = creature;
         Quantity = quantity;
+        Army = newArmy;
     }
 
     public void Add(int amount) => Quantity += amount;

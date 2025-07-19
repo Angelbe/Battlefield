@@ -3,9 +3,14 @@ using System.Collections.Generic;
 
 public class ReserveHandler : IReserveHandler
 {
+    public Army Army { get; private set; }     // slot index → criatura
     public Dictionary<int, CreatureStack> CreaturesInReserve { get; private set; } = new();     // slot index → criatura
 
-    public void SetNewReserve(Dictionary<int, CreatureStack> newReserve)
+    public ReserveHandler(Army newArmy)
+    {
+        Army = newArmy;
+    }
+    public void SetNewReserve(Dictionary<int, CreatureStack> newReserve, Army newArmy)
     {
         CreaturesInReserve = newReserve;
     }
@@ -27,7 +32,7 @@ public class ReserveHandler : IReserveHandler
         {
             if (!CreaturesInReserve.ContainsKey(slot))
             {
-                CreaturesInReserve[slot] = new CreatureStack(creature, quantity);
+                CreaturesInReserve[slot] = new CreatureStack(creature, Army, quantity);
                 return true;
             }
         }

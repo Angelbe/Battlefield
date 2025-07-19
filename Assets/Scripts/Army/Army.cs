@@ -14,7 +14,7 @@ public class Army : IArmy
         Name = newArmyName;
         ArmyColor = newArmyColor;
         Champion = ChampionOfTheArmy;
-        Reserve = new();
+        Reserve = new(this);
         Deployed = new(Reserve);
     }
 

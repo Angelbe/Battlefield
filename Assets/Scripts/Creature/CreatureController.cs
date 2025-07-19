@@ -11,6 +11,7 @@ public class CreatureController : MonoBehaviour
     public CreatureStats Stats { get; private set; }
     public CreatureMovementHandler Movement { get; private set; }
     public CreatureCombatHandler Combat { get; private set; }
+    public CreatureValidatorHandler Validator { get; private set; }
     private CreatureShapeCatalog shapeCatalog = new();
     public bool IsDefender { get; private set; }
     public List<TileController> OccupiedTiles { get; private set; }
@@ -112,8 +113,9 @@ public class CreatureController : MonoBehaviour
         Army = newArmy;
         View.Init(Model);
         Stats = new CreatureStats(Model);
-        Movement = new CreatureMovementHandler(this, newBfController, new Pathfinder(newBfController));
-        Combat = new CreatureCombatHandler(this, newBfController);
+        Movement = new CreatureMovementHandler(this, bfController, new Pathfinder(newBfController));
+        Combat = new CreatureCombatHandler(this, bfController);
+        Validator = new CreatureValidatorHandler(this, bfController, shapeCatalog);
         SetNewPosition(tileClicked);
         if (isDefender)
         {
