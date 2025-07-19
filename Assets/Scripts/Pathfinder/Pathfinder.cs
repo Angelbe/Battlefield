@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class Pathfinder
 {
-    private readonly Dictionary<CubeCoord, TileController> tileControllers;
+    private readonly BattlefieldController bfController;
+    private readonly Dictionary<CubeCoord, TileController> tilesInTheBattlefield;
     private readonly CreatureShapeCatalog shapeCatalog = new();
 
-    public Pathfinder(Dictionary<CubeCoord, TileController> tiles)
+    public Pathfinder(BattlefieldController newBfController)
     {
-        tileControllers = tiles;
+        bfController = newBfController;
+        tilesInTheBattlefield = newBfController.BfGrid.TilesInTheBattlefield; ;
     }
 
     public List<CubeCoord> GetReachableTiles(CreatureController creature)
     {
-        var origin = creature.OccupiedTiles[0].Model.Coord;
-        var shapeOffsets = shapeCatalog.GetShape(creature.Model.Shape);
-
+        CubeCoord origin = creature.OccupiedTiles[0].Model.Coord;
+        List<CubeCoord> shapeOffsets = shapeCatalog.GetShape(creature.Model.Shape);
         int maxRange = creature.Stats.Speed;
 
         Dictionary<CubeCoord, int> costSoFar = new();
@@ -31,45 +32,23 @@ public class Pathfinder
             CubeCoord current = frontier.Dequeue();
             int currentCost = costSoFar[current];
 
-            foreach (var dir in CubeCoord.CubeDirections.Values)
+            foreach (CubeCoord next in current.GetNeighbors())
             {
-                CubeCoord next = current + dir;
-
                 if (costSoFar.ContainsKey(next)) continue;
-
-                // Validar que todo el shape cabe en la casilla siguiente
-                bool isValid = true;
-                foreach (var offset in shapeOffsets)
-                {
-                    CubeCoord tileCoord = next + offset;
-                    if (!tileControllers.TryGetValue(tileCoord, out var tile))
-                    {
-                        isValid = false; break;
-                    }
-                    if (tile.OccupantCreature != null && tile.OccupantCreature != creature)
-                    {
-                        isValid = false; break;
-                    }
-                }
-
-                if (!isValid) continue;
+                if (!bfController.BfGrid.DoesTileExist(next)) continue;
+                if (!creature.Movement.CanStandOnTile(tilesInTheBattlefield[next])) continue;
 
                 int newCost = currentCost + 1;
                 if (newCost > maxRange) continue;
 
                 costSoFar[next] = newCost;
                 frontier.Enqueue(next, newCost);
-
-                if (origin != next)
-                {
-                    result.Add(next);
-                }
+                if (next != origin) result.Add(next);
             }
         }
 
         return result;
     }
-
 
 
     public List<CubeCoord> GetPath(CubeCoord start, CubeCoord goal)
@@ -93,8 +72,8 @@ public class Pathfinder
             {
                 CubeCoord next = current + dir;
 
-                if (!tileControllers.ContainsKey(next)) continue;
-                if (tileControllers[next].OccupantCreature != null && next != goal) continue;
+                if (!tilesInTheBattlefield.ContainsKey(next)) continue;
+                if (tilesInTheBattlefield[next].OccupantCreature != null && next != goal) continue;
 
                 int newCost = costSoFar[current] + 1;
                 if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])

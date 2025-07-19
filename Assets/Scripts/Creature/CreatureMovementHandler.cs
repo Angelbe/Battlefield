@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementHandler
+public class CreatureMovementHandler
 {
     private CreatureController crController;
     private BattlefieldController bfController;
@@ -11,7 +11,7 @@ public class MovementHandler
     public Pathfinder Pathfinder { get; private set; }
     public HashSet<CubeCoord> ReachableTiles { get; private set; } = new();
 
-    public MovementHandler(CreatureController owner, BattlefieldController battlefield, Pathfinder pathfinderInstance)
+    public CreatureMovementHandler(CreatureController owner, BattlefieldController battlefield, Pathfinder pathfinderInstance)
     {
         crController = owner;
         bfController = battlefield;
@@ -26,7 +26,7 @@ public class MovementHandler
         Color movementColor = bfController.BfConfig.GetColor(ETileHighlightType.MovementRange);
         foreach (var coord in result)
         {
-            if (bfController.TileControllers.TryGetValue(coord, out var tile))
+            if (bfController.BfGrid.TilesInTheBattlefield.TryGetValue(coord, out var tile))
             {
                 tile.Highlight.AddColor(3, movementColor);
             }
@@ -43,7 +43,7 @@ public class MovementHandler
     {
         foreach (CubeCoord step in path)
         {
-            Vector3 targetPos = bfController.TileControllers[step].transform.position;
+            Vector3 targetPos = bfController.BfGrid.TilesInTheBattlefield[step].transform.position;
 
             while ((crController.transform.position - targetPos).sqrMagnitude > 0.01f)
             {
@@ -53,9 +53,8 @@ public class MovementHandler
         }
 
         CubeCoord finalCoord = path[^1];
-        TileController finalTile = bfController.TileControllers[finalCoord];
+        TileController finalTile = bfController.BfGrid.TilesInTheBattlefield[finalCoord];
         crController.SetNewPosition(finalTile);
-
         onComplete?.Invoke();
     }
 
@@ -72,7 +71,7 @@ public class MovementHandler
         Color movementColor = bfController.BfConfig.GetColor(ETileHighlightType.MovementRange);
         foreach (var coord in ReachableTiles)
         {
-            if (bfController.TileControllers.TryGetValue(coord, out var tile))
+            if (bfController.BfGrid.TilesInTheBattlefield.TryGetValue(coord, out var tile))
             {
                 tile.Highlight.RemoveColor(3, movementColor);
             }
@@ -83,13 +82,13 @@ public class MovementHandler
     public bool CanStandOnTile(TileController originTile)
     {
         CubeCoord origin = originTile.Model.Coord;
-        CubeCoord[] shape = shapeCatalog.GetShape(crController.Model.Shape);
+        List<CubeCoord> shape = shapeCatalog.GetShape(crController.Model.Shape);
 
         foreach (CubeCoord offset in shape)
         {
             CubeCoord pos = origin + offset;
 
-            if (!bfController.TileControllers.TryGetValue(pos, out TileController tile))
+            if (!bfController.BfGrid.TilesInTheBattlefield.TryGetValue(pos, out TileController tile))
                 return false;
 
             if (tile.OccupantCreature != null)

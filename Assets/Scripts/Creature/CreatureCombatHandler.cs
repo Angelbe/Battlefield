@@ -63,7 +63,7 @@ public class CreatureCombatHandler
             foreach (CubeCoord dir in CubeCoord.CubeDirections.Values)
             {
                 CubeCoord adjacent = tile.Model.Coord + dir;
-                if (!bfController.TileControllers.TryGetValue(adjacent, out TileController neighborTile)) continue;
+                if (!bfController.BfGrid.TilesInTheBattlefield.TryGetValue(adjacent, out TileController neighborTile)) continue;
                 if (neighborTile.OccupantCreature != null && neighborTile.OccupantCreature.Army != crController.Army)
                 {
                     return false; // bloqueo por melee

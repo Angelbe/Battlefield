@@ -2,22 +2,22 @@ using System.Collections.Generic;
 
 public class CreatureShapeCatalog : ICreatureShapeCatalog
 {
-    private readonly Dictionary<ECreatureShape, CubeCoord[]> _shapes = new()
+    private readonly Dictionary<ECreatureShape, List<CubeCoord>> shapes = new()
     {
-        [ECreatureShape.Single] = new[]
+        [ECreatureShape.Single] = new List<CubeCoord>
         {
             new CubeCoord(0, 0, 0)
         },
-        [ECreatureShape.Line] = new[]
+        [ECreatureShape.Line] = new List<CubeCoord>
         {
             new CubeCoord(0, 0, 0),
             CubeCoord.CubeDirections["W"]
         }
     };
 
-    public CubeCoord[] GetShape(ECreatureShape shape)
+    public List<CubeCoord> GetShape(ECreatureShape shape)
     {
-        if (!_shapes.TryGetValue(shape, out var coords))
+        if (!shapes.TryGetValue(shape, out var coords))
             throw new KeyNotFoundException($"Shape {shape} no definido en el catálogo.");
         return coords;
     }

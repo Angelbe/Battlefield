@@ -6,23 +6,25 @@ using UnityEngine;
 public class BattlefieldGizmoDrawer : MonoBehaviour
 {
 #if UNITY_EDITOR
-    private BattlefieldController battlefield;
+    [SerializeField] private BattlefieldController bfController;
 
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
+        if (bfController == null)
+        {
+            Debug.LogWarning("Battlefield Not initialized for Gizmos");
+            enabled = false;
+        }
 
-        if (battlefield == null)
-            battlefield = GetComponent<BattlefieldController>();
-
-        if (battlefield == null || battlefield.TileControllers == null)
+        if (bfController == null || bfController.BfGrid.TilesInTheBattlefield == null)
             return;
 
-        foreach (TileController tileController in battlefield.TileControllers.Values)
+        foreach (TileController tileController in bfController.BfGrid.TilesInTheBattlefield.Values)
         {
             ColRow colRow = tileController.Model.ColRow;
             CubeCoord coord = tileController.Model.Coord;
-            float size = battlefield.BfConfig.HexSize;
+            float size = bfController.BfConfig.HexSize;
             Vector3 pos = ColRow.FromColRowToWorldPosition(colRow, size);
 
             string label = $"{coord.X},{coord.Y},{coord.Z}";

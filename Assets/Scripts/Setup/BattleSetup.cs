@@ -9,13 +9,10 @@ public class BattleSetup : MonoBehaviour
     [SerializeField] private GameObject UIPrefab;
     [SerializeField] private CreatureCatalog creatureCatalog;
     [SerializeField] private CursorCatalog cursorCatalog;
-    private SetupHelpers setupUtils;
+    private SetupHelpers setupUtils = new();
 
-    // Prototipo de datos: luego vendrán de menú, savegame, etc.
     void Awake()
     {
-        setupUtils = new();
-        // setupUtils.CreateMainCamera(new Vector3(8.5f, 4, -10));
         setupUtils.CreateGlobalLight2D();
         ChampionModel championGoku = new("Goku");
         ChampionModel championVegeta = new("Vegeta");
@@ -38,11 +35,11 @@ public class BattleSetup : MonoBehaviour
         CameraBattlefieldController cameraController = camGO.GetComponent<CameraBattlefieldController>();
         UIController UIController = UIGO.GetComponent<UIController>();
         PhaseManager phaseMgr = new PhaseManager(bfController, UIController);
-        CursorBattlefieldController uroborosCursor = setupUtils.CreateCursor(cursorCatalog, cameraController);
+        CursorBattlefieldController uroborosCursor = setupUtils.CreateCursor(cursorCatalog);
         bfController.Init(bfModel, battlefieldConfig, uroborosCursor, phaseMgr, creatureCatalog, UIController);
         cameraController.Init(cameraBattlefieldConfig);
         UIController.Init(bfController, phaseMgr);
-        cameraController.ChangeCameraPosition(bfController.Center);
+        cameraController.ChangeCameraPosition(bfController.BfGrid.Center);
         UIController.AssignCamera(camGO.GetComponent<Camera>());
         uroborosCursor.Init(cursorCatalog, cameraController, bfController);
 

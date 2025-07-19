@@ -66,6 +66,12 @@ public struct CubeCoord : IEquatable<CubeCoord>
         return neighborCoords.ToList();
     }
 
+    public IEnumerable<CubeCoord> GetNeighbors()
+    {
+        foreach (CubeCoord dir in CubeCoord.CubeDirections.Values)
+            yield return this + dir;
+    }
+
 
     public static readonly Dictionary<string, CubeCoord> CubeDirections = new()
     {

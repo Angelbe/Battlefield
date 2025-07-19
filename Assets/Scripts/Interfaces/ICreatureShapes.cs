@@ -1,4 +1,6 @@
+using System.Collections.Generic;
+
 public interface ICreatureShapeCatalog
 {
-    CubeCoord[] GetShape(ECreatureShape shape);
+    List<CubeCoord> GetShape(ECreatureShape shape);
 }

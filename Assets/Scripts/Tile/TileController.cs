@@ -7,7 +7,6 @@ public class TileController : MonoBehaviour, ITileController
     public BattlefieldController BfController { get; private set; }
     public TileHighlightController Highlight { get; private set; }
     public CreatureController OccupantCreature { get; private set; }
-    public AttackCursor AttackCursor { get; private set; }
     [SerializeField] private GameObject AttackCursorPrefab;
 
     public void Init(TileModel model, BattlefieldController newBfController)
@@ -36,15 +35,4 @@ public class TileController : MonoBehaviour, ITileController
 
     private void OnMouseEnter() => BfController.HandleHoverTile(this);
     private void OnMouseExit() => BfController.HandleUnhoverTile();
-    // private void OnMouseDown() => BfController.HandleClickTile(this);
-
-    public void InstatiateAttackCursor()
-    {
-
-    }
-
-    public void Update()
-    {
-
-    }
 }

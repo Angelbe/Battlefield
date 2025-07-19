@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CreaturePlacementValidator
@@ -15,13 +16,13 @@ public class CreaturePlacementValidator
 
     public bool DoesTheCreatureFitInTile(CreatureModel creature, CubeCoord anchor)
     {
-        var shapeOffsets = shapeCatalog.GetShape(creature.Shape);
+        List<CubeCoord> shapeOffsets = shapeCatalog.GetShape(creature.Shape);
         foreach (var offset in shapeOffsets)
         {
-            var coord = anchor + offset;
+            CubeCoord coord = anchor + offset;
             if (!CheckTileExists(coord)) return false;
 
-            var tile = bfController.TileControllers[coord];
+            TileController tile = bfController.BfGrid.TilesInTheBattlefield[coord];
             if (!CheckTileNotOccupied(tile)) return false;
             if (!CheckTileInDeployZone(tile)) return false;
         }
@@ -29,7 +30,7 @@ public class CreaturePlacementValidator
     }
 
     private bool CheckTileExists(CubeCoord coord)
-        => bfController.TileControllers.ContainsKey(coord);
+        => bfController.BfGrid.TilesInTheBattlefield.ContainsKey(coord);
 
     private bool CheckTileNotOccupied(TileController tile)
         => tile.OccupantCreature == null;

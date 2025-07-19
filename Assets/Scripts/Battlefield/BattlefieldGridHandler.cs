@@ -4,29 +4,14 @@ using UnityEngine;
 public class BattlefieldGridHandler
 {
     private BattlefieldConfig bfConfiguration;
-    public BattlefieldGridHandler(BattlefieldConfig battlefieldConfigAssigned)
+    private BattlefieldController bfController;
+    public Vector2 Center { get; private set; }
+    public Dictionary<CubeCoord, TileController> TilesInTheBattlefield { get; private set; } = new();
+
+    public BattlefieldGridHandler(BattlefieldConfig battlefieldConfigAssigned, BattlefieldController newBattlefieldController)
     {
         bfConfiguration = battlefieldConfigAssigned;
-    }
-
-    public Vector2 CubeToWorldPosition(CubeCoord cubeCoord, float hexSize)
-    {
-        CubeToColRow(cubeCoord, out int col, out int row);
-        return OffsetToWorld(col, row, hexSize);
-    }
-
-    public void CubeToColRow(CubeCoord coord, out int col, out int row)
-    {
-        row = coord.Z;
-        col = coord.X + (row - (row & 1)) / 2;
-    }
-
-    public Vector2 OffsetToWorld(int col, int row, float size)
-    {
-        float width = Mathf.Sqrt(3f) * size;
-        float height = 1.5f * size;
-        float offsetX = (row % 2 == 0) ? 0 : width / 2f;
-        return new Vector2(col * width + offsetX, row * height);
+        bfController = newBattlefieldController;
     }
 
     public Dictionary<CubeCoord, TileModel> GenerateGridModel()
@@ -49,6 +34,48 @@ public class BattlefieldGridHandler
             }
         }
         return result;
+    }
+
+    public void GetGridWorldCenter()
+    {
+        Vector2 min = Vector2.positiveInfinity;
+        Vector2 max = Vector2.negativeInfinity;
+
+        foreach (var tileController in TilesInTheBattlefield.Values)
+        {
+            Vector2 pos = tileController.transform.position;
+            min = Vector2.Min(min, pos);
+            max = Vector2.Max(max, pos);
+        }
+
+        Center = (min + max) / 2f;
+    }
+
+    private void InstantiateTiles(Dictionary<CubeCoord, TileModel> tileModels)
+    {
+
+        GameObject GridContainerGO = GameObject.Instantiate(new GameObject("GridContainer"), bfController.transform);
+        foreach (TileModel tileModel in tileModels.Values)
+        {
+            var go = GameObject.Instantiate(bfConfiguration.tilePrefab, tileModel.WorldPosition, Quaternion.identity, GridContainerGO.transform);
+            go.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+            var tileController = go.GetComponent<TileController>();
+            tileController.Init(tileModel, bfController);
+            TilesInTheBattlefield[tileModel.Coord] = tileController;
+        }
+    }
+
+
+    public void GenerateGrid()
+    {
+        Dictionary<CubeCoord, TileModel> tileModels = GenerateGridModel();
+        InstantiateTiles(tileModels);
+        GetGridWorldCenter();
+    }
+
+    public bool DoesTileExist(CubeCoord coord)
+    {
+        return TilesInTheBattlefield.ContainsKey(coord);
     }
 
 }

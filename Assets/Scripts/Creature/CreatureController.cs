@@ -9,14 +9,14 @@ public class CreatureController : MonoBehaviour
     public CreatureView View;
     public CreatureModel Model { get; private set; }
     public CreatureStats Stats { get; private set; }
-    public MovementHandler Movement { get; private set; }
+    public CreatureMovementHandler Movement { get; private set; }
     public CreatureCombatHandler Combat { get; private set; }
     private CreatureShapeCatalog shapeCatalog = new();
     public bool IsDefender { get; private set; }
     public List<TileController> OccupiedTiles { get; private set; }
-    public bool isDead;
-    public int Quantity;
-    public Army Army;
+    public bool isDead { get; private set; }
+    public int Quantity { get; private set; }
+    public Army Army { get; private set; }
 
     public void ModifyQuantity(int newCreaturesToAdd)
     {
@@ -33,27 +33,25 @@ public class CreatureController : MonoBehaviour
         View.SetFlipSprite(isDefender);
     }
 
-    public void SetNewPosition(TileController newTile)
+    private void ClearOccupiedTiles()
     {
-
-        if (OccupiedTiles != null)
+        foreach (TileController oldTile in OccupiedTiles)
         {
-            foreach (var oldTile in OccupiedTiles)
-            {
-                if (oldTile.OccupantCreature == this)
-                    oldTile.ClearOcupantCreature(this);
-            }
+            if (oldTile.OccupantCreature == this)
+                oldTile.ClearOcupantCreature(this);
         }
+    }
 
-
-        CubeCoord center = newTile.Model.Coord;
-        CubeCoord[] shapeOffsets = shapeCatalog.GetShape(Model.Shape);
+    private void SetOccupiedTiles(TileController AnchorTile)
+    {
+        CubeCoord center = AnchorTile.Model.Coord;
+        List<CubeCoord> shapeOffsets = shapeCatalog.GetShape(Model.Shape);
         List<TileController> newTiles = new();
 
         foreach (var offset in shapeOffsets)
         {
             CubeCoord tileCoord = center + offset;
-            if (bfController.TileControllers.TryGetValue(tileCoord, out var tile))
+            if (bfController.BfGrid.TilesInTheBattlefield.TryGetValue(tileCoord, out var tile))
             {
                 tile.SetOcupantCreature(this);
                 newTiles.Add(tile);
@@ -61,6 +59,12 @@ public class CreatureController : MonoBehaviour
         }
 
         OccupiedTiles = newTiles;
+    }
+
+    public void SetNewPosition(TileController newTile)
+    {
+        if (OccupiedTiles != null) ClearOccupiedTiles();
+        SetOccupiedTiles(newTile);
     }
 
     public List<TileController> GetAdjacentTiles()
@@ -78,7 +82,7 @@ public class CreatureController : MonoBehaviour
         foreach (CubeCoord dir in CubeCoord.CubeDirections.Values)
         {
             CubeCoord neighborCoord = tile.Model.Coord + dir;
-            if (!bfController.TileControllers.TryGetValue(neighborCoord, out TileController neighbor)) continue;
+            if (!bfController.BfGrid.TilesInTheBattlefield.TryGetValue(neighborCoord, out TileController neighbor)) continue;
             if (IsOccupiedByThisCreature(neighbor)) continue;
             if (result.Contains(neighbor)) continue;
 
@@ -94,7 +98,13 @@ public class CreatureController : MonoBehaviour
         return false;
     }
 
-    public void Init(CreatureModel model, BattlefieldController newBfController, Army newArmy, TileController tileClicked, int newQuantity, bool isDefender)
+    public void Init(CreatureModel model,
+    BattlefieldController newBfController,
+    Army newArmy,
+    TileController tileClicked,
+    int newQuantity,
+    bool isDefender
+    )
     {
         Model = model;
         Quantity = newQuantity;
@@ -102,7 +112,7 @@ public class CreatureController : MonoBehaviour
         Army = newArmy;
         View.Init(Model);
         Stats = new CreatureStats(Model);
-        Movement = new MovementHandler(this, newBfController, new Pathfinder(newBfController.TileControllers));
+        Movement = new CreatureMovementHandler(this, newBfController, new Pathfinder(newBfController));
         Combat = new CreatureCombatHandler(this, newBfController);
         SetNewPosition(tileClicked);
         if (isDefender)

@@ -36,7 +36,7 @@ public class SetupHelpers
         return lightGO;
     }
 
-    public CursorBattlefieldController CreateCursor(CursorCatalog cursorCatalog, CameraBattlefieldController BattlefieldCamera)
+    public CursorBattlefieldController CreateCursor(CursorCatalog cursorCatalog)
     {
         Cursor.visible = false;
         GameObject CursorGO = GameObject.Instantiate(cursorCatalog.CursorPrefab);
