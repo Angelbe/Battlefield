@@ -14,12 +14,11 @@ public class GhostCreatureHandler
 
     public void ShowGhost(CreatureStack creatureStack, TileController tileController)
     {
-        GameObject prefab = creatureCatalog.GetCombatPrefab(creatureStack.Creature.Name);
-        CreatureController crController = prefab.GetComponent<CreatureController>();
-        crController.SetAsDefender(creatureStack.IsDefender);
-        if (prefab == null) return;
-
-        currentGhost = GameObject.Instantiate(prefab, GhostGO);
+        currentGhost = GameObject.Instantiate(creatureCatalog.GetCombatPrefab(creatureStack.Creature.Name), GhostGO);
+        if (currentGhost == null) return;
+        //SIEMPRE instancia el prefab antes de modificarlo
+        CreatureController crController = currentGhost.GetComponent<CreatureController>();
+        if (crController.IsDefender != creatureStack.IsDefender) crController.SetAsDefender(creatureStack.IsDefender);
         currentGhost.transform.position = tileController.Model.WorldPosition;
 
         var spriteRenderer = currentGhost.transform.Find("Creature")?.GetComponent<SpriteRenderer>();
@@ -29,7 +28,7 @@ public class GhostCreatureHandler
         }
         else
         {
-            Debug.LogWarning($"[GhostHandler] No se encontró SpriteRenderer en hijo 'Creature' del prefab {prefab.name}");
+            Debug.LogWarning($"[GhostHandler] No se encontró SpriteRenderer en hijo 'Creature' del prefab {creatureStack.Creature.Name}");
         }
     }
 

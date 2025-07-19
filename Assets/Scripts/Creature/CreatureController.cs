@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CreatureController : MonoBehaviour
 {
     public Guid ID { get; private set; }
-    public BattlefieldController bfController;
-    public CreatureView View;
+    public BattlefieldController bfController { get; private set; }
     public CreatureModel Model { get; private set; }
     public CreatureStats Stats { get; private set; }
     public CreatureMovementHandler Movement { get; private set; }
@@ -18,6 +18,8 @@ public class CreatureController : MonoBehaviour
     public bool isDead { get; private set; }
     public int Quantity { get; private set; }
     public Army Army { get; private set; }
+    public CreatureView View;
+    public TextMeshPro QuantityText;
 
     public void SetQuantityFromHealth()
     {
@@ -42,7 +44,12 @@ public class CreatureController : MonoBehaviour
     public void SetAsDefender(bool isDefender)
     {
         IsDefender = isDefender;
-        View.SetFlipSprite(isDefender);
+        if (isDefender)
+        {
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+        }
     }
 
     private void ClearOccupiedTiles()
@@ -133,8 +140,7 @@ public class CreatureController : MonoBehaviour
     Army newArmy,
     Guid CreatureStackID,
     TileController tileClicked,
-    int newQuantity,
-    bool isDefender
+    int newQuantity
     )
     {
         Model = model;
@@ -148,9 +154,9 @@ public class CreatureController : MonoBehaviour
         Combat = new CreatureCombatHandler(this, bfController);
         Validator = new CreatureValidatorHandler(this, bfController, shapeCatalog);
         SetNewPosition(tileClicked);
-        if (isDefender)
+        if (newArmy.IsDefender != IsDefender)
         {
-            SetAsDefender(isDefender);
+            SetAsDefender(newArmy.IsDefender);
         }
     }
 }

@@ -95,7 +95,7 @@ public class CreatureCombatHandler
 
     public void ExecuteMeleeAttack(CreatureController target)
     {
-
+        crController.Movement.ClearReachableTiles();
         int totalDamage = CalculateDamage(crController, target);
         target.CalculateHurt(-totalDamage);
         Debug.Log($"🗡 {crController.name} hizo {totalDamage} de daño a {target.name} (quedan {target.Quantity})");

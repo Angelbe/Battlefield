@@ -25,14 +25,13 @@ public class CreatureSpawner
         CreatureModel model = stack.Creature;
         int quantity = stack.Quantity;
 
-        GameObject prefab = creatureCatalog.GetCombatPrefab(model.Name);
         Transform parent = isDefender ? defenderParent : attackerParent;
-        GameObject creatureGO = GameObject.Instantiate(prefab, parent);
+        GameObject creatureGO = GameObject.Instantiate(creatureCatalog.GetCombatPrefab(model.Name), parent);
 
         creatureGO.transform.position = tile.Model.WorldPosition;
 
         CreatureController controller = creatureGO.GetComponent<CreatureController>();
-        controller.Init(model, bfController, army, stack.ID, tile, quantity, isDefender);
+        controller.Init(model, bfController, army, stack.ID, tile, quantity);
 
         tile.SetOcupantCreature(controller);
         army.Deployed.AddStackToDeploy(stack, controller);

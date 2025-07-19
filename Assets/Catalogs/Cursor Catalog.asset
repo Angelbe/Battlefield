@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d713e01781d977a186c8fa82cf57a45, type: 3}
   m_Name: Cursor Catalog
   m_EditorClassIdentifier: 
+  CursorPrefab: {fileID: 4497361031866725381, guid: 652cfdd935d5db554956ec6a00dc7925, type: 3}
   cursorEntries:
   - Type: 0
     Sprite: {fileID: -4663302167746504001, guid: 3adb0235f8f2cc8d0a844daed7bfb1d0, type: 3}
