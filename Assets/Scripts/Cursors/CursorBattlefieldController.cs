@@ -10,6 +10,7 @@ public class CursorBattlefieldController : MonoBehaviour
     private BattlefieldController bfController;
     private ECursorType currentCursor;
     private TileController tileUnderCursor;
+    public CubeCoord currentAttackAngle;
 
 
     public void Init(CursorCatalog newCursorCatalog, CameraBattlefieldController BattlefieldCamera, BattlefieldController newBattlefieldController)
@@ -80,13 +81,14 @@ public class CursorBattlefieldController : MonoBehaviour
     {
         angle = (angle + 360f) % 360f;
 
-        if (angle < 30f || angle >= 330f) return 90f; // E
-        if (angle < 90f) return 150f;                 // NE
-        if (angle < 150f) return 210f;                // NW
-        if (angle < 210f) return 270f;                // W
-        if (angle < 270f) return 330f;                // SW
-        return 30f;                                   // SE
+        if (angle < 30f || angle >= 330f) { currentAttackAngle = CubeCoord.CubeDirections["E"]; return 90f; }
+        if (angle < 90f) { currentAttackAngle = CubeCoord.CubeDirections["NE"]; return 150f; }
+        if (angle < 150f) { currentAttackAngle = CubeCoord.CubeDirections["NW"]; return 210f; }
+        if (angle < 210f) { currentAttackAngle = CubeCoord.CubeDirections["W"]; return 270f; }
+        if (angle < 270f) { currentAttackAngle = CubeCoord.CubeDirections["SW"]; return 330f; }
+        { currentAttackAngle = CubeCoord.CubeDirections["SE"]; return 30f; }
     }
+
 
 
     private void Update()

@@ -57,17 +57,18 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
 
     private void UpdateCursorIcon(CreatureController active, CreatureController target, TileController tile)
     {
+        if (ShouldShowRangedCursor(active, target))
+        {
+            uroborosCursor.SetCursor(ECursorType.RangedAttack);
+            return;
+        }
         if (ShouldShowMeleeCursor(active, target, tile))
         {
             uroborosCursor.SetCursor(ECursorType.MeleeAttack);
             return;
         }
 
-        if (ShouldShowRangedCursor(active, target))
-        {
-            uroborosCursor.SetCursor(ECursorType.RangedAttack);
-            return;
-        }
+
 
         uroborosCursor.SetCursor(ECursorType.Default);
     }

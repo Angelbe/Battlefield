@@ -78,4 +78,44 @@ public class BattlefieldGridHandler
         return TilesInTheBattlefield.ContainsKey(coord);
     }
 
+    public TileController GetClosestTileToPosition(Vector3 position, List<TileController> exclusions)
+    {
+        TileController closest = null;
+        float shortestDist = float.MaxValue;
+
+        foreach (TileController tileToCheck in TilesInTheBattlefield.Values)
+        {
+            TileController tile = tileToCheck;
+            if (exclusions.Contains(tile)) continue;
+
+            float dist = (tile.transform.position - position).sqrMagnitude;
+            if (dist < shortestDist)
+            {
+                closest = tile;
+                shortestDist = dist;
+            }
+        }
+
+        return closest;
+    }
+
+    public TileController GetClosestTileFromList(Vector3 position, List<TileController> candidates)
+    {
+        TileController closest = null;
+        float shortestDist = float.MaxValue;
+
+        foreach (var tile in candidates)
+        {
+            float dist = (tile.Model.WorldPosition - position).sqrMagnitude;
+            if (dist < shortestDist)
+            {
+                closest = tile;
+                shortestDist = dist;
+            }
+        }
+
+        return closest;
+    }
+
+
 }

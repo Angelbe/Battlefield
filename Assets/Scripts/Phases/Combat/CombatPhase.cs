@@ -52,7 +52,7 @@ public class CombatPhase : IBattlePhase
         if (occupant == null || occupant.Army == ActiveCreature.Army) return false;
         if (!ActiveCreature.Combat.CanMeleeAttack(occupant)) return false;
 
-        TileController attackFromTile = ActiveCreature.Combat.FindClosestAttackTile(occupant, tileClicked.Model.WorldPosition);
+        TileController attackFromTile = ActiveCreature.Combat.FindClosestAttackTile(occupant, tileClicked);
         if (attackFromTile == null) return false;
 
         CubeCoord destination = attackFromTile.Model.Coord;

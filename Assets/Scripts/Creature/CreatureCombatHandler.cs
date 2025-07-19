@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CreatureCombatHandler
@@ -78,24 +79,18 @@ public class CreatureCombatHandler
     }
 
 
-    public TileController FindClosestAttackTile(CreatureController enemy, Vector3 cursorWorldPos)
+    public TileController FindClosestAttackTile(CreatureController enemy, TileController clickedTile)
     {
-        TileController bestTile = null;
-        float shortestDist = float.MaxValue;
-        List<TileController> adjacentTiles = enemy.GetAdjacentTiles();
+        CursorBattlefieldController cursor = GameObject.FindFirstObjectByType<CursorBattlefieldController>();
+        if (cursor == null) return null;
 
-        foreach (TileController tile in adjacentTiles)
-        {
-            if (!crController.Movement.IsTileReachable(tile.Model.Coord)) continue;
+        CubeCoord offset = cursor.currentAttackAngle;
+        CubeCoord targetCoord = clickedTile.Model.Coord + offset;
 
-            float dist = (tile.Model.WorldPosition - cursorWorldPos).sqrMagnitude;
-            if (dist >= shortestDist) continue;
+        if (!crController.Movement.IsTileReachable(targetCoord)) return null;
+        if (!bfController.BfGrid.TilesInTheBattlefield.TryGetValue(targetCoord, out TileController tile)) return null;
 
-            bestTile = tile;
-            shortestDist = dist;
-        }
-
-        return bestTile;
+        return tile;
     }
 
     public void ExecuteMeleeAttack(CreatureController target)
@@ -123,6 +118,7 @@ public class CreatureCombatHandler
 
     public void ExecuteRangedAttack(CreatureController target)
     {
+        crController.Movement.ClearReachableTiles();
         int totalDamage = CalculateDamage(crController, target);
         target.CalculateHurt(-totalDamage);
         Debug.Log($"🏹 {crController.name} hizo {totalDamage} de daño a distancia a {target.name}");

@@ -91,7 +91,7 @@ public class CreatureMovementHandler
             if (!bfController.BfGrid.TilesInTheBattlefield.TryGetValue(pos, out TileController tile))
                 return false;
 
-            if (tile.OccupantCreature != null)
+            if (tile.OccupantCreature != null && tile.OccupantCreature != crController)
                 return false;
         }
 
