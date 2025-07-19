@@ -36,7 +36,7 @@ public class TileController : MonoBehaviour, ITileController
 
     private void OnMouseEnter() => BfController.HandleHoverTile(this);
     private void OnMouseExit() => BfController.HandleUnhoverTile();
-    private void OnMouseDown() => BfController.HandleclickTile(this);
+    // private void OnMouseDown() => BfController.HandleClickTile(this);
 
     public void InstatiateAttackCursor()
     {

@@ -40,8 +40,8 @@ public class SetupHelpers
     {
         Cursor.visible = false;
         GameObject CursorGO = GameObject.Instantiate(cursorCatalog.CursorPrefab);
+        CursorGO.name = "Cursor";
         CursorBattlefieldController CursorController = CursorGO.GetComponent<CursorBattlefieldController>();
-        CursorController.Init(cursorCatalog, BattlefieldCamera);
         return CursorController;
     }
 }

@@ -18,14 +18,14 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
 
     private Color hoverColor => config.GetColor(ETileHighlightType.Hover);
     private Color selectedColor => config.GetColor(ETileHighlightType.Selected);
-    private CursorBattlefieldController cursor;
+    private CursorBattlefieldController uroborosCursor;
 
     public BattlefieldMouseHandler(Dictionary<CubeCoord, TileController> newTileControllers, BattlefieldConfig battlefieldConfig, PhaseManager newPhaseManager, CursorBattlefieldController newCursor)
     {
         tileControllers = newTileControllers;
         config = battlefieldConfig;
         PhaseManager = newPhaseManager;
-        cursor = newCursor;
+        uroborosCursor = newCursor;
     }
 
     public void HandleHoverTile(TileController tileHovered)
@@ -51,33 +51,53 @@ public class BattlefieldMouseHandler : IBattlefieldMouseHandler
         CreatureController active = PhaseManager.CombatPhase.ActiveCreature;
         CreatureController target = tile.OccupantCreature;
 
-        if (TryShowMeleeHover(active, target, tile)) return;
-        if (TryShowRangedHover(active, target, tile)) return;
-
         tile.Highlight.AddColor(4, hoverColor);
+        UpdateCursorIcon(active, target, tile);
     }
 
-    private bool TryShowMeleeHover(CreatureController attacker, CreatureController target, TileController hoveredTile)
+    private void UpdateCursorIcon(CreatureController active, CreatureController target, TileController tile)
     {
-        if (target == null || target.Army == attacker.Army) return false;
-        if (!attacker.Combat.CanMeleeAttack(target)) return false;
+        if (ShouldShowMeleeCursor(active, target, tile))
+        {
+            uroborosCursor.SetCursor(ECursorType.MeleeAttack);
+            return;
+        }
 
-        TileController attackFrom = attacker.Combat.FindClosestAttackTile(target, hoveredTile.Model.WorldPosition);
-        if (attackFrom == null) return false;
+        if (ShouldShowRangedCursor(active, target))
+        {
+            uroborosCursor.SetCursor(ECursorType.RangedAttack);
+            return;
+        }
 
-        cursor.SetCursor(ECursorType.MeleeAttack);
-        attackFrom.Highlight.AddColor(4, hoverColor);
-        currentTileHovered = attackFrom;
-        return true;
+        uroborosCursor.SetCursor(ECursorType.Default);
     }
 
-    private bool TryShowRangedHover(CreatureController attacker, CreatureController target, TileController hoveredTile)
+    private bool ShouldShowMeleeCursor(CreatureController active, CreatureController target, TileController tile)
     {
-        if (target == null || target.Army == attacker.Army) return false;
-        if (attacker.Model.AttackType != EAttackType.Range) return false;
-        if (!attacker.Combat.CanRangedAttack(target)) return false;
-        cursor.SetCursor(ECursorType.RangedAttack);
-        hoveredTile.Highlight.AddColor(4, hoverColor);
+        if (target == null || target.Army == active.Army) return false;
+
+        foreach (CubeCoord dir in CubeCoord.CubeDirections.Values)
+        {
+            CubeCoord neighbor = tile.Model.Coord + dir;
+            if (active.Movement.IsTileReachable(neighbor)) return true;
+        }
+
+        return false;
+    }
+
+    private bool ShouldShowRangedCursor(CreatureController active, CreatureController target)
+    {
+        if (target == null || target.Army == active.Army) return false;
+        if (active.Model.AttackType != EAttackType.Range) return false;
+        if (!active.Combat.CanRangedAttack(target)) return false;
+
+        foreach (TileController adjacent in active.GetAdjacentTiles())
+        {
+            CreatureController occupant = adjacent.OccupantCreature;
+            if (occupant != null && occupant.Army != active.Army)
+                return false; // Hay enemigos adyacentes
+        }
+
         return true;
     }
 

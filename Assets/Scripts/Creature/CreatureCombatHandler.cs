@@ -77,48 +77,23 @@ public class CreatureCombatHandler
 
     public TileController FindClosestAttackTile(CreatureController enemy, Vector3 cursorWorldPos)
     {
-        List<TileController> validTiles = GetValidAdjacentTiles(enemy);
-        if (validTiles.Count == 0) return null;
+        TileController bestTile = null;
+        float shortestDist = float.MaxValue;
+        List<TileController> adjacentTiles = enemy.GetAdjacentTiles();
 
-        TileController best = validTiles[0];
-        float minDist = Vector3.SqrMagnitude(best.Model.WorldPosition - cursorWorldPos);
-
-        foreach (TileController tile in validTiles)
+        foreach (TileController tile in adjacentTiles)
         {
-            float dist = Vector3.SqrMagnitude(tile.Model.WorldPosition - cursorWorldPos);
-            if (dist < minDist)
-            {
-                best = tile;
-                minDist = dist;
-            }
+            if (!crController.Movement.IsTileReachable(tile.Model.Coord)) continue;
+
+            float dist = (tile.Model.WorldPosition - cursorWorldPos).sqrMagnitude;
+            if (dist >= shortestDist) continue;
+
+            bestTile = tile;
+            shortestDist = dist;
         }
 
-        return best;
+        return bestTile;
     }
-
-    public List<TileController> GetValidAdjacentTiles(CreatureController target)
-    {
-        List<TileController> validTiles = new();
-        List<CubeCoord> neighbors = CubeCoord.GetNeighbors(target.OccupiedTiles);
-
-        foreach (CubeCoord neighbor in neighbors)
-        {
-            if (!bfController.TileControllers.ContainsKey(neighbor))
-                continue;
-
-            TileController tile = bfController.TileControllers[neighbor];
-
-            // Skip si alguna de las tiles del shape no cabe aquí
-            if (!crController.Movement.CanStandOnTile(tile))
-                continue;
-
-            validTiles.Add(tile);
-        }
-
-        return validTiles;
-    }
-
-
 
     public void ExecuteMeleeAttack(CreatureController target)
     {

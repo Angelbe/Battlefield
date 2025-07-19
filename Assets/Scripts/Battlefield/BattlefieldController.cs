@@ -78,7 +78,7 @@ public class BattlefieldController : MonoBehaviour, IBattlefieldController
     {
         BfMouse.HandleUnhoverTile();
     }
-    public void HandleclickTile(TileController tileClicked)
+    public void HandleClickTile(TileController tileClicked)
     {
         BfMouse.HandleClickTile(tileClicked);
     }

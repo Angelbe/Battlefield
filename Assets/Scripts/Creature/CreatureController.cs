@@ -63,7 +63,36 @@ public class CreatureController : MonoBehaviour
         OccupiedTiles = newTiles;
     }
 
+    public List<TileController> GetAdjacentTiles()
+    {
+        List<TileController> result = new();
 
+        foreach (TileController tile in OccupiedTiles)
+            AddAdjacentTiles(tile, result);
+
+        return result;
+    }
+
+    private void AddAdjacentTiles(TileController tile, List<TileController> result)
+    {
+        foreach (CubeCoord dir in CubeCoord.CubeDirections.Values)
+        {
+            CubeCoord neighborCoord = tile.Model.Coord + dir;
+            if (!bfController.TileControllers.TryGetValue(neighborCoord, out TileController neighbor)) continue;
+            if (IsOccupiedByThisCreature(neighbor)) continue;
+            if (result.Contains(neighbor)) continue;
+
+            result.Add(neighbor);
+        }
+    }
+
+    private bool IsOccupiedByThisCreature(TileController tile)
+    {
+        foreach (TileController t in OccupiedTiles)
+            if (t == tile) return true;
+
+        return false;
+    }
 
     public void Init(CreatureModel model, BattlefieldController newBfController, Army newArmy, TileController tileClicked, int newQuantity, bool isDefender)
     {

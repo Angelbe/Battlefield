@@ -38,12 +38,13 @@ public class BattleSetup : MonoBehaviour
         CameraBattlefieldController cameraController = camGO.GetComponent<CameraBattlefieldController>();
         UIController UIController = UIGO.GetComponent<UIController>();
         PhaseManager phaseMgr = new PhaseManager(bfController, UIController);
-        CursorBattlefieldController cursor = setupUtils.CreateCursor(cursorCatalog, cameraController);
-        bfController.Init(bfModel, battlefieldConfig, cursor, phaseMgr, creatureCatalog, UIController);
+        CursorBattlefieldController uroborosCursor = setupUtils.CreateCursor(cursorCatalog, cameraController);
+        bfController.Init(bfModel, battlefieldConfig, uroborosCursor, phaseMgr, creatureCatalog, UIController);
         cameraController.Init(cameraBattlefieldConfig);
         UIController.Init(bfController, phaseMgr);
         cameraController.ChangeCameraPosition(bfController.Center);
         UIController.AssignCamera(camGO.GetComponent<Camera>());
+        uroborosCursor.Init(cursorCatalog, cameraController, bfController);
 
 
         CreatureModel Bandit = creatureCatalog.GetCreatureData(ECreaturesNames.Bandit);
